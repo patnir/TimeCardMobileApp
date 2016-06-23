@@ -3,8 +3,136 @@
 
 <head>
     <title>Time Card</title>
-</head>
-<body>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="minimal-ui, width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="HandheldFriendly" content="true" />
+    <link rel="apple-touch-icon" href="https://abramkj.files.wordpress.com/2015/04/hours-icon-512.png">
+    <script language=" javascript" type="text/javascript" src="Logic.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0px;
+            padding: 0px;
+            background: #FFFFFF;
+            overflow: hidden;
+            -webkit-text-size-adjust: none;
+            -webkit-user-select: none;
+        }
+        #divMain {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            transition: 0.3s;
+            background-color: #FFFFFF;
+        }
+        #navbar {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            height: 35px;
+            text-align: center;
+            font-family: Helvetica;
+            font-size: 25px;
+            color: #1588C7;
+            padding-top: 8px;
+            border-bottom: solid;
+            border-color: #808080;
+            border-width: 1px;
+            background-color: #FFFFFF;
+        }
+        #btnAddNewEntry {
+            position: absolute;
+            color: #1588C7;
+            font-size: 40px;
+            top: 0px;
+            right: 7px;
+        }
+        #btnBack {
+            position: absolute;
+            color: #1588C7;
+            font-size: 40px;
+            top: 0px;
+            left: 7px;
+        }
+        #inputInformation {
+            position: absolute;
+            top: 44px;
+            transition: 0.3s;
+            background-color: #000000;
+        }
 
-</body>
-</html>
+        #showInformation {
+            position: absolute;
+            background-color: #FFFFFF;
+            transition: 0.3s;
+            top: 44px;
+            left: 0px;
+        }
+        #lblBeginDate {
+            font-family: Helvetica;
+            font-size: 20px;
+            position: absolute;
+            color: #1588C7;
+            left: 40px;
+            top: 35px;
+            height: 35px;
+            width: 110px;
+        }
+        #txtBeginDate {
+            font-family: Helvetica;
+            font-size: 20px;
+            position: absolute;
+            color: #000000;
+            top: 30px;
+            left: 170px;
+            height: 35px;
+        }
+        #lblEndDate {
+            font-family: Helvetica;
+            font-size: 20px;
+            position: absolute;
+            color: #1588C7;
+            left: 40px;
+            height: 35px;
+            top: 85px;
+            width: 110px;
+        }
+        #txtEndDate {
+            font-family: Helvetica;
+            font-size: 20px;
+            position: absolute;
+            top: 80px;
+            left: 170px;
+            height: 35px;
+            color: #000000;
+        }
+        #btnRefresh {
+            position: absolute;
+            color: white;
+            background-color: #1588C7;
+            font-size: 22px;
+            font-family: Helvetica;
+            border-radius:2px;
+            left: 40px;
+            top: 150px;
+            text-align: center;
+        }
+    </style>      
+</head > 
+<body onload="body_load();">
+    <div id="divMain">
+        <div id="navbar">Time Card
+            <div id="btnAddNewEntry">&plus;</div>
+            <div id="btnBack">&lt;</div>
+        </div>
+        <div id="inputInformation"></div>
+        <div id="showInformation">
+            <label id="lblBeginDate">Begin Date:</label>
+            <input type="text" id="txtBeginDate"/>
+            <label id="lblEndDate">End Date:</label>
+            <input type="text" id="txtEndDate"/>
+            <div id="btnRefresh">Refresh</div>
+        </div>
+    </div>
+</body> 
+</html >
+        
