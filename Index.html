@@ -36,7 +36,7 @@
             padding-top: 8px;
             border-bottom: solid;
             border-color: #808080;
-            border-width: 1px;
+            border-width: 5px;
             background-color: #FFFFFF;
         }
         #btnAddNewEntry {
@@ -73,7 +73,7 @@
             position: absolute;
             color: #1588C7;
             left: 40px;
-            top: 35px;
+            top: 37px;
             height: 35px;
             width: 110px;
         }
@@ -93,7 +93,7 @@
             color: #1588C7;
             left: 40px;
             height: 35px;
-            top: 85px;
+            top: 87px;
             width: 110px;
         }
         #txtEndDate {
@@ -114,6 +114,8 @@
             border-radius:2px;
             left: 40px;
             top: 150px;
+            padding-top: 4px;
+            height: 28px;
             text-align: center;
         }
 
@@ -159,6 +161,51 @@
             font-size: 16px;
             font-family: Sans-Serif;
         }
+        #entriesList {
+            position: absolute;
+            top: 202px;
+            left: 40px;
+            background-color: #BADCEF;
+            overflow: scroll;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        #entriesListElement {
+            background-color: #FFFFFF;
+            height: 80px;
+        }
+        #entryName {
+            position: absolute;
+            color: #1588C7;
+            left: 4px;
+            font-size: 23px;
+            font-family: Helvetica;
+        }
+        #entryDateWorked {
+            position: absolute;
+            right: 4px;
+            color: #000000;
+            font-size: 17px;
+            font-weight: bold;
+            font-family: Helvetica;
+        }
+        #entryHoursWorked {
+            position: absolute;
+            top: 50px;
+            right: 4px;
+            color: #1588C7;
+            font-size: 17px;
+            font-weight: bold;
+            font-family: Helvetica;
+        }
+        #entryDescription {
+            position: absolute;
+            top: 45px;
+            left: 4px;
+            color: #000000;
+            font-size: 13px;
+            font-family: Helvetica;
+        }
     </style>      
 </head > 
 <body onload="body_load();">
@@ -174,6 +221,14 @@
             <label id="lblEndDate">End Date:</label>
             <input type="text" id="txtEndDate"/>
             <div id="btnRefresh">Refresh</div>
+            <div id="entriesList">
+                <div id="entriesListElement">
+                    <div id="entryName">Ryan</div>
+                    <div id="entryDateWorked">May 25, 2016</div>
+                    <div id="entryDescription">012345678901234567890123456789</div>
+                    <div id="entryHoursWorked">6.02</div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="errorMessageMain">
@@ -184,4 +239,3 @@
     </div>
 </body> 
 </html >
-        

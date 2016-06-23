@@ -38,6 +38,10 @@ function window_onresize() {
 
     btnRefresh.style.width = (window.innerWidth - 80).toString() + "px";
 
+    entriesList.style.width = (window.innerWidth - 80).toString() + "px";
+    entriesList.style.height = (window.innerHeight - 262).toString() + "px";
+    entriesListElement.style.width = (window.innerWidth - 80).toString() + "px";
+
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
     errorMessageBody.style.top = ((window.innerHeight - 200 + 44) / 2).toString() + "px";
@@ -117,7 +121,23 @@ function btnRefresh_onmousedown() {
     var url = buildURL();
     var returnString = httpGet(url);
     alert(returnString);
+
+    displayAllEntries(returnString);
 }
+
+function displayAllEntries(serializedString) {
+    var entryList = serializedString.split('\n');
+    entryList.splice(0, 1);
+    var entry;
+    for (var i = 0; i < entryList.length - 1; i++) {
+        addEntryToList(entryList[i])
+    }
+}
+
+function addEntryToList(serializedEntry) {
+    entry = serializedEntry.split('\t');
+}
+
 
 function buildURL() {
     var beginDateParts = txtBeginDate.value.trim().split('/');
@@ -131,7 +151,6 @@ function buildURL() {
         + "-" + endDateParts[1]
         + "-" + endDateParts[2]
         + "&&maxrows=100";
-    alert(result);
     return result;
 }
 
@@ -143,6 +162,21 @@ function httpGet(theUrl) {
     return xmlHttp.responseText;
 }
 
+function formatDateForList(serializedDate) { // array
+    var dateParts = this.serializedDate.split("/");
+    var formattedString = "";
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    formattedString += months[dateParts[1] - 1] + " " + dateParts[2] + ", " + dateParts[0];
+
+    return formattedString;
+}
+
+function formatDescriptionForList(description) {
+    if (description.length > 30) {
+        return description.substring(0, 30);
+    }
+}
 
 function validateInput() {
     var beginDateErrorMessage = "Enter a valid begin date";
