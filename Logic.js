@@ -119,7 +119,6 @@ function btnRefresh_onmousedown() {
 
     var url = buildURL();
     var returnString = httpGet(url);
-    alert(returnString);
 
     displayAllEntries(returnString);
 }
@@ -142,16 +141,28 @@ function addEntryToList(serializedEntry, i) {
 
     var entryDivName = document.createElement('div');
     entryDivName.id = "entryName";
-    entryDivName.style.top = (50 * i).toString() + "px";
+    entryDivName.style.top = (80 * i).toString() + "px";
     entryDivName.innerHTML = entry[1];
 
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
-    entryDivDateWorked.style.top = (50 * i).toString() + "px";
+    entryDivDateWorked.style.top = (80 * i).toString() + "px";
     entryDivDateWorked.innerHTML = formatDateForList(entry[2]);
+
+    var entryDivHoursWorked = document.createElement('div');
+    entryDivHoursWorked.id = "entryHoursWorked";
+    entryDivHoursWorked.style.top = (80 * i + 50).toString() + "px";
+    entryDivHoursWorked.innerHTML = entry[3];
+
+    var entryDivDescription = document.createElement('div');
+    entryDivDescription.id = "entryDescription";
+    entryDivDescription.style.top = (80 * i + 45).toString() + "px";
+    entryDivDescription.innerHTML = formatDescriptionForList(entry[5]);
 
     entryDiv.appendChild(entryDivName);
     entryDiv.appendChild(entryDivDateWorked);
+    entryDiv.appendChild(entryDivHoursWorked);
+    entryDiv.appendChild(entryDivDescription);
 
     entriesList.appendChild(entryDiv);
 }
