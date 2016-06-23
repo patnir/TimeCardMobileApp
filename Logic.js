@@ -40,7 +40,6 @@ function window_onresize() {
 
     entriesList.style.width = (window.innerWidth - 80).toString() + "px";
     entriesList.style.height = (window.innerHeight - 262).toString() + "px";
-    entriesListElement.style.width = (window.innerWidth - 80).toString() + "px";
 
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
@@ -130,12 +129,31 @@ function displayAllEntries(serializedString) {
     entryList.splice(0, 1);
     var entry;
     for (var i = 0; i < entryList.length - 1; i++) {
-        addEntryToList(entryList[i])
+        addEntryToList(entryList[i], i)
     }
 }
 
-function addEntryToList(serializedEntry) {
+function addEntryToList(serializedEntry, i) {
     entry = serializedEntry.split('\t');
+    var entryDiv = document.createElement('div');
+    entryDiv.id = "entriesListElement";
+    entryDiv.style.width = (window.innerWidth - 80).toString();
+    entryDiv.EntryIndex = i;
+
+    var entryDivName = document.createElement('div');
+    entryDivName.id = "entryName";
+    entryDivName.style.top = (50 * i).toString() + "px";
+    entryDivName.innerHTML = entry[1];
+
+    var entryDivDateWorked = document.createElement('div');
+    entryDivDateWorked.id = "entryDateWorked";
+    entryDivDateWorked.style.top = (50 * i).toString() + "px";
+    entryDivDateWorked.innerHTML = formatDateForList(entry[2]);
+
+    entryDiv.appendChild(entryDivName);
+    entryDiv.appendChild(entryDivDateWorked);
+
+    entriesList.appendChild(entryDiv);
 }
 
 
@@ -163,11 +181,11 @@ function httpGet(theUrl) {
 }
 
 function formatDateForList(serializedDate) { // array
-    var dateParts = this.serializedDate.split("/");
+    var dateParts = serializedDate.split("/");
     var formattedString = "";
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-    formattedString += months[dateParts[1] - 1] + " " + dateParts[2] + ", " + dateParts[0];
+    formattedString += months[dateParts[0] - 1] + " " + dateParts[1] + ", " + dateParts[2];
 
     return formattedString;
 }
