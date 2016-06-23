@@ -9,7 +9,18 @@ function body_load() {
     errorMessageMain.style.visibility = 'hidden';
     btnAddNewEntry.style.visibility = "visible";
     btnBack.style.visibility = "hidden";
+
+    addDefaultDates();
+
     window_onresize();
+}
+
+function addDefaultDates() {
+    var dateToday = new Date();
+    txtEndDate.defaultValue = dateToday.getFullYear() + "/" + (dateToday.getMonth() + 1) + "/" + dateToday.getDate();
+
+    dateToday = new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate() - 7);
+    txtBeginDate.defaultValue = dateToday.getFullYear() + "/" + (dateToday.getMonth() + 1) + "/" + dateToday.getDate();
 }
 
 function window_onresize() {
@@ -102,7 +113,36 @@ function btnRefresh_onmousedown() {
     if (validateInput() === false) {
         return;
     }
+
+    var url = buildURL();
+    var returnString = httpGet(url);
+    alert(returnString);
 }
+
+function buildURL() {
+    var beginDateParts = txtBeginDate.value.trim().split('/');
+    var endDateParts = txtEndDate.value.trim().split('/');
+    var result = "Server/TimeLogServer.aspx?action=getEntries&beginDate="
+        + beginDateParts[0]
+        + "-" + beginDateParts[1]
+        + "-" + beginDateParts[2]
+        + "&endDate="
+        + endDateParts[0]
+        + "-" + endDateParts[1]
+        + "-" + endDateParts[2]
+        + "&&maxrows=100";
+    alert(result);
+    return result;
+}
+
+function httpGet(theUrl) {
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+}
+
 
 function validateInput() {
     var beginDateErrorMessage = "Enter a valid begin date";
