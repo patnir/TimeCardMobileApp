@@ -15,13 +15,9 @@ function body_load() {
 
     addDefaultDates();
 
-    window_onresize();
-
     gResponseString = "";
-}
 
-function btnRefresh_onmouseup() {
-    btnRefresh.style.backgroundColor = "#1588C7";
+    window_onresize();
 }
 
 function addDefaultDates() {
@@ -47,13 +43,17 @@ function window_onresize() {
 
     btnRefresh.style.width = (window.innerWidth - 80).toString() + "px";
 
-    entriesList.style.width = (window.innerWidth - 80).toString() + "px";
-    entriesList.style.height = (window.innerHeight - 282).toString() + "px";
+    entriesList.style.width = (window.innerWidth).toString() + "px";
+    entriesList.style.height = (window.innerHeight - 242).toString() + "px";
 
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
-    errorMessageBody.style.top = ((window.innerHeight - 200 + 44) / 2).toString() + "px";
-    errorMessageBody.style.left = ((window.innerWidth - 200) / 2).toString() + "px";
+    errorMessageBody.style.top = (window.innerHeight / 3).toString() + "px";
+    errorMessageBody.style.left = (window.innerWidth / 3).toString() + "px";
+    errorMessageBody.style.height = (window.innerHeight / 3).toString()  + "px";
+    errorMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
+
+    btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
 
     gCharactersToShow = (window.innerWidth / 8);
 
@@ -76,6 +76,206 @@ function btnBack_onmousedown() {
     inputInformation.style.left = window.innerWidth.toString() + "px";
     btnAddNewEntry.style.visibility = "visible";
     btnBack.style.visibility = "hidden";
+}
+
+function btnRefresh_onmousedown() {
+    btnRefresh.style.backgroundColor = "#BADCEF";
+
+    if (validateInput() === false) {
+        return;
+    }
+
+    var url = buildURL();
+    gResponseString = httpGet(url);
+
+    var returnStringSplit = gResponseString.split("\t");
+    if (returnStringSplit[0] === "error") {
+        showErrorMessage(returnStringSplit[1], txtBeginDate);
+        return;
+    }
+    if (returnStringSplit.length === 1) {
+        showErrorMessage("No Entries Found", txtBeginDate);
+    }
+
+    displayAllEntries(gResponseString);
+}
+
+function btnRefresh_onmouseup() {
+    btnRefresh.style.backgroundColor = "#1588C7";
+}
+
+function displayAllEntries(serializedString) {
+    if (serializedString === "") {
+        return;
+    }
+
+    entriesList.innerHTML = "";
+
+    var entryList = serializedString.split('\n'); // double quotes
+
+    for (var i = 1; i < entryList.length - 1; i++) {
+        addEntryToList(entryList[i], i)
+    }
+}
+
+function addEntryToList(serializedEntry, i) {
+    var entry = serializedEntry.split('\t');
+    var entryDiv = document.createElement('div');
+    entryDiv.id = "entriesListElement";
+    entryDiv.style.width = (window.innerWidth - 80).toString();
+    entryDiv.EntryIndex = i;
+
+    var entryDivName = document.createElement('div');
+    entryDivName.id = "entryName";
+    entryDivName.style.top = (82.22 * i + 3).toString() + "px";
+    entryDivName.innerHTML = entry[1];
+
+    var entryDivDateWorked = document.createElement('div');
+    entryDivDateWorked.id = "entryDateWorked";
+    entryDivDateWorked.style.top = (82.22 * i + 3).toString() + "px";
+    entryDivDateWorked.innerHTML = formatDateForList(entry[2]);
+
+    var entryDivHoursWorked = document.createElement('div');
+    entryDivHoursWorked.id = "entryHoursWorked";
+    entryDivHoursWorked.style.top = (82.22 * i + 53).toString() + "px";
+    entryDivHoursWorked.innerHTML = entry[3];
+
+    var entryDivDescription = document.createElement('div');
+    entryDivDescription.id = "entryDescription";
+    entryDivDescription.style.top = (82.22 * i + 45).toString() + "px";
+    entryDivDescription.innerHTML = formatDescriptionForList(entry[5]);
+    entryDivDescription.style.width = (4 * window.innerWidth / 5).toString() + "px"
+
+    entryDiv.appendChild(entryDivName);
+    entryDiv.appendChild(entryDivDateWorked);
+    entryDiv.appendChild(entryDivHoursWorked);
+    entryDiv.appendChild(entryDivDescription);
+
+    entriesList.appendChild(entryDiv);
+}
+
+
+function buildURL() {
+    var beginDateParts = txtBeginDate.value.trim().split('/');
+    var endDateParts = txtEndDate.value.trim().split('/');
+    var url = "Server/TimeLogServer.aspx?action=getEntries&beginDate="
+        + beginDateParts[0]
+        + "-" + beginDateParts[1]
+        + "-" + beginDateParts[2]
+        + "&endDate="
+        + endDateParts[0]
+        + "-" + endDateParts[1]
+        + "-" + endDateParts[2]
+        + "&&maxrows=100";
+    return url;
+}
+
+// encodeURIComponent
+
+function httpGet(theUrl) {
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", theUrl, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+}
+
+function formatDateForList(serializedDate) { // array
+    var dateParts = serializedDate.split("/");
+    var formattedString = "";
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    formattedString += months[dateParts[0] - 1] + " " + dateParts[1] + ", " + dateParts[2];
+
+    return formattedString;
+}
+
+function formatDescriptionForList(description) {
+    if (description.length > gCharactersToShow) {
+        return description.substring(0, gCharactersToShow - 3) + "...";
+    }
+    return description;
+}
+
+function validateInput() {
+    var beginDateErrorMessage = "Enter a valid begin date.";
+    var endDateErrorMessage = "Enter a valid end date that is no later than today's date.";
+
+    if (tryParseDate(txtBeginDate.value.trim()) === false) {
+        showErrorMessage(beginDateErrorMessage, txtBeginDate);
+        return false;
+    }
+
+    if (tryParseDate(txtEndDate.value.trim()) === false) {
+        showErrorMessage(endDateErrorMessage, txtEndDate);
+        return false;
+    }
+
+    //var dateRangeErrorMessage = validateDateRanges();
+
+    //if (dateRangeErrorMessage.length != 0) {
+    //    showErrorMessage(dateRangeErrorMessage, txtEndDate);
+    //    return false;
+    //}
+
+    return true;
+}
+
+function validateDateRanges() {
+    var endDateAfterTodayErrorMessage = "Enter a date that is before toady";
+
+    var beginDateParts = txtBeginDate.value.trim().split('/');
+    var endDateParts = txtEndDate.value.trim().split('/');
+    dateToday = new Date();
+    // 0 - year, 1 - month, 2 - day
+    if (parseInt(endDateParts[0]) > dateToday.getFullYear()) {
+        return endDateAfterTodayErrorMessage;
+    }
+    else if (parseInt(endDateParts[0]) === dateToday.getFullYear()
+        && parseInt(endDateParts[1] > dateToday.getMonth() + 1)) {
+        alert(dateToday.getMonth() + 1);
+        return endDateAfterTodayErrorMessage + month;
+    }
+    else if (parseInt(endDateParts[0]) === dateToday.getFullYear()
+        && parseInt(endDateParts[1] === dateToday.getMonth() + 1)
+        && parseInt(endDateParts[2] > dateToday.getMonth())) {
+        return endDateAfterTodayErrorMessage + "day";
+    }
+
+    return "";
+}
+
+function showErrorMessage(message, objectToFocus) {
+    errorMessageMain.style.visibility = 'visible';
+    inputInformation.style.pointerEvents = 'none';
+    errorMessageString.innerHTML = message;
+
+    errorMessageMain.ObjectToFocus = objectToFocus;
+}
+
+function btnErrorMessageOK_onmousedown() {
+    errorMessageMain.style.visibility = 'hidden';
+    inputInformation.style.pointerEvents = 'all';
+    btnRefresh.style.backgroundColor = "#1588C7";
+    window.setTimeout(function () {
+        errorMessageMain.ObjectToFocus.focus();
+    }, 0);
+}
+
+
+function checkIfStringIsNumber(numberString) {
+    var checkDigits = numberString.split("");
+    if (checkDigits.length === 0) {
+        return false;
+    }
+    var checkNumbers = new RegExp('[0-9]');
+
+    for (var i = 0; i < checkDigits.length; i++) {
+        if (checkNumbers.test(checkDigits[i]) === false) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function tryParseDate(dateString) {
@@ -126,162 +326,5 @@ function tryParseDate(dateString) {
         return false;
     }
 
-    return true;
-}
-
-function btnRefresh_onmousedown() {
-    btnRefresh.style.backgroundColor = "#BADCEF";
-
-    if (validateInput() === false) {
-        return;
-    }
-
-    var url = buildURL();
-    gResponseString = httpGet(url);
-
-    var returnStringSplit = gResponseString.split("\t");
-    if (returnStringSplit[0] === "error") {
-        showErrorMessage(returnStringSplit[1], txtBeginDate);
-        return;
-    }
-
-    displayAllEntries(gResponseString);
-}
-
-function displayAllEntries(serializedString) {
-    while (entriesList.hasChildNodes()) {
-        entriesList.removeChild(entriesList.lastChild);
-    }
-
-    var entryList = serializedString.split('\n');
-    entryList.splice(0, 1);
-    var entry;
-    for (var i = 0; i < entryList.length - 1; i++) {
-        addEntryToList(entryList[i], i)
-    }
-}
-
-function addEntryToList(serializedEntry, i) {
-    entry = serializedEntry.split('\t');
-    var entryDiv = document.createElement('div');
-    entryDiv.id = "entriesListElement";
-    entryDiv.style.width = (window.innerWidth - 80).toString();
-    entryDiv.EntryIndex = i;
-
-    var entryDivName = document.createElement('div');
-    entryDivName.id = "entryName";
-    entryDivName.style.top = (82.22 * i + 3).toString() + "px";
-    entryDivName.innerHTML = entry[1];
-
-    var entryDivDateWorked = document.createElement('div');
-    entryDivDateWorked.id = "entryDateWorked";
-    entryDivDateWorked.style.top = (82.22 * i + 3).toString() + "px";
-    entryDivDateWorked.innerHTML = formatDateForList(entry[2]);
-
-    var entryDivHoursWorked = document.createElement('div');
-    entryDivHoursWorked.id = "entryHoursWorked";
-    entryDivHoursWorked.style.top = (82.22 * i + 53).toString() + "px";
-    entryDivHoursWorked.innerHTML = entry[3];
-
-    var entryDivDescription = document.createElement('div');
-    entryDivDescription.id = "entryDescription";
-    entryDivDescription.style.top = (82.22 * i + 45).toString() + "px";
-    entryDivDescription.innerHTML = formatDescriptionForList(entry[5]);
-    entryDivDescription.style.width = (4 * window.innerWidth / 5).toString() + "px"
-
-    entryDiv.appendChild(entryDivName);
-    entryDiv.appendChild(entryDivDateWorked);
-    entryDiv.appendChild(entryDivHoursWorked);
-    entryDiv.appendChild(entryDivDescription);
-
-    entriesList.appendChild(entryDiv);
-}
-
-
-function buildURL() {
-    var beginDateParts = txtBeginDate.value.trim().split('/');
-    var endDateParts = txtEndDate.value.trim().split('/');
-    var result = "Server/TimeLogServer.aspx?action=getEntries&beginDate="
-        + beginDateParts[0]
-        + "-" + beginDateParts[1]
-        + "-" + beginDateParts[2]
-        + "&endDate="
-        + endDateParts[0]
-        + "-" + endDateParts[1]
-        + "-" + endDateParts[2]
-        + "&&maxrows=100";
-    return result;
-}
-
-function httpGet(theUrl) {
-    var xmlHttp = null;
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", theUrl, false);
-    xmlHttp.send(null);
-    return xmlHttp.responseText;
-}
-
-function formatDateForList(serializedDate) { // array
-    var dateParts = serializedDate.split("/");
-    var formattedString = "";
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
-    formattedString += months[dateParts[0] - 1] + " " + dateParts[1] + ", " + dateParts[2];
-
-    return formattedString;
-}
-
-function formatDescriptionForList(description) {
-    if (description.length > gCharactersToShow) {
-        return description.substring(0, gCharactersToShow - 3) + "...";
-    }
-    return description;
-}
-
-function validateInput() {
-    var beginDateErrorMessage = "Enter a valid begin date";
-    var endDateErrorMessage = "Enter a valid end date that is no later than today's date";
-
-    if (tryParseDate(txtBeginDate.value.trim()) === false) {
-        showErrorMessage(beginDateErrorMessage, txtBeginDate);
-        return false;
-    }
-
-    if (tryParseDate(txtEndDate.value.trim()) === false) {
-        showErrorMessage(endDateErrorMessage, txtEndDate);
-        return false;
-    }
-}
-
-function showErrorMessage(message, objectToFocus) {
-    errorMessageMain.style.visibility = 'visible';
-    inputInformation.style.pointerEvents = 'none';
-    errorMessageString.innerHTML = message;
-
-    errorMessageMain.ObjectToFocus = objectToFocus;
-}
-
-function btnErrorMessageOK_onmousedown() {
-    errorMessageMain.style.visibility = 'hidden';
-    inputInformation.style.pointerEvents = 'all';
-    btnRefresh.style.backgroundColor = "#1588C7";
-    window.setTimeout(function () {
-        errorMessageMain.ObjectToFocus.focus();
-    }, 0);
-}
-
-
-function checkIfStringIsNumber(numberString) {
-    var checkDigits = numberString.split("");
-    if (checkDigits.length === 0) {
-        return false;
-    }
-    var checkNumbers = new RegExp('[0-9]');
-
-    for (var i = 0; i < checkDigits.length; i++) {
-        if (checkNumbers.test(checkDigits[i]) === false) {
-            return false;
-        }
-    }
     return true;
 }
