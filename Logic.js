@@ -1,10 +1,13 @@
 /// <reference path="Index.html">
 
+var gResponseString;
+
 function body_load() {
     window.onresize = window_onresize;
     btnAddNewEntry.onmousedown = btnAddNewEntry_onmousedown;
     btnBack.onmousedown = btnBack_onmousedown;
     btnRefresh.onmousedown = btnRefresh_onmousedown;
+    btnRefresh.onmouseup = btnRefresh_onmouseup;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
     errorMessageMain.style.visibility = 'hidden';
     btnAddNewEntry.style.visibility = "visible";
@@ -13,6 +16,12 @@ function body_load() {
     addDefaultDates();
 
     window_onresize();
+
+    gResponseString = "";
+}
+
+function btnRefresh_onmouseup() {
+    btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function addDefaultDates() {
@@ -39,12 +48,20 @@ function window_onresize() {
     btnRefresh.style.width = (window.innerWidth - 80).toString() + "px";
 
     entriesList.style.width = (window.innerWidth - 80).toString() + "px";
-    entriesList.style.height = (window.innerHeight - 262).toString() + "px";
+    entriesList.style.height = (window.innerHeight - 282).toString() + "px";
 
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
     errorMessageBody.style.top = ((window.innerHeight - 200 + 44) / 2).toString() + "px";
     errorMessageBody.style.left = ((window.innerWidth - 200) / 2).toString() + "px";
+
+    gCharactersToShow = (window.innerWidth / 8);
+
+    if (window.innerWidth < 700) {
+        gCharactersToShow -= 20;
+    }
+
+    displayAllEntries(gResponseString);
 }
 
 function btnAddNewEntry_onmousedown() {
@@ -113,17 +130,29 @@ function tryParseDate(dateString) {
 }
 
 function btnRefresh_onmousedown() {
+    btnRefresh.style.backgroundColor = "#BADCEF";
+
     if (validateInput() === false) {
         return;
     }
 
     var url = buildURL();
-    var returnString = httpGet(url);
+    gResponseString = httpGet(url);
 
-    displayAllEntries(returnString);
+    var returnStringSplit = gResponseString.split("\t");
+    if (returnStringSplit[0] === "error") {
+        showErrorMessage(returnStringSplit[1], txtBeginDate);
+        return;
+    }
+
+    displayAllEntries(gResponseString);
 }
 
 function displayAllEntries(serializedString) {
+    while (entriesList.hasChildNodes()) {
+        entriesList.removeChild(entriesList.lastChild);
+    }
+
     var entryList = serializedString.split('\n');
     entryList.splice(0, 1);
     var entry;
@@ -141,23 +170,24 @@ function addEntryToList(serializedEntry, i) {
 
     var entryDivName = document.createElement('div');
     entryDivName.id = "entryName";
-    entryDivName.style.top = (80 * i).toString() + "px";
+    entryDivName.style.top = (82.22 * i + 3).toString() + "px";
     entryDivName.innerHTML = entry[1];
 
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
-    entryDivDateWorked.style.top = (80 * i).toString() + "px";
+    entryDivDateWorked.style.top = (82.22 * i + 3).toString() + "px";
     entryDivDateWorked.innerHTML = formatDateForList(entry[2]);
 
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
-    entryDivHoursWorked.style.top = (80 * i + 50).toString() + "px";
+    entryDivHoursWorked.style.top = (82.22 * i + 53).toString() + "px";
     entryDivHoursWorked.innerHTML = entry[3];
 
     var entryDivDescription = document.createElement('div');
     entryDivDescription.id = "entryDescription";
-    entryDivDescription.style.top = (80 * i + 45).toString() + "px";
+    entryDivDescription.style.top = (82.22 * i + 45).toString() + "px";
     entryDivDescription.innerHTML = formatDescriptionForList(entry[5]);
+    entryDivDescription.style.width = (4 * window.innerWidth / 5).toString() + "px"
 
     entryDiv.appendChild(entryDivName);
     entryDiv.appendChild(entryDivDateWorked);
@@ -202,9 +232,10 @@ function formatDateForList(serializedDate) { // array
 }
 
 function formatDescriptionForList(description) {
-    if (description.length > 30) {
-        return description.substring(0, 30);
+    if (description.length > gCharactersToShow) {
+        return description.substring(0, gCharactersToShow - 3) + "...";
     }
+    return description;
 }
 
 function validateInput() {
@@ -233,6 +264,7 @@ function showErrorMessage(message, objectToFocus) {
 function btnErrorMessageOK_onmousedown() {
     errorMessageMain.style.visibility = 'hidden';
     inputInformation.style.pointerEvents = 'all';
+    btnRefresh.style.backgroundColor = "#1588C7";
     window.setTimeout(function () {
         errorMessageMain.ObjectToFocus.focus();
     }, 0);
