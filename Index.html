@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -7,6 +7,9 @@
     <meta name="viewport" content="minimal-ui, width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
     <meta name="HandheldFriendly" content="true" />
     <link rel="apple-touch-icon" href="https://abramkj.files.wordpress.com/2015/04/hours-icon-512.png">
+    <link rel="stylesheet" type="text/css" href="ShowEntriesPanel.css">
+    <link rel="stylesheet" type="text/css" href="ErrorMessage.css">
+    <link rel="stylesheet" type="text/css" href="NavigationBar.css">
     <script language=" javascript" type="text/javascript" src="Logic.js"></script>
     <style type="text/css">
         body {
@@ -24,188 +27,17 @@
             transition: 0.3s;
             background-color: #FFFFFF;
         }
-        #navbar {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            height: 36px;
-            text-align: center;
-            font-family: Helvetica;
-            font-size: 25px;
-            color: #1588C7;
-            padding-top: 5px;
-            border-bottom: solid;
-            border-color: #808080;
-            border-width: 3px;
-            background-color: #FFFFFF;
-        }
-        #btnAddNewEntry {
-            position: absolute;
-            color: #1588C7;
-            font-size: 40px;
-            top: 0px;
-            padding-bottom: 30px;
-            right: 0px;
-        }
-        #btnBack {
-            position: absolute;
-            color: #1588C7;
-            font-size: 40px;
-            top: 0px;
-            left: 7px;
-        }
         #inputInformation {
             position: absolute;
             top: 44px;
             transition: 0.3s;
             background-color: #000000;
         }
-
-        #showInformation {
+        #updateInformation {
             position: absolute;
-            background-color: #FFFFFF;
-            transition: 0.3s;
             top: 44px;
-            left: 0px;
-        }
-        #lblBeginDate {
-            font-family: Helvetica;
-            font-size: 20px;
-            position: absolute;
-            color: #1588C7;
-            left: 40px;
-            top: 37px;
-            height: 35px;
-            width: 110px;
-        }
-        #txtBeginDate {
-            font-family: Helvetica;
-            font-size: 20px;
-            position: absolute;
-            color: #000000;
-            top: 30px;
-            left: 170px;
-            height: 35px;
-        }
-        #lblEndDate {
-            font-family: Helvetica;
-            font-size: 20px;
-            position: absolute;
-            color: #1588C7;
-            left: 40px;
-            height: 35px;
-            top: 87px;
-            width: 110px;
-        }
-        #txtEndDate {
-            font-family: Helvetica;
-            font-size: 20px;
-            position: absolute;
-            top: 80px;
-            left: 170px;
-            height: 35px;
-            color: #000000;
-        }
-        #btnRefresh {
-            position: absolute;
-            color: white;
-            background-color: #1588C7;
-            font-size: 22px;
-            font-family: Helvetica;
-            border-radius:2px;
-            left: 40px;
-            top: 150px;
-            padding-top: 4px;
-            height: 28px;
-            text-align: center;
-        }
-
-        #errorMessageMain {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        #errorMessageBody {
-            position: absolute;
-            background-color: #FFFFFF;
-            color: #000000;
-            pointer-events: all;
-            border-radius: 8px;
-        }
-
-        #btnErrorMessageOK {
-            position: absolute;
-            left: 0px;
-            bottom: 0px;
-            height: 45px;
-            text-align: center;
-            font-family: Sans-Serif;
-            font-size: 20px;
-            border-width: 1px;
-            border-bottom-right-radius: 8px;
-            border-bottom-left-radius: 8px;
-            background-color: #FFFFFF;
-            border-top-color: #808080;
-            color: #1588C7;
-            border-style: solid;
-        }
-
-        #errorMessageString {
-            padding-left: 20px;
-            padding-right: 20px;
-            padding-top: 5px;
-            font-size: 16px;
-            font-family: Sans-Serif;
-        }
-        #entriesList {
-            position: absolute;
-            top: 202px;
-            left: 0px;
-            background-color: #BADCEF;
-            overflow: scroll;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-        #entriesListElement {
-            background-color: #FFFFFF;
-            height: 80px;
-            border-top: solid;
-            border-width: 1px;
-            border-color: #808080;
-        }
-        #entryName {
-            position: absolute;
-            color: #1588C7;
-            left: 4px;
-            font-size: 23px;
-            font-family: Helvetica;
-        }
-        #entryDateWorked {
-            position: absolute;
-            right: 4px;
-            color: #000000;
-            font-size: 17px;
-            font-weight: bold;
-            font-family: Helvetica;
-        }
-        #entryHoursWorked {
-            position: absolute;
-            top: 50px;
-            right: 4px;
-            color: #1588C7;
-            font-size: 17px;
-            font-weight: bold;
-            font-family: Helvetica;
-        }
-        #entryDescription {
-            position: absolute;
-            top: 45px;
-            left: 4px;
-            color: #000000;
-            font-size: 13px;
-            font-family: Helvetica;
+            transition: 0.3s;
+            background-color: #000000;
         }
     </style>      
 </head > 

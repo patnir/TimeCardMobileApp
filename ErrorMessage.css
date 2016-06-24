@@ -1,0 +1,38 @@
+﻿#errorMessageMain {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#errorMessageBody {
+    position: absolute;
+    background-color: #FFFFFF;
+    color: #000000;
+    pointer-events: all;
+    border-radius: 8px;
+}
+
+#btnErrorMessageOK {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    height: 45px;
+    text-align: center;
+    font-family: Sans-Serif;
+    font-size: 20px;
+    border-width: 1px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: #FFFFFF;
+    border-top-color: #808080;
+    color: #1588C7;
+    border-style: solid;
+}
+#errorMessageString {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    font-size: 16px;
+    font-family: Sans-Serif;
+}

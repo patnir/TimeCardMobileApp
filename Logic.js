@@ -1,4 +1,4 @@
-/// <reference path="Index.html">
+﻿/// <reference path="Index.html">
 
 var gResponseString;
 
@@ -120,29 +120,6 @@ function displayAllEntries(serializedString) {
     }
 }
 
-function isTouchDevice() {
-    return "ontouchstart" in window;
-}
-
-function addEventToListElement(object, eventFunction) {
-    if (isTouchDevice() === true) {
-        object.ontouchstart = entryDiv_onpress;
-        object.ontouchend = entryDiv_onblur;
-    }
-    else {
-        object.onmousedown = entryDiv_onpress;
-        object.onmouseup = entryDiv_onblur;
-    }
-
-    function entryDiv_onblur() {
-        object.style.backgroundColor = "#FFFFFF";
-    }
-
-    function entryDiv_onpress() {
-        object.style.backgroundColor = "#E0E0E0";
-    }
-}
-
 function addEntryToList(serializedEntry, i) {
     var entry = serializedEntry.split('\t');
     var entryDiv = document.createElement('div');
@@ -224,6 +201,47 @@ function formatDescriptionForList(description) {
     return description;
 }
 
+function showErrorMessage(message, objectToFocus) {
+    errorMessageMain.style.visibility = 'visible';
+    inputInformation.style.pointerEvents = 'none';
+    errorMessageString.innerHTML = message;
+
+    errorMessageMain.ObjectToFocus = objectToFocus;
+}
+
+function btnErrorMessageOK_onmousedown() {
+    errorMessageMain.style.visibility = 'hidden';
+    inputInformation.style.pointerEvents = 'all';
+    btnRefresh.style.backgroundColor = "#1588C7";
+    window.setTimeout(function () {
+        errorMessageMain.ObjectToFocus.focus();
+    }, 0);
+}
+
+function isTouchDevice() {
+    return "ontouchstart" in window;
+}
+
+function addEventToListElement(object, eventFunction) {
+    if (isTouchDevice() === true) {
+        object.ontouchstart = entryDiv_onpress;
+        object.ontouchend = entryDiv_onblur;
+    }
+    else {
+        object.onmousedown = entryDiv_onpress;
+        object.onmouseup = entryDiv_onblur;
+    }
+
+    function entryDiv_onblur() {
+        object.style.backgroundColor = "#FFFFFF";
+    }
+
+    function entryDiv_onpress() {
+        object.style.backgroundColor = "#E0E0E0";
+    }
+}
+
+
 function validateInput() {
     var beginDateErrorMessage = "Enter a valid begin date.";
     var endDateErrorMessage = "Enter a valid end date that is no later than today's date.";
@@ -284,24 +302,6 @@ function validateDateRanges() {
 
     return "";
 }
-
-function showErrorMessage(message, objectToFocus) {
-    errorMessageMain.style.visibility = 'visible';
-    inputInformation.style.pointerEvents = 'none';
-    errorMessageString.innerHTML = message;
-
-    errorMessageMain.ObjectToFocus = objectToFocus;
-}
-
-function btnErrorMessageOK_onmousedown() {
-    errorMessageMain.style.visibility = 'hidden';
-    inputInformation.style.pointerEvents = 'all';
-    btnRefresh.style.backgroundColor = "#1588C7";
-    window.setTimeout(function () {
-        errorMessageMain.ObjectToFocus.focus();
-    }, 0);
-}
-
 
 function checkIfStringIsNumber(numberString) {
     var checkDigits = numberString.split("");
