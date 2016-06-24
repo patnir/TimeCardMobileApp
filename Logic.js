@@ -113,7 +113,9 @@ function displayAllEntries(serializedString) {
 
     var entryList = serializedString.split('\n'); // double quotes
 
-    for (var i = 1; i < entryList.length - 1; i++) {
+    entryList.splice(0, 1);
+
+    for (var i = 0; i < entryList.length - 1; i++) {
         addEntryToList(entryList[i], i)
     }
 }
@@ -127,22 +129,22 @@ function addEntryToList(serializedEntry, i) {
 
     var entryDivName = document.createElement('div');
     entryDivName.id = "entryName";
-    entryDivName.style.top = (82.22 * i + 3).toString() + "px";
+    entryDivName.style.top = (84 * i + 3).toString() + "px";
     entryDivName.innerHTML = entry[1];
 
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
-    entryDivDateWorked.style.top = (82.22 * i + 3).toString() + "px";
+    entryDivDateWorked.style.top = (84 * i + 3).toString() + "px";
     entryDivDateWorked.innerHTML = formatDateForList(entry[2]);
 
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
-    entryDivHoursWorked.style.top = (82.22 * i + 53).toString() + "px";
+    entryDivHoursWorked.style.top = (84 * i + 53).toString() + "px";
     entryDivHoursWorked.innerHTML = entry[3];
 
     var entryDivDescription = document.createElement('div');
     entryDivDescription.id = "entryDescription";
-    entryDivDescription.style.top = (82.22 * i + 45).toString() + "px";
+    entryDivDescription.style.top = (84 * i + 45).toString() + "px";
     entryDivDescription.innerHTML = formatDescriptionForList(entry[5]);
     entryDivDescription.style.width = (4 * window.innerWidth / 5).toString() + "px"
 
@@ -211,35 +213,48 @@ function validateInput() {
         return false;
     }
 
-    //var dateRangeErrorMessage = validateDateRanges();
+    var dateRangeErrorMessage = validateDateRanges();
 
-    //if (dateRangeErrorMessage.length != 0) {
-    //    showErrorMessage(dateRangeErrorMessage, txtEndDate);
-    //    return false;
-    //}
+    if (dateRangeErrorMessage.length != 0) {
+        showErrorMessage(dateRangeErrorMessage, txtEndDate);
+        return false;
+    }
 
     return true;
 }
 
 function validateDateRanges() {
-    var endDateAfterTodayErrorMessage = "Enter a date that is before toady";
+    var endDateAfterTodayErrorMessage = "Enter an end date that is not in the future.";
+    var beginDateAfterEndErrorMessage = "Enter a begin date that is not after the end date.";
 
     var beginDateParts = txtBeginDate.value.trim().split('/');
     var endDateParts = txtEndDate.value.trim().split('/');
     dateToday = new Date();
-    // 0 - year, 1 - month, 2 - day
+
     if (parseInt(endDateParts[0]) > dateToday.getFullYear()) {
         return endDateAfterTodayErrorMessage;
     }
-    else if (parseInt(endDateParts[0]) === dateToday.getFullYear()
-        && parseInt(endDateParts[1] > dateToday.getMonth() + 1)) {
-        alert(dateToday.getMonth() + 1);
-        return endDateAfterTodayErrorMessage + month;
+    if (parseInt(endDateParts[0]) === dateToday.getFullYear()
+        && parseInt(endDateParts[1]) > dateToday.getMonth() + 1) {
+        return endDateAfterTodayErrorMessage;
     }
-    else if (parseInt(endDateParts[0]) === dateToday.getFullYear()
-        && parseInt(endDateParts[1] === dateToday.getMonth() + 1)
-        && parseInt(endDateParts[2] > dateToday.getMonth())) {
-        return endDateAfterTodayErrorMessage + "day";
+    if (parseInt(endDateParts[0]) === dateToday.getFullYear()
+        && parseInt(endDateParts[1]) === dateToday.getMonth() + 1
+        && parseInt(endDateParts[2]) > dateToday.getDate()) {
+        return endDateAfterTodayErrorMessage;
+    }
+
+    if (parseInt(endDateParts[0]) < parseInt(beginDateParts[0])) {
+        return beginDateAfterEndErrorMessage;
+    }
+    if (parseInt(endDateParts[0]) === parseInt(beginDateParts[0])
+        && parseInt(endDateParts[1]) < parseInt(beginDateParts[1])) {
+        return beginDateAfterEndErrorMessage;
+    }
+    if (parseInt(endDateParts[0]) === parseInt(beginDateParts[0])
+        && parseInt(endDateParts[1]) === parseInt(beginDateParts[1])
+        && parseInt(endDateParts[2]) < parseInt(beginDateParts[2])) {
+        return beginDateAfterEndErrorMessage;
     }
 
     return "";
