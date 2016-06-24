@@ -120,6 +120,29 @@ function displayAllEntries(serializedString) {
     }
 }
 
+function isTouchDevice() {
+    return "ontouchstart" in window;
+}
+
+function addEventToListElement(object, eventFunction) {
+    if (isTouchDevice() === true) {
+        object.ontouchstart = entryDiv_onpress;
+        object.ontouchend = entryDiv_onblur;
+    }
+    else {
+        object.onmousedown = entryDiv_onpress;
+        object.onmouseup = entryDiv_onblur;
+    }
+
+    function entryDiv_onblur() {
+        object.style.backgroundColor = "#FFFFFF";
+    }
+
+    function entryDiv_onpress() {
+        object.style.backgroundColor = "#E0E0E0";
+    }
+}
+
 function addEntryToList(serializedEntry, i) {
     var entry = serializedEntry.split('\t');
     var entryDiv = document.createElement('div');
@@ -127,24 +150,26 @@ function addEntryToList(serializedEntry, i) {
     entryDiv.style.width = (window.innerWidth - 80).toString();
     entryDiv.EntryIndex = i;
 
+    addEventToListElement(entryDiv);
+
     var entryDivName = document.createElement('div');
     entryDivName.id = "entryName";
-    entryDivName.style.top = (84 * i + 3).toString() + "px";
+    entryDivName.style.top = (81 * i + 3).toString() + "px";
     entryDivName.innerHTML = entry[1];
 
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
-    entryDivDateWorked.style.top = (84 * i + 3).toString() + "px";
+    entryDivDateWorked.style.top = (81 * i + 3).toString() + "px";
     entryDivDateWorked.innerHTML = formatDateForList(entry[2]);
 
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
-    entryDivHoursWorked.style.top = (84 * i + 53).toString() + "px";
+    entryDivHoursWorked.style.top = (81 * i + 53).toString() + "px";
     entryDivHoursWorked.innerHTML = entry[3];
 
     var entryDivDescription = document.createElement('div');
     entryDivDescription.id = "entryDescription";
-    entryDivDescription.style.top = (84 * i + 45).toString() + "px";
+    entryDivDescription.style.top = (81 * i + 45).toString() + "px";
     entryDivDescription.innerHTML = formatDescriptionForList(entry[5]);
     entryDivDescription.style.width = (4 * window.innerWidth / 5).toString() + "px"
 
