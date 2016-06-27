@@ -9,6 +9,8 @@ function body_load() {
     btnBack.onmousedown = btnBack_onmousedown;
     btnRefresh.onmousedown = btnRefresh_onmousedown;
     btnRefresh.onmouseup = btnRefresh_onmouseup;
+    btnSignIn.onmousedown = btnSignIn_onmousedown;
+    btnSignIn.onmouseup = btnSignIn_onmouseup;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
     errorMessageMain.style.visibility = 'hidden';
     btnAddNewEntry.style.visibility = "visible";
@@ -21,6 +23,15 @@ function body_load() {
     gResponseString = "";
 
     window_onresize();
+}
+
+function btnSignIn_onmousedown() {
+    btnSignIn.style.backgroundColor = "#BADCEF";
+}
+
+function btnSignIn_onmouseup() {
+    btnSignIn.style.backgroundColor = "#1588C7";
+    divSignIn.style.visibility = "hidden";
 }
 
 function addDefaultDates() {
@@ -36,14 +47,32 @@ function window_onresize() {
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
 
-    divSignIn.style.width = window.innerWidth.toString() + "px";
-    divSignIn.style.height = window.innerHeight.toString() + "px";
-    btnSignIn.style.width = (window.innerWidth - 80).toString() + "px";
-
-    showEntries.style.width = window.innerWidth.toString() + "px";
-    showEntries.style.height = (window.innerHeight - 44).toString() + "px";
     inputInformation.style.width = window.innerWidth.toString() + "px";
     inputInformation.style.height = (window.innerHeight - 44).toString() + "px";
+
+    // Sign in page
+    divSignIn.style.width = window.innerWidth.toString() + "px";
+    divSignIn.style.height = (window.innerHeight - 44).toString() + "px";
+    btnSignIn.style.width = (window.innerWidth / 2).toString() + "px";
+    btnForgotPassword.style.width = (window.innerWidth / 4).toString() + "px";
+
+    lblTeamName.style.width = (window.innerWidth - 80).toString() + "px";
+    lblTeamName.style.top = (1 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
+    lblUserID.style.width = (window.innerWidth - 80).toString() + "px";
+    lblUserID.style.top = (7 *(window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
+    lblPassword.style.width = (window.innerWidth - 80).toString() + "px";
+    lblPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
+
+    txtTeamName.style.width = (window.innerWidth - 80).toString() + "px";
+    txtTeamName.style.top = (1 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+    txtUserID.style.width = (window.innerWidth - 80).toString() + "px";
+    txtUserID.style.top = (7 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+    txtPassword.style.width = (window.innerWidth - 80).toString() + "px";
+    txtPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+
+    // Entries page
+    showEntries.style.width = window.innerWidth.toString() + "px";
+    showEntries.style.height = (window.innerHeight - 44).toString() + "px";
 
     txtBeginDate.style.width = (window.innerWidth - 210).toString() + "px";
     txtEndDate.style.width = (window.innerWidth - 210).toString() + "px";
@@ -53,6 +82,8 @@ function window_onresize() {
     entriesList.style.width = (window.innerWidth).toString() + "px";
     entriesList.style.height = (window.innerHeight - 242).toString() + "px";
 
+
+    // Error Messages
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
     errorMessageBody.style.top = (window.innerHeight / 3).toString() + "px";

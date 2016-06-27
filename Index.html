@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="ShowEntriesPanel.css">
     <link rel="stylesheet" type="text/css" href="ErrorMessage.css">
     <link rel="stylesheet" type="text/css" href="NavigationBar.css">
+    <link rel="stylesheet" type="text/css" href="SignInPage.css" />
     <script language=" javascript" type="text/javascript" src="Logic.js"></script>
     <style type="text/css">
         body {
@@ -19,50 +20,6 @@
             overflow: hidden;
             -webkit-text-size-adjust: none;
             -webkit-user-select: none;
-        }
-        #divSignIn {
-            position: absolute;
-            left: 0px;
-            top: 44px;
-            transition: 0.3s;
-            background-color: #FFFFFF
-        }
-        #lblTeamName {
-            position: absolute;
-            font-family: Helvetica;
-        }
-        #txtTeamName {
-            position: absolute;
-            font-family: Helvetica;
-        }
-        #lblUserID {
-            position: absolute;
-            font-family: Helvetica;
-        }
-        #txtUserID {
-            position: absolute;
-            font-family: Helvetica;
-        }
-        #lblPassword {
-            position: absolute;
-            font-family: Helvetica;
-        }
-        #txtPassword {
-            position: absolute;
-            font-family: Helvetica;
-        }
-        #btnSignIn {
-            position: absolute;
-            color: white;
-            background-color: #1588C7;
-            font-size: 22px;
-            font-family: Helvetica;
-            border-radius: 2px;
-            left: 40px;
-            top: 150px;
-            padding-top: 4px;
-            height: 28px;
-            text-align: center;
         }
         #divMain {
             position: absolute;
@@ -112,9 +69,15 @@
         </div>
         <div id="divSignIn">
             <label id="lblTeamName">Team Name:</label>
-            <label id="lblUserID">Password:</label>
-            <label id="lblPassword">User ID:</label>
+            <input id="txtTeamName" type="text"/>
+            <label id="lblUserID">User ID:</label>
+            <input id="txtUserID" type="text"/>
+            <label id="lblPassword">Password:</label>
+            <input id="txtPassword" type="password"/>
             <div id="btnSignIn">Sign In</div>
+            <a href="#" id="btnForgotPassword">Forgot Password</a>
+            <input id="cbxRememberPassword" type="checkbox" />
+            <label id="lblRememberPassword">Remember Password</label>
         </div>
     </div>
     <div id="errorMessageMain">
