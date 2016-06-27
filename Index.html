@@ -32,7 +32,55 @@
             position: absolute;
             top: 44px;
             transition: 0.3s;
-            background-color: #000000;
+            background-color: #FFFFFF;
+        }
+        #txtProject {
+            position: absolute;
+            left: 40px;
+        }
+        #btnChooseProject {
+            position: absolute;
+            right: 40px;
+        }
+        #txtTask {
+            position: absolute;
+            left: 40px;
+        }
+        #btnChooseTask {
+            position: absolute;
+            right: 40px;
+        }
+        #txtActivity {
+            position: absolute;
+            left: 40px;
+        }
+        #txtDateWorked {
+            position: absolute;
+            left: 40px;
+        }
+        #txtHoursWorked {
+            position: absolute;
+            right: 40px;
+        }
+        #cbxPayable {
+            position: absolute;
+            left: 40px;
+        }
+        #lblPayable {
+            position: absolute;
+            left: 60px;
+        }
+        #cbxBillable {
+            position: absolute;
+            left: 40px;
+        }
+        #lblBillable {
+            position: absolute;
+            left: 60px;
+        }
+        #txtDescription {
+            position: absolute;
+            left: 40px;
         }
         #updateInformation {
             position: absolute;
@@ -57,7 +105,24 @@
             </div>
             <div id="btnBack"><img src="Back30.png"></div>
         </div>
-        <div id="inputInformation"></div>
+        <div id="inputInformation">
+            <input id="txtProject" type="text" readonly/>
+            <div id="btnChooseProject">Choose ...</div>
+            <input id="txtTask" type="text" readonly />
+            <div id="btnChooseTask">Choose ...</div>
+            <select id="txtActivity">
+                <option>Administrative</option>
+                <option>Computer Maintenance</option>
+                <option>Management</option>
+                <option>Software Development</option>
+            </select>
+            <input id="txtDateWorked" type="text" />
+            <input id="HoursWorked" type="text" />
+            <input id="cbxPayable" type="checkbox" />
+            <label id="lblPayable">Payable</label>
+            <input id="cbxBillable" type="checkbox"/>
+            <label id="lblBillable">Billable</label>
+        </div>
         <div id="showEntries">
             <label id="lblBeginDate">Begin Date:</label>
             <input type="text" id="txtBeginDate"/>

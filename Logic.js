@@ -13,7 +13,7 @@ function body_load() {
     btnSignIn.onmouseup = btnSignIn_onmouseup;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
     errorMessageMain.style.visibility = 'hidden';
-    btnAddNewEntry.style.visibility = "visible";
+    btnAddNewEntry.style.visibility = "hidden";
     btnBack.style.visibility = "hidden";
 
     gEntriesList = [];
@@ -32,6 +32,7 @@ function btnSignIn_onmousedown() {
 function btnSignIn_onmouseup() {
     btnSignIn.style.backgroundColor = "#1588C7";
     divSignIn.style.visibility = "hidden";
+    btnAddNewEntry.style.visibility = "visible";
 }
 
 function addDefaultDates() {
