@@ -1,6 +1,7 @@
 ﻿/// <reference path="Index.html">
 
 var gResponseString;
+var gEntriesList;
 
 function body_load() {
     window.onresize = window_onresize;
@@ -12,6 +13,8 @@ function body_load() {
     errorMessageMain.style.visibility = 'hidden';
     btnAddNewEntry.style.visibility = "visible";
     btnBack.style.visibility = "hidden";
+
+    gEntriesList = [];
 
     addDefaultDates();
 
@@ -33,8 +36,12 @@ function window_onresize() {
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
 
-    showInformation.style.width = window.innerWidth.toString() + "px";
-    showInformation.style.height = (window.innerHeight - 44).toString() + "px";
+    divSignIn.style.width = window.innerWidth.toString() + "px";
+    divSignIn.style.height = window.innerHeight.toString() + "px";
+    btnSignIn.style.width = (window.innerWidth - 80).toString() + "px";
+
+    showEntries.style.width = window.innerWidth.toString() + "px";
+    showEntries.style.height = (window.innerHeight - 44).toString() + "px";
     inputInformation.style.width = window.innerWidth.toString() + "px";
     inputInformation.style.height = (window.innerHeight - 44).toString() + "px";
 
@@ -60,19 +67,18 @@ function window_onresize() {
     if (window.innerWidth < 700) {
         gCharactersToShow -= 20;
     }
-
     displayAllEntries(gResponseString);
 }
 
 function btnAddNewEntry_onmousedown() {
     inputInformation.style.left = "0px";
-    showInformation.style.left = (-1 * window.innerWidth).toString() + "px";
+    showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
     btnAddNewEntry.style.visibility = "hidden";
     btnBack.style.visibility = "visible";
 }
 
 function btnBack_onmousedown() {
-    showInformation.style.left = "0px";
+    showEntries.style.left = "0px";
     inputInformation.style.left = window.innerWidth.toString() + "px";
     btnAddNewEntry.style.visibility = "visible";
     btnBack.style.visibility = "hidden";
@@ -96,6 +102,8 @@ function btnRefresh_onmousedown() {
     if (returnStringSplit.length === 1) {
         showErrorMessage("No Entries Found", txtBeginDate);
     }
+
+    // alert(gResponseString);
 
     displayAllEntries(gResponseString);
 }

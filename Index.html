@@ -20,6 +20,50 @@
             -webkit-text-size-adjust: none;
             -webkit-user-select: none;
         }
+        #divSignIn {
+            position: absolute;
+            left: 0px;
+            top: 44px;
+            transition: 0.3s;
+            background-color: #FFFFFF
+        }
+        #lblTeamName {
+            position: absolute;
+            font-family: Helvetica;
+        }
+        #txtTeamName {
+            position: absolute;
+            font-family: Helvetica;
+        }
+        #lblUserID {
+            position: absolute;
+            font-family: Helvetica;
+        }
+        #txtUserID {
+            position: absolute;
+            font-family: Helvetica;
+        }
+        #lblPassword {
+            position: absolute;
+            font-family: Helvetica;
+        }
+        #txtPassword {
+            position: absolute;
+            font-family: Helvetica;
+        }
+        #btnSignIn {
+            position: absolute;
+            color: white;
+            background-color: #1588C7;
+            font-size: 22px;
+            font-family: Helvetica;
+            border-radius: 2px;
+            left: 40px;
+            top: 150px;
+            padding-top: 4px;
+            height: 28px;
+            text-align: center;
+        }
         #divMain {
             position: absolute;
             left: 0px;
@@ -57,7 +101,7 @@
             <div id="btnBack"><img src="Back30.png"></div>
         </div>
         <div id="inputInformation"></div>
-        <div id="showInformation">
+        <div id="showEntries">
             <label id="lblBeginDate">Begin Date:</label>
             <input type="text" id="txtBeginDate"/>
             <label id="lblEndDate">End Date:</label>
@@ -65,6 +109,12 @@
             <div id="btnRefresh">Refresh</div>
             <div id="entriesList">
             </div>
+        </div>
+        <div id="divSignIn">
+            <label id="lblTeamName">Team Name:</label>
+            <label id="lblUserID">Password:</label>
+            <label id="lblPassword">User ID:</label>
+            <div id="btnSignIn">Sign In</div>
         </div>
     </div>
     <div id="errorMessageMain">
