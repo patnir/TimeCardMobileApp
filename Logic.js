@@ -43,13 +43,40 @@ function addDefaultDates() {
     txtBeginDate.defaultValue = dateToday.getFullYear() + "/" + (dateToday.getMonth() + 1) + "/" + dateToday.getDate();
 }
 
+function inputInformationPage_onresize() {
+    var pageHeight = window.innerHeight - 44;
+
+    inputInformation.style.width = window.innerWidth.toString() + "px";
+    inputInformation.style.height = pageHeight.toString() + "px";
+
+    txtProject.style.top = (2 * pageHeight / 15).toString() + "px";
+    btnChooseProject.style.top = (2 * pageHeight / 15).toString() + "px";
+
+    txtTask.style.top = (4 * pageHeight / 15).toString() + "px";
+    btnChooseTask.style.top = (4 * pageHeight / 15).toString() + "px";
+
+    txtActivity.style.top = (6 * pageHeight / 15).toString() + "px";
+
+    txtDateWorked.style.top = (8 * pageHeight / 15).toString() + "px";
+    txtHoursWorked.style.top = (8 * pageHeight / 15).toString() + "px";
+
+    lblPayable.style.top = (10 * pageHeight / 15).toString() + "px";
+    cbxPayable.style.top = (10 * pageHeight / 15).toString() + "px";
+
+    lblBillable.style.top = (10 * pageHeight / 15).toString() + "px";
+    cbxBillable.style.top = (10 * pageHeight / 15).toString() + "px";
+
+    txtDescription.style.top = (11 * pageHeight / 15).toString() + "px";
+    txtDescription.style.height = (3 * pageHeight / 15).toString() + "px";
+    txtDescription.style.width = (window.innerWidth - 80).toString() + "px";
+}
+
 function window_onresize() {
     divMain.style.width = window.innerWidth.toString() + "px";
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
 
-    inputInformation.style.width = window.innerWidth.toString() + "px";
-    inputInformation.style.height = (window.innerHeight - 44).toString() + "px";
+    inputInformationPage_onresize();
 
     // Sign in page
     divSignIn.style.width = window.innerWidth.toString() + "px";

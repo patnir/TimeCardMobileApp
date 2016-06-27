@@ -72,11 +72,11 @@
         }
         #cbxBillable {
             position: absolute;
-            left: 40px;
+            right: 40px;
         }
         #lblBillable {
             position: absolute;
-            left: 60px;
+            right: 60px;
         }
         #txtDescription {
             position: absolute;
@@ -105,7 +105,7 @@
             </div>
             <div id="btnBack"><img src="Back30.png"></div>
         </div>
-        <div id="inputInformation">
+        <div id="inputInformation" onload="inputLoad()">
             <input id="txtProject" type="text" readonly/>
             <div id="btnChooseProject">Choose ...</div>
             <input id="txtTask" type="text" readonly />
@@ -117,11 +117,12 @@
                 <option>Software Development</option>
             </select>
             <input id="txtDateWorked" type="text" />
-            <input id="HoursWorked" type="text" />
+            <input id="txtHoursWorked" type="text" />
             <input id="cbxPayable" type="checkbox" />
             <label id="lblPayable">Payable</label>
             <input id="cbxBillable" type="checkbox"/>
             <label id="lblBillable">Billable</label>
+            <input id="txtDescription" type="text">
         </div>
         <div id="showEntries">
             <label id="lblBeginDate">Begin Date:</label>
