@@ -1,0 +1,89 @@
+﻿#divSignIn {
+    position: absolute;
+    left: 0px;
+    top: 44px;
+    transition: 0.3s;
+    background-color: #FFFFFF 
+}
+#lblTeamName {
+    position: absolute;
+    left: 40px;
+    font-family: Helvetica;
+}
+#txtTeamName {
+    position: absolute;
+    left: 40px;
+    font-size: 22px;
+    font-family: Helvetica;
+}
+#lblUserID {
+    position: absolute;
+    left: 40px;
+    font-family: Helvetica;
+}
+#txtUserID {
+    position: absolute;
+    left: 40px;
+    font-size: 22px;
+    font-family: Helvetica;
+}
+#lblPassword {
+    position: absolute;
+    left: 40px;
+    font-family: Helvetica;
+}
+#txtPassword {
+    position: absolute;
+    left: 40px;
+    font-size: 22px;
+    font-family: Helvetica;
+}
+#btnSignIn {
+    position: absolute;
+    color: white;
+    background-color: #1588C7;
+    font-size: 22px;
+    font-family: Helvetica;
+    border-radius: 2px;
+    left: 40px;
+    bottom: 55px;
+    padding-top: 4px;
+    height: 28px;
+    text-align: center;
+}
+#btnForgotPassword {
+    position: absolute;
+    color: #808080;
+    font-size: 15px;
+    font-family: Helvetica;
+    border-radius: 2px;
+    right: 40px;
+    bottom: 50px;
+    padding-top: 4px;
+    height: 28px;
+    text-align: center;
+}
+#cbxRememberPassword {
+    position: absolute;
+    color: #808080;
+    font-size: 15px;
+    font-family: Helvetica;
+    border-radius: 2px;
+    left: 40px;
+    bottom: 20px;
+    padding-top: 4px;
+    height: 28px;
+    text-align: left;
+}
+#lblRememberPassword {
+    position: absolute;
+    color: #808080;
+    font-size: 15px;
+    font-family: Helvetica;
+    border-radius: 2px;
+    left: 60px;
+    bottom: 18px;
+    padding-top: 4px;
+    height: 28px;
+    text-align: left;
+}
