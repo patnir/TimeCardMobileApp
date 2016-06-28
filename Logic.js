@@ -43,7 +43,7 @@ function addDefaultDates() {
     txtBeginDate.defaultValue = dateToday.getFullYear() + "/" + (dateToday.getMonth() + 1) + "/" + dateToday.getDate();
 }
 
-function inputInformationPage_onresize() {
+function addEntryPanel_onresize() {
     var pageHeight = window.innerHeight - 44;
 
     inputInformation.style.width = window.innerWidth.toString() + "px";
@@ -71,14 +71,33 @@ function inputInformationPage_onresize() {
     txtDescription.style.width = (window.innerWidth - 80).toString() + "px";
 }
 
+
+
 function window_onresize() {
     divMain.style.width = window.innerWidth.toString() + "px";
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
 
-    inputInformationPage_onresize();
+    addEntryPanel_onresize();
 
     // Sign in page
+    signInPage_onresize();
+
+    // Entries page
+    showEntriesPanel_onresize();
+
+    // Error Messages
+    errorMessageBody_onresize();
+
+    gCharactersToShow = (window.innerWidth / 8);
+
+    if (window.innerWidth < 700) {
+        gCharactersToShow -= 20;
+    }
+    displayAllEntries(gResponseString);
+}
+
+function signInPage_onresize() {
     divSignIn.style.width = window.innerWidth.toString() + "px";
     divSignIn.style.height = (window.innerHeight - 44).toString() + "px";
     btnSignIn.style.width = (window.innerWidth / 2).toString() + "px";
@@ -87,7 +106,7 @@ function window_onresize() {
     lblTeamName.style.width = (window.innerWidth - 80).toString() + "px";
     lblTeamName.style.top = (1 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
     lblUserID.style.width = (window.innerWidth - 80).toString() + "px";
-    lblUserID.style.top = (7 *(window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
+    lblUserID.style.top = (7 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
     lblPassword.style.width = (window.innerWidth - 80).toString() + "px";
     lblPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
 
@@ -97,8 +116,9 @@ function window_onresize() {
     txtUserID.style.top = (7 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
     txtPassword.style.width = (window.innerWidth - 80).toString() + "px";
     txtPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+}
 
-    // Entries page
+function showEntriesPanel_onresize() {
     showEntries.style.width = window.innerWidth.toString() + "px";
     showEntries.style.height = (window.innerHeight - 44).toString() + "px";
 
@@ -109,24 +129,17 @@ function window_onresize() {
 
     entriesList.style.width = (window.innerWidth).toString() + "px";
     entriesList.style.height = (window.innerHeight - 242).toString() + "px";
+}
 
-
-    // Error Messages
+function errorMessageBody_onresize() {
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
     errorMessageBody.style.top = (window.innerHeight / 3).toString() + "px";
     errorMessageBody.style.left = (window.innerWidth / 3).toString() + "px";
-    errorMessageBody.style.height = (window.innerHeight / 3).toString()  + "px";
+    errorMessageBody.style.height = (window.innerHeight / 3).toString() + "px";
     errorMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
 
     btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
-
-    gCharactersToShow = (window.innerWidth / 8);
-
-    if (window.innerWidth < 700) {
-        gCharactersToShow -= 20;
-    }
-    displayAllEntries(gResponseString);
 }
 
 function btnAddNewEntry_onmousedown() {
