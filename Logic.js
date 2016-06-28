@@ -117,10 +117,10 @@ function displayLastSevenDays() {
         dateOption.style.top = (50 * i).toString() + "px";
         dateOption.onmousedown = dateOption_onmousedown;
         if (i === 0) {
-            dateOption.innerHTML = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " (Today)";
+            dateOption.innerHTML = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " (Today)";
         } else {
             var dayOfTheWeek = daysOfTheWeek[date.getDay()];
-            dateOption.innerHTML = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " (" + dayOfTheWeek + ")";
+            dateOption.innerHTML = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " (" + dayOfTheWeek + ")";
         }
         entryOptionsList.appendChild(dateOption);
     }
