@@ -35,6 +35,11 @@ function body_load() {
 
 function btnDateWorked_onmousedown() {
     btnDateWorked.style.backgroundColor = "#E0E0E0";
+    entryOptionsList.style.left = "0px";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    btnBack.style.visibility = "hidden";
+
+    displayLastSevenDays();
 }
 
 function btnProject_onmousedown() {
@@ -79,11 +84,56 @@ function displayHoursWorkedOptions() {
         hoursOption.style.width = window.innerWidth.toString() + "px";
         hoursOption.style.top = (50 * counter).toString() + "px";
         hoursOption.onmousedown = hoursWorkedOption_onmousedown;
-        hoursOption.innerHTML = i.toString();
+        hoursOption.innerHTML = formatNumberToTwoDecimalPlaces(i);
         entryOptionsList.appendChild(hoursOption);
         i = i + 0.25;
         counter += 1;
     }
+}
+
+function dateOption_onmousedown() {
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
+    inputInformation.style.left = "0px";
+    this.style.backgroundColor = "#E0E0E0";
+    btnDateWorked.style.backgroundColor = "#FFFFFF";
+    var formattedDate = this.innerHTML.split(" ");
+    selectedDateWorked.innerHTML = formattedDate[0];
+    btnBack.style.visibility = "visible";
+}
+
+function displayLastSevenDays() {
+    var dateToday = new Date();
+
+    entryOptionsList.innerHTML = "";
+
+    var daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+    for (var i = 0; i < 7; i++) {
+        var date = new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate() - i);
+
+        var dateOption = document.createElement('div');
+        dateOption.id = "entryOption";
+        dateOption.style.width = window.innerWidth.toString() + "px";
+        dateOption.style.top = (50 * i).toString() + "px";
+        dateOption.onmousedown = dateOption_onmousedown;
+        if (i === 0) {
+            dateOption.innerHTML = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " (Today)";
+        } else {
+            var dayOfTheWeek = daysOfTheWeek[date.getDay()];
+            dateOption.innerHTML = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate() + " (" + dayOfTheWeek + ")";
+        }
+        entryOptionsList.appendChild(dateOption);
+    }
+}
+
+function formatNumberToTwoDecimalPlaces(number) {
+    if (number % 1 === 0) {
+        return number.toString() + ".00";
+    }
+    if (number * 10 % 1 === 0) {
+        return number.toString() + "0";
+    }
+    return number.toString();
 }
 
 function btnSignIn_onmousedown() {
