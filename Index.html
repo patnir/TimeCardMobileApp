@@ -35,41 +35,32 @@
             transition: 0.3s;
             background-color: #000000;
         }
+        #hoursWorkedList {
+            position: absolute;
+            top:44px;
+            transition: 0.3s;
+            background-color: #000000;
+        }
     </style>      
 </head > 
 <body onload="body_load();">
     <div id="divMain">
         <div id="navbar">Time Card
-            <div id="btnAddNewEntry">            
-                <svg version="1.1"
-                     baseProfile="full"
-                     width="40" height="40"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <rect width="100%" height="100%" fill="white" />
-                    <rect x="5" y="18.5" width="30" height="3" fill="#1588C7" />
-                    <rect x="18.5" y="5" width="3" height="30" fill="#1588C7" />
-                </svg>
-            </div>
-            <div id="btnBack"><img src="Back30.png"></div>
+            <div id="btnAddNewEntry"><img src="Images/Plus40.png" /></div>
+            <div id="btnBack"><img src="Images/Back30.png"></div>
         </div>
         <div id="inputInformation" onload="inputLoad()">
-            <input id="txtProject" type="text" readonly/>
-            <div id="btnChooseProject">Choose ...</div>
-            <input id="txtTask" type="text" readonly />
-            <div id="btnChooseTask">Choose ...</div>
-            <select id="txtActivity">
-                <option>Administrative</option>
-                <option>Computer Maintenance</option>
-                <option>Management</option>
-                <option>Software Development</option>
-            </select>
-            <input id="txtDateWorked" type="text" />
-            <input id="txtHoursWorked" type="text" />
+            <div id="btnDateWorked">Date</div>
+            <div id="btnProject">Project</div>
+            <div id="btnTask">Task</div>
+            <div id="btnActivity">Activity</div>
+            <div id="btnHoursWorked">Hours</div>
             <input id="cbxPayable" type="checkbox" />
             <label id="lblPayable">Payable</label>
-            <input id="cbxBillable" type="checkbox"/>
             <label id="lblBillable">Billable</label>
+            <input id="cbxBillable" type="checkbox" />
             <input id="txtDescription" type="text">
+            <div id="btnSave">Save</div>
         </div>
         <div id="showEntries">
             <label id="lblBeginDate">Begin Date:</label>
@@ -80,11 +71,13 @@
             <div id="entriesList">
             </div>
         </div>
+        <div id="hoursWorkedList">
+        </div>
         <div id="divSignIn">
             <label id="lblTeamName">Team Name:</label>
             <input id="txtTeamName" type="text"/>
-            <label id="lblUserID">User ID:</label>
-            <input id="txtUserID" type="text"/>
+            <label id="lblEmail">Email:</label>
+            <input id="txtEmail" type="text"/>
             <label id="lblPassword">Password:</label>
             <input id="txtPassword" type="password"/>
             <div id="btnSignIn">Sign In</div>

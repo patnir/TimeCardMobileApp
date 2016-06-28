@@ -16,12 +16,12 @@
     font-size: 22px;
     font-family: Helvetica;
 }
-#lblUserID {
+#lblEmail {
     position: absolute;
     left: 40px;
     font-family: Helvetica;
 }
-#txtUserID {
+#txtEmail {
     position: absolute;
     left: 40px;
     font-size: 22px;

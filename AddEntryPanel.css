@@ -4,33 +4,55 @@
     transition: 0.3s;
     background-color: #FFFFFF;
 }
-#txtProject {
+#btnProject {
     position: absolute;
-    left: 40px;
+    left: 0px;
+    color: #1588C7;
+    padding-top: 5px;
+    padding-left:20px;
+    background-color: white;
+    font-size: 22px;
+    font-family: Helvetica;
 }
-#btnChooseProject {
+#btnTask {
     position: absolute;
-    right: 40px;
+    left: 0px;
+    padding-left:20px;
+    padding-top: 5px;
+    color: #1588C7;
+    background-color: white;
+    font-size: 22px;
+    font-family: Helvetica;
 }
-#txtTask {
+#btnActivity {
     position: absolute;
-    left: 40px;
+    left: 0px;
+    color: #1588C7;
+    padding-left:20px;
+    padding-top: 5px;
+    background-color: white;
+    font-size: 22px;
+    font-family: Helvetica;
 }
-#btnChooseTask {
+#btnDateWorked {
     position: absolute;
-    right: 40px;
+    left: 0px;
+    color: #1588C7;
+    padding-left:20px;
+    padding-top: 5px;
+    background-color: white;
+    font-size: 22px;
+    font-family: Helvetica;
 }
-#txtActivity {
+#btnHoursWorked {
     position: absolute;
-    left: 40px;
-}
-#txtDateWorked {
-    position: absolute;
-    left: 40px;
-}
-#txtHoursWorked {
-    position: absolute;
-    right: 40px;
+    padding-top: 5px;
+    left: 0px;
+    color: #1588C7;
+    padding-left:20px;
+    background-color: white;
+    font-size: 22px;
+    font-family: Helvetica;
 }
 #cbxPayable {
     position: absolute;
@@ -39,16 +61,37 @@
 #lblPayable {
     position: absolute;
     left: 60px;
+    color: #1588C7;
+    font-size: 18px;
+    font-family: Helvetica;
 }
 #cbxBillable {
     position: absolute;
-    right: 40px;
+    right: 100px;
 }
 #lblBillable {
     position: absolute;
-    right: 60px;
+    right: 40px;
+    color: #1588C7;
+    font-size: 18px;
+    font-family: Helvetica;
 }
 #txtDescription {
     position: absolute;
     left: 40px;
+
+}
+
+#btnSave {
+    position: absolute;
+    color: white;
+    background-color: #1588C7;
+    font-size: 22px;
+    font-family: Helvetica;
+    border-radius:2px;
+    left: 40px;
+    top: 150px;
+    padding-top: 4px;
+    height: 28px;
+    text-align: center;
 }
