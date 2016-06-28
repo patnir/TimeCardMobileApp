@@ -22,6 +22,8 @@ function body_load() {
     btnActivity.onmousedown = btnActivity_onmousedown;
     btnHoursWorked.onmousedown = btnHoursWorked_onmousedown;
 
+    hoursWorkedList.style.left = window.innerWidth.toString() + "px";
+
     gEntriesList = [];
 
     addDefaultDates();
@@ -49,6 +51,38 @@ function btnActivity_onmousedown() {
 
 function btnHoursWorked_onmousedown() {
     btnHoursWorked.style.backgroundColor = "#E0E0E0";
+    hoursWorkedList.style.left = "0px";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    btnBack.style.visibility = "hidden";
+
+    displayHoursWorkedOptions();
+}
+
+function hoursWorkedOption_onmousedown() {
+    hoursWorkedList.style.left = window.innerWidth.toString() + "px";
+    inputInformation.style.left = "0px";
+    this.style.backgroundColor = "#E0E0E0";
+    btnHoursWorked.style.backgroundColor = "#FFFFFF";
+    btnBack.style.visibility = "visible";
+}
+
+function displayHoursWorkedOptions() {
+    var i = 0.00;
+    var counter = 0;
+    
+    hoursWorkedList.innerHTML = "";
+
+    while (i <= 4) {
+        var hoursOption = document.createElement('div');
+        hoursOption.id = "hoursWorkedOption";
+        hoursOption.style.width = window.innerWidth.toString() + "px";
+        hoursOption.style.top = (30 * counter).toString() + "px";
+        hoursOption.onmousedown = hoursWorkedOption_onmousedown;
+        hoursOption.innerHTML = i.toString();
+        hoursWorkedList.appendChild(hoursOption);
+        i = i + 0.25;
+        counter += 1;
+    }
 }
 
 function btnSignIn_onmousedown() {

@@ -79,7 +79,7 @@
 #txtDescription {
     position: absolute;
     left: 40px;
-
+    font-family: Helvetica;
 }
 
 #btnSave {
