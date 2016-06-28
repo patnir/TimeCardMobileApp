@@ -6,19 +6,17 @@
 }
 #btnProject {
     position: absolute;
+    padding-top: 5px;
     left: 0px;
     color: #1588C7;
-    padding-top: 5px;
-    padding-left:20px;
     background-color: white;
     font-size: 22px;
     font-family: Helvetica;
 }
 #btnTask {
     position: absolute;
-    left: 0px;
-    padding-left:20px;
     padding-top: 5px;
+    left: 0px;
     color: #1588C7;
     background-color: white;
     font-size: 22px;
@@ -26,20 +24,18 @@
 }
 #btnActivity {
     position: absolute;
+    padding-top: 5px;
     left: 0px;
     color: #1588C7;
-    padding-left:20px;
-    padding-top: 5px;
     background-color: white;
     font-size: 22px;
     font-family: Helvetica;
 }
 #btnDateWorked {
     position: absolute;
+    padding-top: 5px;
     left: 0px;
     color: #1588C7;
-    padding-left:20px;
-    padding-top: 5px;
     background-color: white;
     font-size: 22px;
     font-family: Helvetica;
@@ -49,9 +45,40 @@
     padding-top: 5px;
     left: 0px;
     color: #1588C7;
-    padding-left:20px;
     background-color: white;
     font-size: 22px;
+    font-family: Helvetica;
+}
+#addEntryButtonText {
+    position: absolute;
+    left: 0px;
+    padding-left:20px;
+    color: #1588C7;
+    font-size: 22px;
+    font-family: Helvetica;
+}
+#selectedHoursWorked {
+    position: absolute;
+    right: 0px;
+    right: 50px;
+    padding-top: 5px;
+    color: #808080;
+    font-size: 15px;
+    font-family: Helvetica;
+}
+#menuSelectItem {
+    position: absolute;
+    right: 0px;
+    padding-right: 20px;
+    color: #808080;
+    font-size: 18px;
+    font-family: Helvetica;
+}
+#rightArroqButton {
+    position: absolute;
+    right: 0px;
+    font-size: 18px;
+    color:#808080;
     font-family: Helvetica;
 }
 #cbxPayable {

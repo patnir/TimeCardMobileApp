@@ -22,7 +22,7 @@ function body_load() {
     btnActivity.onmousedown = btnActivity_onmousedown;
     btnHoursWorked.onmousedown = btnHoursWorked_onmousedown;
 
-    hoursWorkedList.style.left = window.innerWidth.toString() + "px";
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
 
     gEntriesList = [];
 
@@ -51,7 +51,7 @@ function btnActivity_onmousedown() {
 
 function btnHoursWorked_onmousedown() {
     btnHoursWorked.style.backgroundColor = "#E0E0E0";
-    hoursWorkedList.style.left = "0px";
+    entryOptionsList.style.left = "0px";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     btnBack.style.visibility = "hidden";
 
@@ -59,10 +59,11 @@ function btnHoursWorked_onmousedown() {
 }
 
 function hoursWorkedOption_onmousedown() {
-    hoursWorkedList.style.left = window.innerWidth.toString() + "px";
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
     this.style.backgroundColor = "#E0E0E0";
     btnHoursWorked.style.backgroundColor = "#FFFFFF";
+    selectedHoursWorked.innerHTML = this.innerHTML;
     btnBack.style.visibility = "visible";
 }
 
@@ -70,16 +71,16 @@ function displayHoursWorkedOptions() {
     var i = 0.00;
     var counter = 0;
     
-    hoursWorkedList.innerHTML = "";
+    entryOptionsList.innerHTML = "";
 
     while (i <= 4) {
         var hoursOption = document.createElement('div');
-        hoursOption.id = "hoursWorkedOption";
+        hoursOption.id = "entryOption";
         hoursOption.style.width = window.innerWidth.toString() + "px";
-        hoursOption.style.top = (30 * counter).toString() + "px";
+        hoursOption.style.top = (50 * counter).toString() + "px";
         hoursOption.onmousedown = hoursWorkedOption_onmousedown;
         hoursOption.innerHTML = i.toString();
-        hoursWorkedList.appendChild(hoursOption);
+        entryOptionsList.appendChild(hoursOption);
         i = i + 0.25;
         counter += 1;
     }
@@ -142,8 +143,8 @@ function addEntryPanel_onresize() {
     btnSave.style.width = (window.innerWidth - 80).toString() + "px";
     btnSave.style.top = (10.25 * pageHeight / 12).toString() + "px";
 
-    hoursWorkedList.style.width = (window.innerWidth).toString() + "px";
-    hoursWorkedList.style.height = (window.innerHeight - 44).toString() + "px";
+    entryOptionsList.style.width = (window.innerWidth).toString() + "px";
+    entryOptionsList.style.height = (window.innerHeight - 44).toString() + "px";
 }
 
 function window_onresize() {
