@@ -10,6 +10,10 @@
     <script language="javascript" type="text/javascript" src="TimeLogDate.js"></script>
     <script language="javascript" type="text/javascript" src="clsTimeLogEntry.js"></script>
     <script language="javascript" type="text/javascript" src="Logic.js"></script>
+    <script language="javascript" type="text/javascript" src="dmHttp.js"></script>
+
+
+
     <style type="text/css">
         body {
             margin: 0px;
@@ -34,31 +38,6 @@
             top: 44px;
             transition: 0.3s;
             background-color: #000000;
-        }
-
-        /*Options for Entry Properties Page*/
-
-        #entryOptionsList {
-            position: absolute;
-            top: 44px;
-            transition: 0.3s;
-            background-color: #FFFFFF;
-            overflow: scroll;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-        #entryOption {
-            position: absolute;
-            height: 39px;
-            left: 0px;
-            padding-top:10px;
-            border-bottom: solid;
-            border-width: 1px;
-            border-color: #F0F0F0;
-            color: #1588C7;
-            text-align: center;
-            font-family: Helvetica;
-            font-size: 20px;
         }
     </style>
 
@@ -213,6 +192,30 @@
             padding-top: 4px;
             height: 28px;
             text-align: center;
+        }
+
+        #entryOptionsList {
+            position: absolute;
+            top: 44px;
+            transition: 0.3s;
+            background-color: #FFFFFF;
+            overflow: scroll;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #entryOption {
+            position: absolute;
+            height: 39px;
+            left: 0px;
+            padding-top: 10px;
+            border-bottom: solid;
+            border-width: 1px;
+            border-color: #F0F0F0;
+            color: #1588C7;
+            text-align: center;
+            font-family: Helvetica;
+            font-size: 20px;
         }
     </style>
 

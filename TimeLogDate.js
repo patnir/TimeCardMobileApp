@@ -4,8 +4,27 @@
     this.Year = year;
 }
 
-TimeLogDate.prototype.ToMonthDayString = function () {
-    // return = Jan 12, 1994
+TimeLogDate.prototype.Serialize = function () {
+    return this.Year.ToString() + '\t'
+            + this.Month.ToString() + '\t'
+            + this.Day.ToString();
+}
+
+TimeLogDate.prototype.Deserialize = function (serializedString) {
+    var values = serializedString.split("\t");
+
+    this.Month = parseInt(values[0]);
+    this.Day = parseInt(values[1]);
+    this.Year = parseInt(values[2]);
+}
+
+TimeLogDate.prototype.ToYearMonthDayString = function () {
+    // return 1995/14/1
+    return this.Year + "/" + this.Month + "/" + this.Day;
+}
+
+TimeLogDate.prototype.ToMonthNameDayYearString = function () {
+    // return = Jan 14, 1994
 
     var TimeLogDateParts = serializedTimeLogDate.split("/");
     var formattedString = "";
@@ -17,7 +36,7 @@ TimeLogDate.prototype.ToMonthDayString = function () {
 }
 
 TimeLogDate.prototype.ToString = function () {
-    // return 12/01/1994
+    // return 14/01/1994
 
     return this.Month + "/" + this.Day + "/" + this.Year;
 }
@@ -64,8 +83,6 @@ TimeLogDate.prototype.TryParseTimeLogDate = function(TimeLogDateString) {
         return false;
     }
 
-    // check leap year
-
     var isLeapYear = false;
     if (year % 4 === 0
         && !(year % 100 === 0 && year % 400 != 0)) {
@@ -92,12 +109,21 @@ TimeLogDate.prototype.TryParseTimeLogDate = function(TimeLogDateString) {
     }
 
     return true;
-}
 
-TimeLogDate.prototype.Serialize = function() {
-    return this.Year.ToString() + '\t'
-            + this.Month.ToString() + '\t'
-            + this.Day.ToString();
+    function checkIfStringIsNumber(numberString) {
+        var checkDigits = numberString.split("");
+        if (checkDigits.length === 0) {
+            return false;
+        }
+        var checkNumbers = new RegExp('[0-9]');
+
+        for (var i = 0; i < checkDigits.length; i++) {
+            if (checkNumbers.test(checkDigits[i]) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 TimeLogDate.prototype.IsEmpty = function () {
@@ -106,27 +132,4 @@ TimeLogDate.prototype.IsEmpty = function () {
     }
 
     return false;
-}
-
-TimeLogDate.prototype.Deserialize = function (serializedString) {
-    var values = serializedString.split("\t");
-    
-    this.Month = parseInt(values[0]);
-    this.Day = parseInt(values[1]);
-    this.Year = parseInt(values[2]);
-}
-
-function checkIfStringIsNumber(numberString) {
-    var checkDigits = numberString.split("");
-    if (checkDigits.length === 0) {
-        return false;
-    }
-    var checkNumbers = new RegExp('[0-9]');
-
-    for (var i = 0; i < checkDigits.length; i++) {
-        if (checkNumbers.test(checkDigits[i]) === false) {
-            return false;
-        }
-    }
-    return true;
 }

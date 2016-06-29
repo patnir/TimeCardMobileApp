@@ -33,6 +33,67 @@ function body_load() {
     window_onresize();
 }
 
+function ditHttpGetSync(url) {
+
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open("GET", url, false);
+    httpRequest.send(null);
+
+    return httpRequest.responseText;
+}
+
+function serializeTabs(array) {
+
+    var serializedString = "";
+    for (var i = 0; i < array.length - 1; ++i) {
+        serializedString += array[i] + "\t";
+    }
+    serializedString += array[array.length - 1];
+    return serializedString;
+}
+
+function btnRefresh_onmousedown() {
+    btnRefresh.style.backgroundColor = "#BADCEF";
+
+    var requestString = serializeTabs([txtBeginDate.value, txtEndDate.value]);
+
+    httpPost(gServerRoot + "action=getEntries", requestString,
+
+		function (responseString) {
+		    alert(responseString);
+		    //gTimelogs = deserializeTimelog(responseString);
+		    //gTimelogs.splice(0, 1); // remove 'ok'
+		    //fillTableWithData(gTimelogs);
+		    //addRowHandlers();
+		    //updateTotalHoursWorked();
+		}
+
+    );
+
+    btnRefresh.style.backgroundColor = "#1588C7";
+
+    //if (validateInput() === false) {
+    //    return;
+    //}
+
+    //var url = buildURL();
+    //gResponseString = httpGet(url);
+
+    //var returnStringSplit = gResponseString.split("\t");
+    //if (returnStringSplit[0] === "error") {
+    //    showErrorMessage(returnStringSplit[1], txtBeginDate);
+    //    return;
+    //}
+    //if (returnStringSplit.length === 1) {
+    //    showErrorMessage("No Entries Found", txtBeginDate);
+    //}
+
+    //// alert(gResponseString);
+
+    //displayAllEntries(gResponseString);
+}
+
+
 function btnDateWorked_onmousedown() {
     btnDateWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
@@ -148,10 +209,10 @@ function btnSignIn_onmouseup() {
 
 function addDefaultDates() {
     var dateToday = new Date();
-    txtEndDate.defaultValue = dateToday.getFullYear() + "/" + (dateToday.getMonth() + 1) + "/" + dateToday.getDate();
+    txtEndDate.defaultValue = (dateToday.getMonth() + 1) + "/" + dateToday.getDate() + "/" + dateToday.getFullYear();
 
     dateToday = new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate() - 7);
-    txtBeginDate.defaultValue = dateToday.getFullYear() + "/" + (dateToday.getMonth() + 1) + "/" + dateToday.getDate();
+    txtBeginDate.defaultValue = (dateToday.getMonth() + 1) + "/" + dateToday.getDate() + "/" + dateToday.getFullYear();
 }
 
 function addEntryPanel_onresize() {
@@ -278,30 +339,6 @@ function btnBack_onmousedown() {
     inputInformation.style.left = window.innerWidth.toString() + "px";
     btnAddNewEntry.style.visibility = "visible";
     btnBack.style.visibility = "hidden";
-}
-
-function btnRefresh_onmousedown() {
-    btnRefresh.style.backgroundColor = "#BADCEF";
-
-    if (validateInput() === false) {
-        return;
-    }
-
-    var url = buildURL();
-    gResponseString = httpGet(url);
-
-    var returnStringSplit = gResponseString.split("\t");
-    if (returnStringSplit[0] === "error") {
-        showErrorMessage(returnStringSplit[1], txtBeginDate);
-        return;
-    }
-    if (returnStringSplit.length === 1) {
-        showErrorMessage("No Entries Found", txtBeginDate);
-    }
-
-    // alert(gResponseString);
-
-    displayAllEntries(gResponseString);
 }
 
 function btnRefresh_onmouseup() {
