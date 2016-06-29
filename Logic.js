@@ -187,11 +187,11 @@ function addEntryPanel_onresize() {
     cbxBillable.style.top = (6 * pageHeight / 12).toString() + "px";
 
     txtDescription.style.top = (7 * pageHeight / 12).toString() + "px";
-    txtDescription.style.height = (2.5 * pageHeight / 12).toString() + "px";
-    txtDescription.style.width = (window.innerWidth - 80).toString() + "px";
+    txtDescription.style.height = (3.00 * pageHeight / 12).toString() + "px";
+    txtDescription.style.width = (window.innerWidth - 40).toString() + "px";
 
-    btnSave.style.width = (window.innerWidth - 80).toString() + "px";
-    btnSave.style.top = (10.25 * pageHeight / 12).toString() + "px";
+    btnSave.style.width = (window.innerWidth - 40).toString() + "px";
+    btnSave.style.top = (10.625 * pageHeight / 12).toString() + "px";
 
     entryOptionsList.style.width = (window.innerWidth).toString() + "px";
     entryOptionsList.style.height = (window.innerHeight - 44).toString() + "px";
