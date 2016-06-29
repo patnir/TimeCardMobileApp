@@ -62,3 +62,26 @@ clsTimeLogEntry.prototype.Deserialize = function (serializedEntry) {
     this.LastName = values[13]; 
     this.ProjectTitle = values[14];
 }
+
+clsTimeLogEntry.prototype.SerializeJSON = function () {
+
+}
+
+clsTimeLogEntry.prototype.DeserializeJSON = function (jsonSerializedEntry) {
+    var obj = JSON.parse(jsonSerializedEntry);
+    this.EntryID = obj.EntryID; // int
+    this.UserID = obj.UserID; // int
+    this.ProjectID = obj.ProjectID; // int
+    this.TaskTitle = obj.TaskTitle;
+    this.HoursWorked = obj.HoursWorked; // float
+    this.DateWorked = obj.DateWorked; // string
+    this.EntryDescription = obj.EntryDescription; // string
+    this.ActivityTitle = obj.ActivityTitle; // string
+    this.BillalbeIndicator = obj.BillalbeIndicator; // boolean
+    this.PayableIndicator = obj.PayableIndicator; // boolean
+    this.LastMaintUserID = obj.LastMaintUserID; // int
+    this.LastMaintUTC = obj.LastMaintUTC; // string 
+    this.FirstName = obj.FirstName; // string
+    this.LastName = obj.LastName; // string
+    this.ProjectTitle = obj.ProjectTitle; //string
+}
