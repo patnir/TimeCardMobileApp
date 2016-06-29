@@ -16,7 +16,7 @@ Date.prototype.ToMonthDayString = function () {
     return formattedString;
 }
 
-Date.prototype.ToShortString = function () {
+Date.prototype.ToString = function () {
     // return 12/01/1994
 
     return this.Month + "/" + this.Day + "/" + this.Year;

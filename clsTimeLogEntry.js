@@ -1,50 +1,64 @@
 ﻿/// <reference path="Index.html">
-
-//function clsTimeLogEntry(userID,
-//    project,
-//    task,
-//    activity,
-//    dateWorked,
-//    hoursWorked,
-//    isBillable, 
-//    isPayable,
-//    description) {
-//    this.Project = project;
-//    this.Task = task;
-//    this.Activity = activity;
-//    this.DateWorked = dateWorked;
-//    this.HoursWorked = hoursWorked;
-//    this.IsBillable = isBillable;
-//    this.IsPayable = isPayable;
-//    this.Description = description;
-//}
-
-
-function clsTimeLogEntry(entryID, name, dateWorked, hoursWorked, billable, description) {
-    this.EntryID = entryID;
-    this.Name = name;
-    this.DateWorked = dateWorked;
-    this.HoursWorked = hoursWorked;
-    this.IsBillable = billable;
-    this.Description = description;
+function clsTimeLogEntry() {
+    this.EntryID = null; // int
+    this.UserID = null; // int
+    this.ProjectID = null; // int
+    this.TaskTitle = "";
+    this.HoursWorked = 0.00; // float
+    this.DateWorked = ""; // string
+    this.EntryDescription = ""; // string
+    this.ActivityTitle = ""; // string
+    this.BillalbeIndicator = null; // boolean
+    this.PayableIndicator = null; // boolean
+    this.LastMaintUserID = null; // int
+    this.LastMaintUTC = ""; // string 
+    this.FirstName = ""; // string
+    this.LastName = ""; // string
+    this.ProjectTitle = ""; //string
 }
 
 clsTimeLogEntry.prototype.Serialize = function () {
-    var billable = 0;
-    if (this.IsBillable === true) {
-        billable = 1;
+    return this.EntryID.toString() + "\t" +
+        this.UserID.toString() + "\t" +
+        this.ProjectID.toString() + "\t" +
+        this.TaskTitle + "\t" +
+        this.HoursWorked.toString() + "\t" +
+        this.DateWorked + "\t" +
+        this.EntryDescription + "\t" +
+        this.ActivityTitle + "\t" +
+        this.BillalbeIndicator.toString() + "\t" +
+        this.PayableIndicator.toString() + "\t" +
+        this.LastMaintUserID.toString() + "\t" +
+        this.LastMaintUTC + "\t" +
+        this.FirstName + "\t" +
+        this.LastName + "\t" +
+        this.ProjectTitle;
+}
+
+clsTimeLogEntry.prototype.Deserialize = function (serializedEntry) {
+    var values = serializedEntry.split("\t");
+    this.EntryID = parseInt(values[0]);
+    this.UserID =  parseInt(values[1]);
+    this.ProjectID = parseInt(values[2]);
+    this.TaskTitle = values[3];
+    this.HoursWorked = parseFloat(values[4]);
+    this.DateWorked = values[5];
+    this.EntryDescription = values[6];
+    this.ActivityTitle = values[7];
+
+    this.BillalbeIndicator = false;
+    if (values[8] === "true") {
+        this.BillalbeIndicator = true;
     }
-    return this.EntryID.toString() + "\t"
-        + this.Name + "\t"
-        + this.DateWorked.toString() + "\t"
-        + this.HoursWorked.toString() + "\t"
-        + billable.toString() + "\t"
-        + this.Description;
+
+    this.PayableIndicator = false;
+    if (values[9] === "true") {
+        this.PayableIndicator = true;
+    }
+
+    this.LastMaintUserID = parseInt(values[10]);
+    this.LastMaintUTC = values[11]; 
+    this.FirstName = values[12]; 
+    this.LastName = values[13]; 
+    this.ProjectTitle = values[14];
 }
-
-clsTimeLogEntry.prototype.Deserialize = function(serializedEntry) {
-    var entry = serializedEntry.split("\t");
-    this.Name = entry[0]
-}
-
-
