@@ -281,10 +281,6 @@ function btnBack_onmousedown() {
 }
 
 function btnRefresh_onmousedown() {
-    var entry = new clsTimeLogEntry();
-    var test = '{ "EntryID": 3, "UserID": 3, "ProjectID": 5, "TaskTitle": "Taco Making", "HoursWorked": 1.0, "DateWorked": "6/28/2016 12:00:00 AM", "EntryDescription": "Fixed the taco making machine.", "ActivityTitle": "Computer Maintenance", "BillableIndicator": false, "PayableIndicator": false, "LastMaintUserID": 3, "LastMaintUTC": "6/28/2016 12:00:00 AM", "FirstName": "Paco", "LastName": "Taco", "ProjectTitle": "TacoDelMar" }';
-    entry.DeserializeJSON(test);
-
     btnRefresh.style.backgroundColor = "#BADCEF";
 
     if (validateInput() === false) {
@@ -576,3 +572,9 @@ function tryParseDate(dateString) {
 
     return true;
 }
+
+//code to test if serialize and deserialize works
+//var entry = new clsTimeLogEntry();
+//var test = '{ "EntryID": 3, "UserID": 3, "ProjectID": 5, "TaskTitle": "Taco Making", "HoursWorked": 1.0, "DateWorked": "6/28/2016 12:00:00 AM", "EntryDescription": "Fixed the taco making machine.", "ActivityTitle": "Computer Maintenance", "BillableIndicator": false, "PayableIndicator": false, "LastMaintUserID": 3, "LastMaintUTC": "6/28/2016 12:00:00 AM", "FirstName": "Paco", "LastName": "Taco", "ProjectTitle": "TacoDelMar" }';
+//entry.DeserializeJSON(test);
+//entry.SerializeJSON();
