@@ -57,55 +57,112 @@ function serializeTabs(array) {
     return serializedString;
 }
 
+function validateEntryInput() {
+    if (selectedDateWorked.innerHTML === "") {
+        showErrorMessage("Date is required.", null);
+        return false;
+    }
+    if (selectedProject.innerHTML === "") {
+        showErrorMessage("Select a Project.", null);
+        return false;
+    }
+    if (selectedTask === "") {
+        showErrorMessage("Select a Task.", null);
+        return false;
+    }
+    if (selectedActivity === "") {
+        showErrorMessage("Select a Activity.", null);
+        return false;
+    }
+    if (selectedHours === "") {
+        showErrorMessage("Select number of Hours Worked.", null);
+        return false;
+    }
+
+    if (txtDescription.trim() === "") {
+        showErrorMessage("Description is required.");
+    }
+
+    return true;
+
+}
+
 function btnSave_onmousedown() {
     btnSave.style.backgroundColor = "#BADCEF";
 
+    if (validateEntryInput() === false) {
+        btnSave.style.backgroundColor = "#1588C7";
+        return;
+    }
+
     var entry = new clsTimeLogEntry();
 
+    entry.HoursWorked = parseFloat(selectedHoursWorked.innerHTML);
+    entry.DateWorked = selectedDateWorked.innerHTML;
+    entry.ActivityTitle = selectedActivity.innerHTML;
+    entry.ProjectTitle = selectedProject.innerHTML;
+    entry.TaskTitle = selectedTask.innerHTML;
+    entry.FirstName = gFirstName;
+    entry.LastName = gLastName;
+    entry.EntryDescription = txtDescription.value;
+
     gEntriesList.push(entry);
+
+    alert(gEntriesList);
+
+    btnBack_onmousedown();
+
+    displayAllEntries();
 }
 
+function getAllEntriesConvertToJSON(beginDate, endDate) {
+    var obj = {
+        AuthToken: "",
+        FromDate: beginDate,
+        ToDate: endDate
+    };
+
+    return JSON.stringify(obj);
+}
+
+function getDateTimeNowInUTC() {
+    var now = new Date();
+    
+    var hours = now.getUTCHours;
+    if (hours > 12) {
+        hours = hours - 12;
+    }
+
+    var formattedDate = (now.getUTCMonth() + 1).toString() + "/" +
+        now.getUTCDate().toString() + "/" +
+        now.getUTCFullYear().toString() + " " +
+        now.getUTCHours().toString() + ":" +
+        now.getUTCMinutes().toString() + ":" +
+        now.getUTCSeconds().toString() + "AM";
+}
 
 function btnRefresh_onmousedown() {
     btnRefresh.style.backgroundColor = "#BADCEF";
 
-    var requestString = serializeTabs([txtBeginDate.value, txtEndDate.value]);
+    var requestString = getAllEntriesConvertToJSON(txtBeginDate.value, txtEndDate.value);
 
 
-    httpPost(gServerRoot + "action=getEntries", requestString, callbackFunctionGetResponseString);
+    httpPost(gServerRoot + "action=getEntries", requestString, callbackGetAllEntries);
+
+    gEntriesList = [];
 
     btnRefresh.style.backgroundColor = "#1588C7";
-
-    //if (validateInput() === false) {
-    //    return;
-    //}
-
-    //var url = buildURL();
-    //gResponseString = httpGet(url);
-
-    //var returnStringSplit = gResponseString.split("\t");
-    //if (returnStringSplit[0] === "error") {
-    //    showErrorMessage(returnStringSplit[1], txtBeginDate);
-    //    return;
-    //}
-    //if (returnStringSplit.length === 1) {
-    //    showErrorMessage("No Entries Found", txtBeginDate);
-    //}
-
-    //// alert(gResponseString);
-
-    //displayAllEntries(gResponseString);
 }
 
-function callbackFunctionGetResponseString(responseString) {    
+function callbackGetAllEntries(responseString) {    
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
-        showErrorMessage(parts[1]);
+        showErrorMessage(parts[1], txtBeginDate);
         return;
     }
-
+    
     if (parts[1] === "[]") {
-        showErrorMessage("No Entries Found.");
+        showErrorMessage("No Entries Found.", txtBeginDate);
         return;
     }
 
@@ -224,8 +281,45 @@ function formatNumberToTwoDecimalPlaces(number) {
     return number.toString();
 }
 
+function signInConvertToJSON(teamName, emailAddress, password) {
+    var object = {
+        TeamName: teamName, 
+        EmailAddress: emailAddress,
+        Password: password
+    }
+
+    return JSON.stringify(object)
+}
+
+function callbackSignIn(responseString) {
+    alert(responseString);
+
+    var parts = responseString.split("\n");
+    if (parts[0] === "error") {
+        showErrorMessage(parts[1], txtTeamName);
+        return;
+    }
+
+    var objects = JSON.parse(parts[1]);
+
+    for (var i = 0; i < objects.length; i++) {
+        var entry = new clsTimeLogEntry();
+        entry.Deserialize(objects[i]);
+        gEntriesList.push(entry);
+    }
+
+    displayAllEntries();
+}
+
 function btnSignIn_onmousedown() {
-    btnSignIn.style.backgroundColor = "#BADCEF";
+
+    var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
+
+    httpPost(gServerRoot + "action=signIn", requestString, callbackGetAllEntries);
+
+    gEntriesList = [];
+
+    btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function btnSignIn_onmouseup() {
@@ -250,6 +344,7 @@ function btnAddNewEntry_onmousedown() {
 }
 
 function btnBack_onmousedown() {
+    btnSave.style.backgroundColor = "#1588C7";
     showEntries.style.left = "0px";
     inputInformation.style.left = window.innerWidth.toString() + "px";
     btnAddNewEntry.style.visibility = "visible";
@@ -263,7 +358,7 @@ function btnRefresh_onmouseup() {
 function displayAllEntries(serializedString) {
     entriesList.innerHTML = "";
 
-    for (var i = 0; i < gEntriesList.length - 1; i++) {
+    for (var i = 0; i < gEntriesList.length; i++) {
         addEntryToList(gEntriesList[i], i);
     }
 }
@@ -303,32 +398,6 @@ function addEntryToList(entry, i) {
     entryDiv.appendChild(entryDivDescription);
 
     entriesList.appendChild(entryDiv);
-}
-
-
-function buildURL() {
-    var beginDateParts = txtBeginDate.value.trim().split('/');
-    var endDateParts = txtEndDate.value.trim().split('/');
-    var url = "Server/TimeLogServer.aspx?action=getEntries&beginDate="
-        + beginDateParts[0]
-        + "-" + beginDateParts[1]
-        + "-" + beginDateParts[2]
-        + "&endDate="
-        + endDateParts[0]
-        + "-" + endDateParts[1]
-        + "-" + endDateParts[2]
-        + "&&maxrows=100";
-    return url;
-}
-
-// encodeURIComponent
-
-function httpGet(theUrl) {
-    var xmlHttp = null;
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", theUrl, false);
-    xmlHttp.send(null);
-    return xmlHttp.responseText;
 }
 
 function formatDateForList(serializedDate) { // array
