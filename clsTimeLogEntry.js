@@ -41,6 +41,8 @@ clsTimeLogEntry.prototype.Serialize = function () {
 }
 
 clsTimeLogEntry.prototype.Deserialize = function (obj) {
+    alert(obj.DateWorked);
+
     //var obj = JSON.parse(jsonSerializedEntry);
     this.EntryID = obj.EntryID; // int
     this.UserID = obj.UserID; // int
