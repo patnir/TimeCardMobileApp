@@ -85,6 +85,7 @@ function validateEntryInput() {
 
     if (txtDescription.value.trim() === "") {
         showErrorMessage("Description is required.");
+        return false;
     }
 
     return true;
@@ -183,6 +184,14 @@ function btnProject_onmousedown() {
     displayEntriesOptions(gProjects, projectOption_onmousedown);
 }
 
+function btnActivity_onmousedown() {
+    btnActivity.style.backgroundColor = "#E0E0E0";
+    entryOptionsList.style.left = "0px";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    btnBack.style.visibility = "hidden";
+    displayEntriesOptions(gActivities, activityOption_onmousedown);
+}
+
 function btnTask_onmousedown() {
     btnTask.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
@@ -194,10 +203,6 @@ function btnTask_onmousedown() {
         return;
     }
     displayEntriesOptions(gTasks[selectedProject.innerHTML], taskOption_onmousedown);
-}
-
-function btnActivity_onmousedown() {
-    btnActivity.style.backgroundColor = "#E0E0E0";
 }
 
 function btnHoursWorked_onmousedown() {
@@ -280,6 +285,16 @@ function taskOption_onmousedown() {
     btnTask.style.backgroundColor = "#FFFFFF";
     var task = this.innerHTML.split(" ");
     selectedTask.innerHTML = task;
+    btnBack.style.visibility = "visible";
+}
+
+function activityOption_onmousedown() {
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
+    inputInformation.style.left = "0px";
+    this.style.backgroundColor = "#E0E0E0";
+    btnTask.style.backgroundColor = "#FFFFFF";
+    var activity = this.innerHTML.split(" ");
+    selectedActivity.innerHTML = activity;
     btnBack.style.visibility = "visible";
 }
 
