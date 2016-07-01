@@ -1,4 +1,4 @@
-﻿function TimeLogDate(month, day, year) {
+﻿function TimeLogDate() {
     this.Month = month;
     this.Day = day;
     this.Year = year;
@@ -8,6 +8,10 @@ TimeLogDate.prototype.Serialize = function () {
     return this.Year.ToString() + '\t'
             + this.Month.ToString() + '\t'
             + this.Day.ToString();
+}
+
+TimeLogDate.prototype.ConvertToNowUTCDate = function () {
+
 }
 
 TimeLogDate.prototype.Deserialize = function (serializedString) {
