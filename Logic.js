@@ -108,8 +108,6 @@ function btnSave_onmousedown() {
 
     gEntriesList.push(entry);
 
-    alert(gEntriesList);
-
     btnBack_onmousedown();
 
     displayAllEntries();
@@ -292,26 +290,38 @@ function signInConvertToJSON(teamName, emailAddress, password) {
 }
 
 function callbackSignIn(responseString) {
-    alert(responseString);
-
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
         showErrorMessage(parts[1], txtTeamName);
         return;
     }
 
-    var objects = JSON.parse(parts[1]);
+    divSignIn.style.visibility = "hidden";
+    btnAddNewEntry.style.visibility = "visible";
+}
 
-    for (var i = 0; i < objects.length; i++) {
-        var entry = new clsTimeLogEntry();
-        entry.Deserialize(objects[i]);
-        gEntriesList.push(entry);
+function validateSignInPage() {
+    if (txtTeamName.value.trim() === "") {
+        showErrorMessage("Enter a team name.", txtTeamName);
+        return false;
+    }
+    if (txtEmail.value.trim() === "") {
+        showErrorMessage("Enter an email address.", txtEmail);
+        return false;
+    }
+    if (txtPassword.value === "") {
+        showErrorMessage("Enter a password.", txtPassword);
+        return false;
     }
 
-    displayAllEntries();
+    return true;
 }
 
 function btnSignIn_onmousedown() {
+
+    if (validateSignInPage() === false) {
+        return;
+    }
 
     var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
 
@@ -320,12 +330,15 @@ function btnSignIn_onmousedown() {
     gEntriesList = [];
 
     btnRefresh.style.backgroundColor = "#1588C7";
+
+    divSignIn.style.visibility = "hidden";
+    showEntries.style.visibility = "visible";
 }
+
+
 
 function btnSignIn_onmouseup() {
     btnSignIn.style.backgroundColor = "#1588C7";
-    divSignIn.style.visibility = "hidden";
-    btnAddNewEntry.style.visibility = "visible";
 }
 
 function addDefaultDates() {
