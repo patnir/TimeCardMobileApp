@@ -9,8 +9,6 @@ function httpPost(url, reqString, callbackFunction) {
 
     var timeoutFunction = setTimeout(httpPostAsyncTimeout, 30000);
 
-    alert(url);
-
     httpRequest.onreadystatechange = httpStateChange;
     httpRequest.open("POST", url, true);
     httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
