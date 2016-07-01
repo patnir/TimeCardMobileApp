@@ -115,7 +115,18 @@ function btnSave_onmousedown() {
 
     btnBack_onmousedown();
 
+    clearEntryPage();
+
     displayAllEntries();
+}
+
+function clearEntryPage() {
+    selectedActivity.innerHTML = "";
+    selectedDateWorked.innerHTML = "";
+    selectedHoursWorked.innerHTML = "";
+    selectedProject.innerHTML = "";
+    txtDescription.value = "";
+    selectedTask.innerHTML = "";
 }
 
 function getAllEntriesConvertToJSON(beginDate, endDate) {
@@ -424,6 +435,7 @@ function btnBack_onmousedown() {
     inputInformation.style.left = window.innerWidth.toString() + "px";
     btnAddNewEntry.style.visibility = "visible";
     btnBack.style.visibility = "hidden";
+    clearEntryPage();
 }
 
 function btnRefresh_onmouseup() {
