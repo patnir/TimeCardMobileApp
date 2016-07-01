@@ -83,7 +83,7 @@ function validateEntryInput() {
         return false;
     }
 
-    if (txtDescription.trim() === "") {
+    if (txtDescription.value.trim() === "") {
         showErrorMessage("Description is required.");
     }
 
@@ -180,11 +180,20 @@ function btnProject_onmousedown() {
     entryOptionsList.style.left = "0px";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     btnBack.style.visibility = "hidden";
-    displayEntriesOptions(gProjects);
+    displayEntriesOptions(gProjects, projectOption_onmousedown);
 }
 
 function btnTask_onmousedown() {
     btnTask.style.backgroundColor = "#E0E0E0";
+    entryOptionsList.style.left = "0px";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    btnBack.style.visibility = "hidden";
+    if (selectedProject.innerHTML === "") {
+        showErrorMessage("Select a project.", btnSave);
+        btnTask.style.backgroundColor = "#FFFFFF";
+        return;
+    }
+    displayEntriesOptions(gTasks[selectedProject.innerHTML], taskOption_onmousedown);
 }
 
 function btnActivity_onmousedown() {
@@ -251,16 +260,27 @@ function initializeEntriesOptionsArrays() {
     }
 }
 
-function displayEntriesOptions(array) {
+function displayEntriesOptions(array, function_onmousdown) {
+    entryOptionsList.innerHTML = "";
     for (var i = 0; i < array.length; i++) {
         var projectOption = document.createElement('div');
         projectOption.id = "entryOption";
         projectOption.innerHTML = array[i];
         projectOption.style.width = window.innerWidth.toString() + "px";
         projectOption.style.top = (50 * i).toString() + "px";
-        projectOption.onmousedown = projectOption_onmousedown;
+        projectOption.onmousedown = function_onmousdown;
         entryOptionsList.appendChild(projectOption);
     }
+}
+
+function taskOption_onmousedown() {
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
+    inputInformation.style.left = "0px";
+    this.style.backgroundColor = "#E0E0E0";
+    btnTask.style.backgroundColor = "#FFFFFF";
+    var task = this.innerHTML.split(" ");
+    selectedTask.innerHTML = task;
+    btnBack.style.visibility = "visible";
 }
 
 function projectOption_onmousedown() {
