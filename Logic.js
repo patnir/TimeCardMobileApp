@@ -3,6 +3,10 @@
 var gResponseString;
 var gEntriesList;
 
+var gProjects;
+var gActivities;
+var gTasks;
+
 var gFirstName = "Rahul";
 var gLastName = "Patni";
 
@@ -74,7 +78,7 @@ function validateEntryInput() {
         showErrorMessage("Select a Activity.", null);
         return false;
     }
-    if (selectedHours === "") {
+    if (selectedHoursWorked === "") {
         showErrorMessage("Select number of Hours Worked.", null);
         return false;
     }
@@ -173,6 +177,10 @@ function btnDateWorked_onmousedown() {
 
 function btnProject_onmousedown() {
     btnProject.style.backgroundColor = "#E0E0E0";
+    entryOptionsList.style.left = "0px";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    btnBack.style.visibility = "hidden";
+    displayEntriesOptions(gProjects);
 }
 
 function btnTask_onmousedown() {
@@ -200,6 +208,9 @@ function hoursWorkedOption_onmousedown() {
     selectedHoursWorked.innerHTML = this.innerHTML;
     btnBack.style.visibility = "visible";
 }
+
+// Goal to combine all entry options displaying with the same for loop;
+// +=========================================================================================================================================================================+
 
 function displayHoursWorkedOptions() {
     var i = 0.00;
@@ -230,6 +241,38 @@ function dateOption_onmousedown() {
     btnBack.style.visibility = "visible";
 }
 
+function initializeEntriesOptionsArrays() {
+    gProjects = ["CropZilla", "Gardner", "TimeCard"];
+    gActivities = ["Administrative", "Application Design", "Documentation", "Management", "Software Development", "Self Education"];
+    gTasks = {
+        CropZilla: ["Task1", "Task2"],
+        Gardner: ["TaskG1", "Task G2"],
+        TimeCard: ["Server", "DeskTopUI", "AdminUI", "WebUI", "MobileUI"]
+    }
+}
+
+function displayEntriesOptions(array) {
+    for (var i = 0; i < array.length; i++) {
+        var projectOption = document.createElement('div');
+        projectOption.id = "entryOption";
+        projectOption.innerHTML = array[i];
+        projectOption.style.width = window.innerWidth.toString() + "px";
+        projectOption.style.top = (50 * i).toString() + "px";
+        projectOption.onmousedown = projectOption_onmousedown;
+        entryOptionsList.appendChild(projectOption);
+    }
+}
+
+function projectOption_onmousedown() {
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
+    inputInformation.style.left = "0px";
+    this.style.backgroundColor = "#E0E0E0";
+    btnProject.style.backgroundColor = "#FFFFFF";
+    var project = this.innerHTML.split(" ");
+    selectedProject.innerHTML = project;
+    btnBack.style.visibility = "visible";
+}
+
 function displayLastSevenDays() {
     var dateToday = new Date();
 
@@ -254,6 +297,8 @@ function displayLastSevenDays() {
         entryOptionsList.appendChild(dateOption);
     }
 }
+
+// +=========================================================================================================================================================================+
 
 function formatNumberToTwoDecimalPlaces(number) {
     if (number % 1 === 0) {
@@ -331,6 +376,7 @@ function addDefaultDates() {
 }
 
 function btnAddNewEntry_onmousedown() {
+    initializeEntriesOptionsArrays();
     inputInformation.style.left = "0px";
     showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
     btnAddNewEntry.style.visibility = "hidden";
