@@ -123,23 +123,10 @@ function getAllEntriesConvertToJSON(beginDate, endDate) {
     return JSON.stringify(obj);
 }
 
-function getDateTimeNowInUTC() {
-    var now = new Date();
-    
-    var hours = now.getUTCHours;
-    if (hours > 12) {
-        hours = hours - 12;
-    }
-
-    var formattedDate = (now.getUTCMonth() + 1).toString() + "/" +
-        now.getUTCDate().toString() + "/" +
-        now.getUTCFullYear().toString() + " " +
-        now.getUTCHours().toString() + ":" +
-        now.getUTCMinutes().toString() + ":" +
-        now.getUTCSeconds().toString() + "AM";
-}
-
 function btnRefresh_onmousedown() {
+    if (validateShowEntriesDates() === false) {
+        return;
+    }
     btnRefresh.style.backgroundColor = "#BADCEF";
 
     var requestString = getAllEntriesConvertToJSON(txtBeginDate.value, txtEndDate.value);
@@ -173,7 +160,6 @@ function callbackGetAllEntries(responseString) {
     }
 
     displayAllEntries();
-
 }
 
 function btnDateWorked_onmousedown() {
@@ -296,6 +282,8 @@ function callbackSignIn(responseString) {
         return;
     }
 
+    btnSignIn.style.backgroundColor = "#1588C7";
+
     divSignIn.style.visibility = "hidden";
     btnAddNewEntry.style.visibility = "visible";
 }
@@ -325,14 +313,7 @@ function btnSignIn_onmousedown() {
 
     var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
 
-    httpPost(gServerRoot + "action=signIn", requestString, callbackGetAllEntries);
-
-    gEntriesList = [];
-
-    btnRefresh.style.backgroundColor = "#1588C7";
-
-    divSignIn.style.visibility = "hidden";
-    showEntries.style.visibility = "visible";
+    httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
 }
 
 
@@ -413,7 +394,9 @@ function addEntryToList(entry, i) {
     entriesList.appendChild(entryDiv);
 }
 
-function formatDateForList(serializedDate) { // array
+// Nothing to change from here.
+
+function formatDateForList(serializedDate) {
     var dateParts = serializedDate.split("/");
     var formattedString = "";
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -470,8 +453,7 @@ function addEventToListElement(object, eventFunction) {
     }
 }
 
-
-function validateInput() {
+function validateShowEntriesDates() {
     var beginDateErrorMessage = "Enter a valid begin date.";
     var endDateErrorMessage = "Enter a valid end date that is no later than today's date.";
 
@@ -485,10 +467,10 @@ function validateInput() {
         return false;
     }
 
-    var dateRangeErrorMessage = validateDateRanges();
+    var dateRangeError = validateDateRanges();
 
-    if (dateRangeErrorMessage.length != 0) {
-        showErrorMessage(dateRangeErrorMessage, txtEndDate);
+    if (dateRangeError[0].length != 0) {
+        showErrorMessage(dateRangeError[0], dateRangeError[1]);
         return false;
     }
 
@@ -503,33 +485,33 @@ function validateDateRanges() {
     var endDateParts = txtEndDate.value.trim().split('/');
     dateToday = new Date();
 
-    if (parseInt(endDateParts[0]) > dateToday.getFullYear()) {
-        return endDateAfterTodayErrorMessage;
+    if (parseInt(endDateParts[2]) > dateToday.getFullYear()) {
+        return [endDateAfterTodayErrorMessage, txtEndDate];
     }
-    if (parseInt(endDateParts[0]) === dateToday.getFullYear()
-        && parseInt(endDateParts[1]) > dateToday.getMonth() + 1) {
-        return endDateAfterTodayErrorMessage;
+    if (parseInt(endDateParts[2]) === dateToday.getFullYear()
+        && parseInt(endDateParts[0]) > dateToday.getMonth() + 1) {
+        return [endDateAfterTodayErrorMessage, txtEndDate];
     }
-    if (parseInt(endDateParts[0]) === dateToday.getFullYear()
-        && parseInt(endDateParts[1]) === dateToday.getMonth() + 1
-        && parseInt(endDateParts[2]) > dateToday.getDate()) {
-        return endDateAfterTodayErrorMessage;
-    }
-
-    if (parseInt(endDateParts[0]) < parseInt(beginDateParts[0])) {
-        return beginDateAfterEndErrorMessage;
-    }
-    if (parseInt(endDateParts[0]) === parseInt(beginDateParts[0])
-        && parseInt(endDateParts[1]) < parseInt(beginDateParts[1])) {
-        return beginDateAfterEndErrorMessage;
-    }
-    if (parseInt(endDateParts[0]) === parseInt(beginDateParts[0])
-        && parseInt(endDateParts[1]) === parseInt(beginDateParts[1])
-        && parseInt(endDateParts[2]) < parseInt(beginDateParts[2])) {
-        return beginDateAfterEndErrorMessage;
+    if (parseInt(endDateParts[2]) === dateToday.getFullYear()
+        && parseInt(endDateParts[0]) === dateToday.getMonth() + 1
+        && parseInt(endDateParts[1]) > dateToday.getDate()) {
+        return [endDateAfterTodayErrorMessage, txtEndDate];
     }
 
-    return "";
+    if (parseInt(endDateParts[2]) < parseInt(beginDateParts[0])) {
+        return [beginDateAfterEndErrorMessage, txtBeginDate];
+    }
+    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[0])
+        && parseInt(endDateParts[0]) < parseInt(beginDateParts[1])) {
+        return [beginDateAfterEndErrorMessage, txtBeginDate];
+    }
+    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[0])
+        && parseInt(endDateParts[0]) === parseInt(beginDateParts[1])
+        && parseInt(endDateParts[1]) < parseInt(beginDateParts[2])) {
+        return [beginDateAfterEndErrorMessage, txtBeginDate];
+    }
+
+    return ["", null];
 }
 
 function checkIfStringIsNumber(numberString) {
@@ -558,9 +540,9 @@ function tryParseDate(dateString) {
         return false;
     }
 
-    var year = parseInt(birthDateParts[0]);
-    var month = parseInt(birthDateParts[1]);
-    var day = parseInt(birthDateParts[2]);
+    var month = parseInt(birthDateParts[0]);
+    var day = parseInt(birthDateParts[1]);
+    var year = parseInt(birthDateParts[2]);
 
     if (year < 1 || year > 9999
         || month < 1 || month > 12

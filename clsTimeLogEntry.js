@@ -18,38 +18,21 @@ function clsTimeLogEntry() {
 }
 
 clsTimeLogEntry.prototype.Serialize = function () {
-    //var obj = {
-    //    "EntryID": this.EntryID,
-    //    "UserID": this.UserID,
-    //    "ProjectID": this.ProjectID,
-    //    "TaskTitle": this.TaskTitle,
-    //    "HoursWorked": this.HoursWorked,
-    //    "DateWorked": this.DateWorked,
-    //    "EntryDescription": this.EntryDescription,
-    //    "ActivityTitle": this.ActivityTitle,
-    //    "BillableIndicator": this.BillableIndicator.toString(),
-    //    "PayableIndicator": this.PayableIndicator.toString(),
-    //    "LastMaintUserID": this.LastMaintUserID,
-    //    "LastMaintUTC": this.LastMaintUTC,
-    //    "FirstName": this.FirstName,
-    //    "LastName": this.LastName,
-    //    "ProjectTitle": this.ProjectTitle
-    //};
-
     var returnString = JSON.stringify(this);
     return returnString;
 }
 
 clsTimeLogEntry.prototype.Deserialize = function (obj) {
-    alert(obj.DateWorked);
-
     //var obj = JSON.parse(jsonSerializedEntry);
     this.EntryID = obj.EntryID; // int
     this.UserID = obj.UserID; // int
     this.ProjectID = obj.ProjectID; // int
     this.TaskTitle = obj.TaskTitle;
     this.HoursWorked = obj.HoursWorked; // float
-    this.DateWorked = obj.DateWorked.split(" ")[0]; // string
+
+    // Only the date is required, not the time
+    this.DateWorked = obj.DateWorked.split(" ")[0];
+
     this.EntryDescription = obj.EntryDescription; // string
     this.ActivityTitle = obj.ActivityTitle; // string
     this.BillableIndicator = obj.BillableIndicator; // boolean

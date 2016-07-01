@@ -1,20 +1,16 @@
-﻿function TimeLogDate() {
+﻿function dmDate() {
     this.Month = month;
     this.Day = day;
     this.Year = year;
 }
 
-TimeLogDate.prototype.Serialize = function () {
+dmDate.prototype.Serialize = function () {
     return this.Year.ToString() + '\t'
             + this.Month.ToString() + '\t'
             + this.Day.ToString();
 }
 
-TimeLogDate.prototype.ConvertToNowUTCDate = function () {
-
-}
-
-TimeLogDate.prototype.Deserialize = function (serializedString) {
+dmDate.prototype.Deserialize = function (serializedString) {
     var values = serializedString.split("\t");
 
     this.Month = parseInt(values[0]);
@@ -22,15 +18,15 @@ TimeLogDate.prototype.Deserialize = function (serializedString) {
     this.Year = parseInt(values[2]);
 }
 
-TimeLogDate.prototype.ToYearMonthDayString = function () {
+dmDate.prototype.ToYearMonthDayString = function () {
     // return 1995/14/1
     return this.Year + "/" + this.Month + "/" + this.Day;
 }
 
-TimeLogDate.prototype.ToMonthNameDayYearString = function () {
+dmDate.prototype.ToMonthNameDayYearString = function () {
     // return = Jan 14, 1994
 
-    var TimeLogDateParts = serializedTimeLogDate.split("/");
+    var dmDateParts = serializeddmDate.split("/");
     var formattedString = "";
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -39,26 +35,26 @@ TimeLogDate.prototype.ToMonthNameDayYearString = function () {
     return formattedString;
 }
 
-TimeLogDate.prototype.ToString = function () {
+dmDate.prototype.ToString = function () {
     // return 14/01/1994
 
     return this.Month + "/" + this.Day + "/" + this.Year;
 }
 
-TimeLogDate.prototype.GetMonthName = function () {
+dmDate.prototype.GetMonthName = function () {
     var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    var TimeLogDate = new TimeLogDate(this.Year, this.Month - 1, this.Day);
+    var dmDate = new dmDate(this.Year, this.Month - 1, this.Day);
 
-    return days[TimeLogDate.getDay()];
+    return days[dmDate.getDay()];
 }
 
-TimeLogDate.prototype.GetDayName = function () {
+dmDate.prototype.GetDayName = function () {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     return months[this.Month - 1];
 }
 
-TimeLogDate.prototype.IsLeapYear = function () {
+dmDate.prototype.IsLeapYear = function () {
     if (year % 4 === 0
         && !(year % 100 === 0 && year % 400 != 0)) {
         return true;
@@ -66,20 +62,20 @@ TimeLogDate.prototype.IsLeapYear = function () {
     return false;
 }
 
-TimeLogDate.prototype.TryParseTimeLogDate = function(TimeLogDateString) {
-    birthTimeLogDateParts = TimeLogDateString.split("/");
-    if (birthTimeLogDateParts.length != 3) {
+dmDate.prototype.TryParsedmDate = function(dmDateString) {
+    birthdmDateParts = dmDateString.split("/");
+    if (birthdmDateParts.length != 3) {
         return false;
     }
-    if (checkIfStringIsNumber(birthTimeLogDateParts[0]) === false
-        || checkIfStringIsNumber(birthTimeLogDateParts[1]) === false
-        || checkIfStringIsNumber(birthTimeLogDateParts[2]) === false) {
+    if (checkIfStringIsNumber(birthdmDateParts[0]) === false
+        || checkIfStringIsNumber(birthdmDateParts[1]) === false
+        || checkIfStringIsNumber(birthdmDateParts[2]) === false) {
         return false;
     }
 
-    var month = parseInt(birthTimeLogDateParts[0]);
-    var day = parseInt(birthTimeLogDateParts[1]);
-    var year = parseInt(birthTimeLogDateParts[2]);
+    var month = parseInt(birthdmDateParts[0]);
+    var day = parseInt(birthdmDateParts[1]);
+    var year = parseInt(birthdmDateParts[2]);
 
     if (year < 1 || year > 9999
         || month < 1 || month > 12
@@ -130,7 +126,7 @@ TimeLogDate.prototype.TryParseTimeLogDate = function(TimeLogDateString) {
     }
 }
 
-TimeLogDate.prototype.IsEmpty = function () {
+dmDate.prototype.IsEmpty = function () {
     if (this.Year === 0 && this.Month === 0 && this.Day === 0) {
         return true;
     }
