@@ -57,18 +57,8 @@ function btnRefresh_onmousedown() {
 
     var requestString = serializeTabs([txtBeginDate.value, txtEndDate.value]);
 
-    httpPost(gServerRoot + "action=getEntries", requestString,
 
-		function (responseString) {
-		    alert(responseString);
-		    //gTimelogs = deserializeTimelog(responseString);
-		    //gTimelogs.splice(0, 1); // remove 'ok'
-		    //fillTableWithData(gTimelogs);
-		    //addRowHandlers();
-		    //updateTotalHoursWorked();
-		}
-
-    );
+    httpPost(gServerRoot + "action=getEntries", requestString, callbackFunctionGetResponseString);
 
     btnRefresh.style.backgroundColor = "#1588C7";
 
@@ -93,6 +83,10 @@ function btnRefresh_onmousedown() {
     //displayAllEntries(gResponseString);
 }
 
+function callbackFunctionGetResponseString(responseString) {    
+    var objs = responseString.split("\n");
+    alert(objs[0]);
+}
 
 function btnDateWorked_onmousedown() {
     btnDateWorked.style.backgroundColor = "#E0E0E0";
