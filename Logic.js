@@ -110,6 +110,8 @@ function btnSave_onmousedown() {
     entry.FirstName = gFirstName;
     entry.LastName = gLastName;
     entry.EntryDescription = txtDescription.value;
+    entry.PayableIndicator = cbxBillable.checked;
+    entry.BillableIndicator = cbxPayable.checked;
 
     gEntriesList.push(entry);
 
@@ -127,6 +129,9 @@ function clearEntryPage() {
     selectedProject.innerHTML = "";
     txtDescription.value = "";
     selectedTask.innerHTML = "";
+
+    cbxBillable.checked = false;
+    cbxPayable.checked = false;
 }
 
 function getAllEntriesConvertToJSON(beginDate, endDate) {
@@ -398,13 +403,18 @@ function validateSignInPage() {
 
 function btnSignIn_onmousedown() {
 
-    if (validateSignInPage() === false) {
-        return;
-    }
+    //if (validateSignInPage() === false) {
+    //    return;
+    //}
 
-    var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
+    //var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
 
-    httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
+    //httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
+
+    btnSignIn.style.backgroundColor = "#1588C7";
+
+    divSignIn.style.visibility = "hidden";
+    btnAddNewEntry.style.visibility = "visible";
 }
 
 
@@ -450,6 +460,27 @@ function displayAllEntries(serializedString) {
     }
 }
 
+function restoreEntryPage(entry) {
+    selectedActivity.innerHTML = entry.ActivityTitle;
+    selectedDateWorked.innerHTML = entry.DateWorked;
+    selectedHoursWorked.innerHTML = entry.HoursWorked;
+    selectedProject.innerHTML = entry.ProjectTitle;
+    txtDescription.value = entry.EntryDescription;
+    selectedTask.innerHTML = entry.TaskTitle;
+
+    cbxBillable.checked = entry.BillableIndicator;
+    cbxPayable.checked = entry.PayableIndicator;
+}
+
+function entryListElement_onmousedown() {
+    btnAddNewEntry.style.visibility = "hidden";
+    btnBack.style.visibility = "visible";
+    inputInformation.style.left = "0px";
+    showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
+
+    restoreEntryPage(this.entryToBeEditted);
+}
+
 function addEntryToList(entry, i) {
     var entryDiv = document.createElement('div');
     entryDiv.id = "entriesListElement";
@@ -457,6 +488,10 @@ function addEntryToList(entry, i) {
     entryDiv.EntryIndex = i;
 
     addEventToListElement(entryDiv);
+
+    entryDiv.onmousedown = entryListElement_onmousedown;
+    entryDiv.entryToBeEditted = entry;
+
 
     var entryDivName = document.createElement('div');
     entryDivName.id = "entryName";
