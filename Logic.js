@@ -92,6 +92,16 @@ function validateEntryInput() {
 
 }
 
+function btnAddNewEntry_onmousedown() {
+    initializeEntriesOptionsArrays();
+    inputInformation.style.left = "0px";
+    showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
+    btnAddNewEntry.style.visibility = "hidden";
+    btnBack.style.visibility = "visible";
+
+    inputInformation.EntryToEdit = null;
+}
+
 function btnSave_onmousedown() {
     btnSave.style.backgroundColor = "#BADCEF";
 
@@ -100,20 +110,26 @@ function btnSave_onmousedown() {
         return;
     }
 
-    var entry = new clsTimeLogEntry();
+    var entry = inputInformation.EntryToEdit;
+
+    if (inputInformation === null) {
+        entry = new clsTimeLogEntry();
+    }
 
     entry.HoursWorked = parseFloat(selectedHoursWorked.innerHTML);
     entry.DateWorked = selectedDateWorked.innerHTML;
     entry.ActivityTitle = selectedActivity.innerHTML;
     entry.ProjectTitle = selectedProject.innerHTML;
     entry.TaskTitle = selectedTask.innerHTML;
-    entry.FirstName = gFirstName;
-    entry.LastName = gLastName;
     entry.EntryDescription = txtDescription.value;
     entry.PayableIndicator = cbxBillable.checked;
     entry.BillableIndicator = cbxPayable.checked;
 
-    gEntriesList.push(entry);
+    if (inputInformation === null) {
+        entry.FirstName = gFirstName;
+        entry.LastName = gLastName;
+        gEntriesList.push(entry);
+    }
 
     btnBack_onmousedown();
 
@@ -431,13 +447,7 @@ function addDefaultDates() {
     txtBeginDate.defaultValue = (dateToday.getMonth() + 1) + "/" + dateToday.getDate() + "/" + dateToday.getFullYear();
 }
 
-function btnAddNewEntry_onmousedown() {
-    initializeEntriesOptionsArrays();
-    inputInformation.style.left = "0px";
-    showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
-    btnAddNewEntry.style.visibility = "hidden";
-    btnBack.style.visibility = "visible";
-}
+
 
 function btnBack_onmousedown() {
     btnSave.style.backgroundColor = "#1588C7";
@@ -470,6 +480,8 @@ function restoreEntryPage(entry) {
 
     cbxBillable.checked = entry.BillableIndicator;
     cbxPayable.checked = entry.PayableIndicator;
+
+    inputInformation.EntryToEdit = entry;
 }
 
 function entryListElement_onmousedown() {
