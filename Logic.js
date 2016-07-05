@@ -133,7 +133,6 @@ function btnSave_onmousedown() {
         entry.LastName = gLastName;
         entry.UserID = gUserID;
         gEntriesList.push(entry);
-        //displayAllEntries();
     }
 
     btnBack_onmousedown();
@@ -215,7 +214,7 @@ function btnProject_onmousedown() {
     entryOptionsList.style.left = "0px";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     btnBack.style.visibility = "hidden";
-    displayEntriesOptions(gProjects, projectOption_onmousedown);
+    displayEntriesOptions(gProjects, 'project', projectOption_onmousedown);
 }
 
 function btnActivity_onmousedown() {
@@ -223,20 +222,24 @@ function btnActivity_onmousedown() {
     entryOptionsList.style.left = "0px";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     btnBack.style.visibility = "hidden";
-    displayEntriesOptions(gActivities, activityOption_onmousedown);
+    displayEntriesOptions(gActivities, 'activity', activityOption_onmousedown);
 }
 
 function btnTask_onmousedown() {
+    if (selectedProject.innerHTML === "") {
+        showErrorMessage("Select a project.", btnSave);
+        btnTask.style.backgroundColor = "#FFFFFF";
+        entryOptionsList.style.left = window.innerWidth.toString() + "px";
+        inputInformation.style.left = "0px";
+        btnBack.style.visibility = "visible";
+        return;
+    }
+
     btnTask.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     btnBack.style.visibility = "hidden";
-    if (selectedProject.innerHTML === "") {
-        showErrorMessage("Select a project.", btnSave);
-        btnTask.style.backgroundColor = "#FFFFFF";
-        return;
-    }
-    displayEntriesOptions(gTasks[selectedProject.innerHTML], taskOption_onmousedown);
+    displayEntriesOptions(gTasks, 'task', taskOption_onmousedown);
 }
 
 function btnHoursWorked_onmousedown() {
@@ -289,22 +292,55 @@ function dateOption_onmousedown() {
     btnBack.style.visibility = "visible";
 }
 
-function callbackGetProjects(responseString) {
+function callbackGetTasks(responseString) {
     alert(responseString);
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
         showErrorMessage(parts[1] + "projects");
         return;
     }
+
+    gTasks = JSON.parse(parts[1]);
+}
+
+function projectOption_onmousedown() {
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
+    inputInformation.style.left = "0px";
+    this.style.backgroundColor = "#E0E0E0";
+    btnProject.style.backgroundColor = "#FFFFFF";
+    var project = this.innerHTML.split(" ");
+    selectedProject.innerHTML = project;
+    btnBack.style.visibility = "visible";
+
+    var object = {
+        AuthToken: gAuthToken.toString(),
+        ProjectID: this.typeID
+    };
+
+
+    var requestString = JSON.stringify(object);
+    alert(requestString);
+    httpPost(gServerRoot + "action=getTasks", requestString, callbackGetTasks);
+}
+
+function callbackGetProjects(responseString) {
+    var parts = responseString.split("\n");
+    if (parts[0] === "error") {
+        showErrorMessage(parts[1] + "projects");
+        return;
+    }
+
+    gProjects = JSON.parse(parts[1]);
 }
 
 function callbackGetActivities(responseString) {
-    alert(responseString);
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
         showErrorMessage(parts[1] + "activities");
         return;
     }
+
+    gActivities = JSON.parse(parts[1]);
 }
 
 function initializeEntriesOptionsArrays() {
@@ -314,31 +350,41 @@ function initializeEntriesOptionsArrays() {
 
 
     var requestString = JSON.stringify(object);
-    alert(requestString);
     httpPost(gServerRoot + "action=getProjects", requestString, callbackGetProjects);
     httpPost(gServerRoot + "action=getActivities", requestString, callbackGetActivities);
 
-    gProjects = ["CropZilla", "Gardner", "TimeCard"];
+    //gProjects = ["CropZilla", "Gardner", "TimeCard"];
 
-    gActivities = ["Administrative", "Application Design", "Documentation", "Management", "Software Development", "Self Education"];
+    //gActivities = ["Administrative", "Application Design", "Documentation", "Management", "Software Development", "Self Education"];
 
 
-    gTasks = {
-        CropZilla: ["Task1", "Task2"],
-        Gardner: ["TaskG1", "Task G2"],
-        TimeCard: ["Server", "DeskTopUI", "AdminUI", "WebUI", "MobileUI"]
-    }
+    //gTasks = {
+    //    CropZilla: ["Task1", "Task2"],
+    //    Gardner: ["TaskG1", "Task G2"],
+    //    TimeCard: ["Server", "DeskTopUI", "AdminUI", "WebUI", "MobileUI"]
+    //}
 }
 
-function displayEntriesOptions(array, function_onmousdown) {
+function displayEntriesOptions(array, type, function_onmousdown) {
     entryOptionsList.innerHTML = "";
     for (var i = 0; i < array.length; i++) {
         var projectOption = document.createElement('div');
         projectOption.id = "entryOption";
-        projectOption.innerHTML = array[i];
         projectOption.style.width = window.innerWidth.toString() + "px";
         projectOption.style.top = (50 * i).toString() + "px";
         projectOption.onmousedown = function_onmousdown;
+        if (type === 'project') {
+            projectOption.typeID = array[i].ProjectID;
+            projectOption.innerHTML = array[i].ProjectTitle;
+        }
+        else if (type === 'activity') {
+            projectOption.typeID = array[i].ActivityID;
+            projectOption.innerHTML = array[i].ActivityTitle;
+        }
+        else if (type === 'task') {
+            projectOption.typeID = array[i].TaskID;
+            projectOption.innerHTML = array[i].TaskTitle;
+        }
         entryOptionsList.appendChild(projectOption);
     }
 }
@@ -357,19 +403,9 @@ function activityOption_onmousedown() {
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
     this.style.backgroundColor = "#E0E0E0";
-    btnTask.style.backgroundColor = "#FFFFFF";
+    btnActivity.style.backgroundColor = "#FFFFFF";
     var activity = this.innerHTML.split(" ");
     selectedActivity.innerHTML = activity;
-    btnBack.style.visibility = "visible";
-}
-
-function projectOption_onmousedown() {
-    entryOptionsList.style.left = window.innerWidth.toString() + "px";
-    inputInformation.style.left = "0px";
-    this.style.backgroundColor = "#E0E0E0";
-    btnProject.style.backgroundColor = "#FFFFFF";
-    var project = this.innerHTML.split(" ");
-    selectedProject.innerHTML = project;
     btnBack.style.visibility = "visible";
 }
 
@@ -468,11 +504,6 @@ function btnSignIn_onmousedown() {
     var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
 
     httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
-
-    //btnSignIn.style.backgroundColor = "#1588C7";
-
-    //divSignIn.style.visibility = "hidden";
-    //btnAddNewEntry.style.visibility = "visible";
 }
 
 

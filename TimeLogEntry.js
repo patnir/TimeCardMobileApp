@@ -1,4 +1,4 @@
-﻿/// <reference path="Index.html">
+﻿/// <reference path="TimeCardv10.html">
 function TimeLogEntry() {
     this.EntryID = null; // int
     this.UserID = null; // int
