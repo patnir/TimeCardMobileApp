@@ -1,10 +1,10 @@
 ﻿/// <reference path="Index.html">
-function clsTimeLogEntry() {
+function TimeLogEntry() {
     this.EntryID = null; // int
     this.UserID = null; // int
     this.ProjectID = null; // int
     this.TaskTitle = "";
-    this.HoursWorked = 0.00; // float
+    this.HoursWorked = null; // float
     this.DateWorked = ""; // string
     this.EntryDescription = ""; // string
     this.ActivityTitle = ""; // string
@@ -17,12 +17,12 @@ function clsTimeLogEntry() {
     this.ProjectTitle = ""; //string
 }
 
-clsTimeLogEntry.prototype.Serialize = function () {
+TimeLogEntry.prototype.Serialize = function () {
     var returnString = JSON.stringify(this);
     return returnString;
 }
 
-clsTimeLogEntry.prototype.Deserialize = function (obj) {
+TimeLogEntry.prototype.Deserialize = function (obj) {
     //var obj = JSON.parse(jsonSerializedEntry);
     this.EntryID = obj.EntryID; // int
     this.UserID = obj.UserID; // int
