@@ -1,4 +1,4 @@
-﻿/// <reference path="Index.html">
+﻿/// <reference path="TimeCardv10.html">
 
 var gResponseString;
 var gEntriesList;
@@ -7,6 +7,9 @@ var gProjects;
 var gActivities;
 var gTasks;
 
+var gTeamID = "";
+var gTeamName = "";
+var gAuthToken = "";
 var gFirstName = "Rahul";
 var gLastName = "Patni";
 
@@ -112,10 +115,11 @@ function btnSave_onmousedown() {
 
     var entry = inputInformation.EntryToEdit;
 
-    if (inputInformation === null) {
-        entry = new clsTimeLogEntry();
+    if (inputInformation.EntryToEdit === null) {
+        entry = new TimeLogEntry();
     }
 
+    alert(selectedHoursWorked.innerHTML);
     entry.HoursWorked = parseFloat(selectedHoursWorked.innerHTML);
     entry.DateWorked = selectedDateWorked.innerHTML;
     entry.ActivityTitle = selectedActivity.innerHTML;
@@ -125,10 +129,12 @@ function btnSave_onmousedown() {
     entry.PayableIndicator = cbxBillable.checked;
     entry.BillableIndicator = cbxPayable.checked;
 
-    if (inputInformation === null) {
+    if (inputInformation.EntryToEdit === null) {
         entry.FirstName = gFirstName;
         entry.LastName = gLastName;
+        entry.UserID = gUserID;
         gEntriesList.push(entry);
+        //displayAllEntries();
     }
 
     btnBack_onmousedown();
@@ -152,7 +158,7 @@ function clearEntryPage() {
 
 function getAllEntriesConvertToJSON(beginDate, endDate) {
     var obj = {
-        AuthToken: "",
+        AuthToken: gAuthToken.toString(),
         FromDate: beginDate,
         ToDate: endDate
     };
@@ -168,15 +174,13 @@ function btnRefresh_onmousedown() {
 
     var requestString = getAllEntriesConvertToJSON(txtBeginDate.value, txtEndDate.value);
 
-
     httpPost(gServerRoot + "action=getEntries", requestString, callbackGetAllEntries);
 
     gEntriesList = [];
-
-    btnRefresh.style.backgroundColor = "#1588C7";
 }
 
-function callbackGetAllEntries(responseString) {    
+function callbackGetAllEntries(responseString) {
+    alert(responseString);
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
         showErrorMessage(parts[1], txtBeginDate);
@@ -191,7 +195,7 @@ function callbackGetAllEntries(responseString) {
     var objects = JSON.parse(parts[1]);
 
     for (var i = 0; i < objects.length; i++) {
-        var entry = new clsTimeLogEntry();
+        var entry = new TimeLogEntry();
         entry.Deserialize(objects[i]);
         gEntriesList.push(entry);
     }
@@ -388,11 +392,21 @@ function signInConvertToJSON(teamName, emailAddress, password) {
 }
 
 function callbackSignIn(responseString) {
+    alert(responseString);
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
         showErrorMessage(parts[1], txtTeamName);
         return;
     }
+
+    var object = JSON.parse(parts[1]);
+
+    gTeamID = object.TeamID;
+    gUserID = object.gUserID;
+    gTeamName = object.TeamName;
+    gAuthToken = object.AuthToken;
+    gFirstName = object.FirstName;
+    gLastName = object.LastName;
 
     btnSignIn.style.backgroundColor = "#1588C7";
 
@@ -419,18 +433,18 @@ function validateSignInPage() {
 
 function btnSignIn_onmousedown() {
 
-    //if (validateSignInPage() === false) {
-    //    return;
-    //}
+    if (validateSignInPage() === false) {
+        return;
+    }
 
-    //var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
+    var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
 
-    //httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
+    httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
 
-    btnSignIn.style.backgroundColor = "#1588C7";
+    //btnSignIn.style.backgroundColor = "#1588C7";
 
-    divSignIn.style.visibility = "hidden";
-    btnAddNewEntry.style.visibility = "visible";
+    //divSignIn.style.visibility = "hidden";
+    //btnAddNewEntry.style.visibility = "visible";
 }
 
 
@@ -468,6 +482,8 @@ function displayAllEntries(serializedString) {
     for (var i = 0; i < gEntriesList.length; i++) {
         addEntryToList(gEntriesList[i], i);
     }
+
+    btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function restoreEntryPage(entry) {
@@ -559,6 +575,8 @@ function showErrorMessage(message, objectToFocus) {
     errorMessageString.innerHTML = message;
 
     errorMessageMain.ObjectToFocus = objectToFocus;
+
+    btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function btnErrorMessageOK_onmousedown() {
