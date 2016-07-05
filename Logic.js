@@ -26,6 +26,10 @@ function body_load() {
     btnAddNewEntry.style.visibility = "hidden";
     btnBack.style.visibility = "hidden";
 
+    btnSignOut.onmousedown = btnSignOut_onmousedown;
+
+    btnSignOut.style.visibility = "hidden";
+
     btnDateWorked.onmousedown = btnDateWorked_onmousedown;
     btnProject.onmousedown = btnProject_onmousedown;
     btnTask.onmousedown = btnTask_onmousedown;
@@ -73,16 +77,16 @@ function validateEntryInput() {
         showErrorMessage("Select a Project.", null);
         return false;
     }
-    if (selectedTask === "") {
+    if (selectedTask.innerHTML === "") {
         showErrorMessage("Select a Task.", null);
         return false;
     }
-    if (selectedActivity === "") {
+    if (selectedActivity.innerHTML === "") {
         showErrorMessage("Select a Activity.", null);
         return false;
     }
-    if (selectedHoursWorked === "") {
-        showErrorMessage("Select number of Hours Worked.", null);
+    if (selectedHoursWorked.innerHTML === "" || parseFloat(selectedHoursWorked.innerHTML) === 0.00) {
+        showErrorMessage("Select number of Hours Worked greater than zero.", null);
         return false;
     }
 
@@ -100,6 +104,7 @@ function btnAddNewEntry_onmousedown() {
     inputInformation.style.left = "0px";
     showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
     btnAddNewEntry.style.visibility = "hidden";
+    btnSignOut.style.visibility = "hidden";
     btnBack.style.visibility = "visible";
 
     inputInformation.EntryToEdit = null;
@@ -446,14 +451,30 @@ function formatNumberToTwoDecimalPlaces(number) {
     return number.toString();
 }
 
-function signInConvertToJSON(teamName, emailAddress, password) {
+function btnSignOut_onmousedown() {
+    btnSignOut.style.color = "#BADCEF";
     var object = {
-        TeamName: teamName, 
-        EmailAddress: emailAddress,
-        Password: password
+        AuthToken: gAuthToken,
     }
 
-    return JSON.stringify(object)
+    var requestString = JSON.stringify(object)
+
+    httpPost(gServerRoot + "action=signOut", requestString, callbackSignOut);
+}
+
+function callbackSignOut(responseString) {
+    var parts = responseString.split("\n");
+
+    btnSignOut.style.color = "#1588C7";
+
+    if (parts[0] === "error") {
+        showErrorMessage(parts[1], txtBeginDate);
+        return;
+    }
+
+    divSignIn.style.visibility = "visible";
+    btnAddNewEntry.style.visibility = "hidden";
+    btnSignOut.style.visibility = "hidden"
 }
 
 function callbackSignIn(responseString) {
@@ -476,6 +497,7 @@ function callbackSignIn(responseString) {
 
     divSignIn.style.visibility = "hidden";
     btnAddNewEntry.style.visibility = "visible";
+    btnSignOut.style.visibility = "visible";
 }
 
 function validateSignInPage() {
@@ -501,7 +523,13 @@ function btnSignIn_onmousedown() {
         return;
     }
 
-    var requestString = signInConvertToJSON(txtTeamName.value, txtEmail.value, txtPassword.value);
+    var object = {
+        TeamName: txtTeamName.value,
+        EmailAddress: txtEmail.value,
+        Password: txtPassword.value
+    }
+
+    var requestString = JSON.stringify(object)
 
     httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
 }
@@ -527,6 +555,7 @@ function btnBack_onmousedown() {
     showEntries.style.left = "0px";
     inputInformation.style.left = window.innerWidth.toString() + "px";
     btnAddNewEntry.style.visibility = "visible";
+    btnSignOut.style.visibility = "visible";
     btnBack.style.visibility = "hidden";
     clearEntryPage();
 }
@@ -561,6 +590,7 @@ function restoreEntryPage(entry) {
 
 function entryListElement_onmousedown() {
     btnAddNewEntry.style.visibility = "hidden";
+    btnSignOut.style.visibility = "hidden";
     btnBack.style.visibility = "visible";
     inputInformation.style.left = "0px";
     showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
