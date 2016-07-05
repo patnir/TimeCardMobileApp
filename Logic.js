@@ -29,9 +29,17 @@ function body_load() {
     txtEmail.value = ditStorageGet('email', "");
     txtTeamName.value = ditStorageGet('teamName', "");
     cbxRememberPassword.value = ditStorageGet('cbxValue', "off");
-    
+    gAuthToken = ditStorageGet('authToken', "");
+
     if (cbxRememberPassword.value === "on") {
         cbxRememberPassword.checked = true;
+        var object = {
+            AuthToken: gAuthToken
+        }
+
+        var requestString = JSON.stringify(object)
+
+        httpPost(gServerRoot + "action=tokenSignIn", requestString, callbackSignIn);
     }
     else {
         cbxRememberPassword.checked = false;
@@ -485,9 +493,11 @@ function callbackSignOut(responseString) {
         return;
     }
 
+    cbxRememberPassword.checked = false;
+
     divSignIn.style.visibility = "visible";
     btnAddNewEntry.style.visibility = "hidden";
-    btnSignOut.style.visibility = "hidden"
+    btnSignOut.style.visibility = "hidden";
 }
 
 function callbackSignIn(responseString) {
@@ -502,7 +512,11 @@ function callbackSignIn(responseString) {
     gTeamID = object.TeamID;
     gUserID = object.gUserID;
     gTeamName = object.TeamName;
-    gAuthToken = object.AuthToken;
+
+    if (object.AuthToken != null) {
+        gAuthToken = object.AuthToken;
+    }
+
     gFirstName = object.FirstName;
     gLastName = object.LastName;
 
