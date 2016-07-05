@@ -119,7 +119,6 @@ function btnSave_onmousedown() {
         entry = new TimeLogEntry();
     }
 
-    alert(selectedHoursWorked.innerHTML);
     entry.HoursWorked = parseFloat(selectedHoursWorked.innerHTML);
     entry.DateWorked = selectedDateWorked.innerHTML;
     entry.ActivityTitle = selectedActivity.innerHTML;
@@ -180,7 +179,6 @@ function btnRefresh_onmousedown() {
 }
 
 function callbackGetAllEntries(responseString) {
-    alert(responseString);
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
         showErrorMessage(parts[1], txtBeginDate);
@@ -291,9 +289,40 @@ function dateOption_onmousedown() {
     btnBack.style.visibility = "visible";
 }
 
+function callbackGetProjects(responseString) {
+    alert(responseString);
+    var parts = responseString.split("\n");
+    if (parts[0] === "error") {
+        showErrorMessage(parts[1] + "projects");
+        return;
+    }
+}
+
+function callbackGetActivities(responseString) {
+    alert(responseString);
+    var parts = responseString.split("\n");
+    if (parts[0] === "error") {
+        showErrorMessage(parts[1] + "activities");
+        return;
+    }
+}
+
 function initializeEntriesOptionsArrays() {
+    var object = {
+        AuthToken: gAuthToken.toString()
+    };
+
+
+    var requestString = JSON.stringify(object);
+    alert(requestString);
+    httpPost(gServerRoot + "action=getProjects", requestString, callbackGetProjects);
+    httpPost(gServerRoot + "action=getActivities", requestString, callbackGetActivities);
+
     gProjects = ["CropZilla", "Gardner", "TimeCard"];
+
     gActivities = ["Administrative", "Application Design", "Documentation", "Management", "Software Development", "Self Education"];
+
+
     gTasks = {
         CropZilla: ["Task1", "Task2"],
         Gardner: ["TaskG1", "Task G2"],
@@ -392,7 +421,6 @@ function signInConvertToJSON(teamName, emailAddress, password) {
 }
 
 function callbackSignIn(responseString) {
-    alert(responseString);
     var parts = responseString.split("\n");
     if (parts[0] === "error") {
         showErrorMessage(parts[1], txtTeamName);
