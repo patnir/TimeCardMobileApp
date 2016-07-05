@@ -26,6 +26,17 @@ function body_load() {
     btnAddNewEntry.style.visibility = "hidden";
     btnBack.style.visibility = "hidden";
 
+    txtEmail.value = ditStorageGet('email', "");
+    txtTeamName.value = ditStorageGet('teamName', "");
+    cbxRememberPassword.value = ditStorageGet('cbxValue', "off");
+    
+    if (cbxRememberPassword.value === "on") {
+        cbxRememberPassword.checked = true;
+    }
+    else {
+        cbxRememberPassword.checked = false;
+    }
+
     btnSignOut.onmousedown = btnSignOut_onmousedown;
 
     btnSignOut.style.visibility = "hidden";
@@ -457,6 +468,8 @@ function btnSignOut_onmousedown() {
         AuthToken: gAuthToken,
     }
 
+    localStorage.clear();
+
     var requestString = JSON.stringify(object)
 
     httpPost(gServerRoot + "action=signOut", requestString, callbackSignOut);
@@ -495,9 +508,36 @@ function callbackSignIn(responseString) {
 
     btnSignIn.style.backgroundColor = "#1588C7";
 
+    if (cbxRememberPassword.checked === true) {
+        storeCredentials();
+    }   
+    else {
+        localStorage.clear();
+    }
+
+    txtTeamName.value = "";
+    txtPassword.value = "";
+    txtEmail.value = "";
+    cbxRememberPassword.checked === false;
+
     divSignIn.style.visibility = "hidden";
     btnAddNewEntry.style.visibility = "visible";
     btnSignOut.style.visibility = "visible";
+}
+
+function storeCredentials() {
+    localStorage.email = txtEmail.value;
+    localStorage.teamName = txtTeamName.value;
+    localStorage.authToken = gAuthToken;
+    localStorage.cbxValue = "on";
+}
+
+function ditStorageGet(key, dfltValue) {
+    var value = localStorage.getItem(key);
+    if (value == undefined) {
+        return dfltValue;
+    }
+    return value;
 }
 
 function validateSignInPage() {
