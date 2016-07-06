@@ -59,13 +59,8 @@ function autoSignIn() {
 
     if (cbxRememberPassword.value === "on") {
         cbxRememberPassword.checked = true;
-        var object = {
-            AuthToken: gAuthToken
-        }
 
-        var requestString = JSON.stringify(object)
-
-        httpPost(gServerRoot + "action=tokenSignIn", requestString, callbackSignIn);
+        httpPost(gServerRoot + "action=tokenSignIn&AuthToken=" + gAuthToken, "", callbackSignIn);
     }
     else {
         cbxRememberPassword.checked = false;
@@ -188,16 +183,6 @@ function clearEntryPage() {
     cbxPayable.checked = false;
 }
 
-function getAllEntriesConvertToJSON(beginDate, endDate) {
-    var obj = {
-        AuthToken: gAuthToken.toString(),
-        FromDate: beginDate,
-        ToDate: endDate
-    };
-
-    return JSON.stringify(obj);
-}
-
 function btnRefresh_onmousedown() {
     if (validateShowEntriesDates() === false) {
         return;
@@ -206,32 +191,41 @@ function btnRefresh_onmousedown() {
 
     var requestString = getAllEntriesConvertToJSON(txtBeginDate.value, txtEndDate.value);
 
-    httpPost(gServerRoot + "action=getEntries", requestString, callbackGetAllEntries);
+    httpPost(gServerRoot + "action=getEntries&AuthToken=" + gAuthToken, requestString, callbackGetAllEntries);
 
     gEntriesList = [];
-}
 
-function callbackGetAllEntries(responseString) {
-    var parts = responseString.split("\n");
-    if (parts[0] === "error") {
-        showErrorMessage(parts[1], txtBeginDate);
-        return;
-    }
-    
-    if (parts[1] === "[]") {
-        showErrorMessage("No Entries Found.", txtBeginDate);
-        return;
+    function getAllEntriesConvertToJSON(beginDate, endDate) {
+        var obj = {
+            FromDate: beginDate,
+            ToDate: endDate
+        };
+
+        return JSON.stringify(obj);
     }
 
-    var objects = JSON.parse(parts[1]);
+    function callbackGetAllEntries(responseString) {
+        var parts = responseString.split("\n");
+        if (parts[0] === "error") {
+            showErrorMessage(parts[1], txtBeginDate);
+            return;
+        }
 
-    for (var i = 0; i < objects.length; i++) {
-        var entry = new TimeLogEntry();
-        entry.Deserialize(objects[i]);
-        gEntriesList.push(entry);
+        if (parts[1] === "[]") {
+            showErrorMessage("No Entries Found.", txtBeginDate);
+            return;
+        }
+
+        var objects = JSON.parse(parts[1]);
+
+        for (var i = 0; i < objects.length; i++) {
+            var entry = new TimeLogEntry();
+            entry.Deserialize(objects[i]);
+            gEntriesList.push(entry);
+        }
+
+        displayAllEntries();
     }
-
-    displayAllEntries();
 }
 
 function btnDateWorked_onmousedown() {
@@ -342,16 +336,6 @@ function dateOption_onmousedown() {
     btnBack.style.visibility = "visible";
 }
 
-function callbackGetTasks(responseString) {
-    var parts = responseString.split("\n");
-    if (parts[0] === "error") {
-        showErrorMessage(parts[1] + "projects");
-        return;
-    }
-
-    gTasks = JSON.parse(parts[1]);
-}
-
 function projectOption_onmousedown() {
     entryOptionsList.style.visibility = "hidden";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
@@ -364,55 +348,46 @@ function projectOption_onmousedown() {
     btnBack.style.visibility = "visible";
 
     var object = {
-        AuthToken: gAuthToken.toString(),
         ProjectID: this.typeID
     };
 
-
     var requestString = JSON.stringify(object);
-    httpPost(gServerRoot + "action=getTasks", requestString, callbackGetTasks);
-}
+    httpPost(gServerRoot + "action=getTasks&AuthToken=" + gAuthToken, requestString, callbackGetTasks);
 
-function callbackGetProjects(responseString) {
-    var parts = responseString.split("\n");
-    if (parts[0] === "error") {
-        showErrorMessage(parts[1] + "projects");
-        return;
+    function callbackGetTasks(responseString) {
+        var parts = responseString.split("\n");
+        if (parts[0] === "error") {
+            showErrorMessage(parts[1] + "projects");
+            return;
+        }
+
+        gTasks = JSON.parse(parts[1]);
     }
-
-    gProjects = JSON.parse(parts[1]);
-}
-
-function callbackGetActivities(responseString) {
-    var parts = responseString.split("\n");
-    if (parts[0] === "error") {
-        showErrorMessage(parts[1] + "activities");
-        return;
-    }
-
-    gActivities = JSON.parse(parts[1]);
 }
 
 function initializeEntriesOptionsArrays() {
-    var object = {
-        AuthToken: gAuthToken.toString()
-    };
+    httpPost(gServerRoot + "action=getProjects&AuthToken=" + gAuthToken, "", callbackGetProjects);
+    httpPost(gServerRoot + "action=getActivities&AuthToken=" + gAuthToken, "", callbackGetActivities);
 
+    function callbackGetActivities(responseString) {
+        var parts = responseString.split("\n");
+        if (parts[0] === "error") {
+            showErrorMessage(parts[1] + "activities");
+            return;
+        }
 
-    var requestString = JSON.stringify(object);
-    httpPost(gServerRoot + "action=getProjects", requestString, callbackGetProjects);
-    httpPost(gServerRoot + "action=getActivities", requestString, callbackGetActivities);
+        gActivities = JSON.parse(parts[1]);
+    }
 
-    //gProjects = ["CropZilla", "Gardner", "TimeCard"];
+    function callbackGetProjects(responseString) {
+        var parts = responseString.split("\n");
+        if (parts[0] === "error") {
+            showErrorMessage(parts[1] + "projects");
+            return;
+        }
 
-    //gActivities = ["Administrative", "Application Design", "Documentation", "Management", "Software Development", "Self Education"];
-
-
-    //gTasks = {
-    //    CropZilla: ["Task1", "Task2"],
-    //    Gardner: ["TaskG1", "Task G2"],
-    //    TimeCard: ["Server", "DeskTopUI", "AdminUI", "WebUI", "MobileUI"]
-    //}
+        gProjects = JSON.parse(parts[1]);
+    }
 }
 
 function displayEntriesOptions(array, type, function_onmousdown) {
@@ -502,32 +477,27 @@ function formatNumberToTwoDecimalPlaces(number) {
 
 function btnSignOut_onmousedown() {
     btnSignOut.style.color = "#BADCEF";
-    var object = {
-        AuthToken: gAuthToken,
-    }
 
     localStorage.clear();
 
-    var requestString = JSON.stringify(object)
+    httpPost(gServerRoot + "action=signOut&AuthToken=" + gAuthToken, "", callbackSignOut);
 
-    httpPost(gServerRoot + "action=signOut", requestString, callbackSignOut);
-}
+    function callbackSignOut(responseString) {
+        var parts = responseString.split("\n");
 
-function callbackSignOut(responseString) {
-    var parts = responseString.split("\n");
+        btnSignOut.style.color = "#1588C7";
 
-    btnSignOut.style.color = "#1588C7";
+        if (parts[0] === "error") {
+            showErrorMessage(parts[1], txtBeginDate);
+            return;
+        }
 
-    if (parts[0] === "error") {
-        showErrorMessage(parts[1], txtBeginDate);
-        return;
+        cbxRememberPassword.checked = false;
+
+        divSignIn.style.visibility = "visible";
+        btnAddNewEntry.style.visibility = "hidden";
+        btnSignOut.style.visibility = "hidden";
     }
-
-    cbxRememberPassword.checked = false;
-
-    divSignIn.style.visibility = "visible";
-    btnAddNewEntry.style.visibility = "hidden";
-    btnSignOut.style.visibility = "hidden";
 }
 
 function callbackSignIn(responseString) {
