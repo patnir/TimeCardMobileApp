@@ -1,4 +1,4 @@
-﻿var gServerRoot = "http://localhost:50912/Default.aspx?";
+﻿var gServerRoot = "http://900f0398.ngrok.io/Default.aspx?";
 
 //Example function call: httpPost(gServerRoot + "action=getEntries", requestString, function (responseString) { alert(responseString); } );
 
@@ -31,6 +31,7 @@ function httpPost(url, reqString, callbackFunction) {
             }
             else {
                 if (aborted === false) {
+                    alert(httpRequest.responseText);
                     alert("Error received from the server.");
                 }
             }

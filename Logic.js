@@ -10,17 +10,68 @@ var gTasks;
 var gTeamID = "";
 var gTeamName = "";
 var gAuthToken = "";
-var gFirstName = "Rahul";
-var gLastName = "Patni";
+var gFirstName = "";
+var gLastName = "";
+
+function txtTeamName_onfocus() {
+    txtEmail.style.visibility = "hidden";
+    lblEmail.style.visibility = "hidden";
+    txtPassword.style.visibility = "hidden";
+    lblPassword.style.visibility = "hidden";
+}
+
+function txtEmail_onfocus() {
+    txtPassword.style.visibility = "hidden";
+    lblPassword.style.visibility = "hidden";
+    txtTeamName.style.visibility = "hidden";
+    lblTeamName.style.visibility = "hidden";
+}
+
+function txtPassword_onfocus() {
+    txtEmail.style.visibility = "hidden";
+    lblEmail.style.visibility = "hidden";
+    txtTeamName.style.visibility = "hidden";
+    lblTeamName.style.visibility = "hidden";
+}
+
+function signInBoxOnBlur() {
+    if (divSignIn.style.visibility === "hidden") {
+        txtEmail.style.visibility = "hidden";
+        lblEmail.style.visibility = "hidden";
+        txtTeamName.style.visibility = "hidden";
+        lblTeamName.style.visibility = "hidden";
+        txtPassword.style.visibility = "hidden";
+        lblPassword.style.visibility = "hidden";
+        return;
+    }
+    txtPassword.style.visibility = "visible";
+    txtTeamName.style.visibility = "visible";
+    txtEmail.style.visibility = "visible";
+
+    lblPassword.style.visibility = "visible";
+    lblTeamName.style.visibility = "visible";
+    lblEmail.style.visibility = "visible";
+}
 
 function body_load() {
     autoSignIn();
+
+    txtTeamName.onfocus = txtTeamName_onfocus;
+    txtEmail.onfocus = txtEmail_onfocus;
+    txtPassword.onfocus = txtPassword_onfocus;
+
+    txtTeamName.onblur = signInBoxOnBlur;
+    txtEmail.onblur = signInBoxOnBlur;
+    txtPassword.onblur = signInBoxOnBlur;
 
     window.onresize = window_onresize;
     btnAddNewEntry.onmousedown = btnAddNewEntry_onmousedown;
     btnBack.onmousedown = btnBack_onmousedown;
     btnRefresh.onmousedown = btnRefresh_onmousedown;
     btnRefresh.onmouseup = btnRefresh_onmouseup;
+
+    btnForgotPassword.onmousedown = btnForgotPassword_onmousedown;
+
     btnSignIn.onmousedown = btnSignIn_onmousedown;
     btnSignIn.onmouseup = btnSignIn_onmouseup;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
@@ -49,6 +100,17 @@ function body_load() {
     gResponseString = "";
 
     window_onresize();
+}
+
+function btnForgotPassword_onmousedown() {
+    if (txtTeamName.value.trim() === "") {
+        showErrorMessage("Enter a team name.", txtTeamName);
+        return;
+    }
+    if (txtEmail.value.trim() === "") {
+        showErrorMessage("Enter an email address.", txtEmail);
+        return;
+    }
 }
 
 function autoSignIn() {
@@ -497,6 +559,7 @@ function btnSignOut_onmousedown() {
         divSignIn.style.visibility = "visible";
         btnAddNewEntry.style.visibility = "hidden";
         btnSignOut.style.visibility = "hidden";
+        signInBoxOnBlur();
     }
 }
 
@@ -511,7 +574,6 @@ function callbackSignIn(responseString) {
 
     gTeamID = object.TeamID;
     gUserID = object.gUserID;
-    gTeamName = object.TeamName;
 
     if (object.AuthToken != null) {
         gAuthToken = object.AuthToken;
@@ -537,6 +599,10 @@ function callbackSignIn(responseString) {
     divSignIn.style.visibility = "hidden";
     btnAddNewEntry.style.visibility = "visible";
     btnSignOut.style.visibility = "visible";
+    entryOptionsList.style.visibility = "hidden";
+    inputInformation.style.visibility = "hidden";
+
+    signInBoxOnBlur();
 }
 
 function storeCredentials() {
@@ -572,7 +638,6 @@ function validateSignInPage() {
 }
 
 function btnSignIn_onmousedown() {
-
     if (validateSignInPage() === false) {
         return;
     }

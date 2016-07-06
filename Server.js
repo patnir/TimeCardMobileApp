@@ -1,4 +1,4 @@
-﻿var gServerRoot = "http://localhost:50912/Default.aspx?";
+﻿var gServerRoot = "http://900f0398.ngrok.io/Default.aspx?";
 
 var gServerErrorMsg;
 
