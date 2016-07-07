@@ -7,11 +7,9 @@ var gProjects;
 var gActivities;
 var gTasks;
 
-var gTeamID = "";
-var gTeamName = "";
+var gUser;
+
 var gAuthToken = "";
-var gFirstName = "";
-var gLastName = "";
 
 function txtTeamName_onfocus() {
     txtEmail.style.visibility = "hidden";
@@ -122,7 +120,14 @@ function autoSignIn() {
     if (cbxRememberPassword.value === "on") {
         cbxRememberPassword.checked = true;
 
-        httpPost(gServerRoot + "action=tokenSignIn&AuthToken=" + gAuthToken, "", callbackSignIn);
+        gUser = tokenSignIn(gAuthToken);
+
+        if (gUser === null) {
+            showErrorMessage(gServerErrorMsg);
+            return;
+        }
+
+        callbackSignIn(gUser);
     }
     else {
         cbxRememberPassword.checked = false;
@@ -251,43 +256,26 @@ function btnRefresh_onmousedown() {
     }
     btnRefresh.style.backgroundColor = "#BADCEF";
 
-    var requestString = getAllEntriesConvertToJSON(txtBeginDate.value, txtEndDate.value);
+    //var requestString = getAllEntriesConvertToJSON(txtBeginDate.value, txtEndDate.value);
 
-    httpPost(gServerRoot + "action=getEntries&AuthToken=" + gAuthToken, requestString, callbackGetAllEntries);
+    //httpPost(gServerRoot + "action=getEntries&AuthToken=" + gAuthToken, requestString, callbackGetAllEntries);
 
-    gEntriesList = [];
+    alert(gUser.UserID);
 
-    function getAllEntriesConvertToJSON(beginDate, endDate) {
-        var obj = {
-            FromDate: beginDate,
-            ToDate: endDate
-        };
+    gEntriesList = getEntries(gUser.UserID, "", "", "", "",
+        "", txtBeginDate.value, txtEndDate.value, "", "", "", "", gAuthToken);
 
-        return JSON.stringify(obj);
+    if (gEntriesList === null) {
+        showErrorMessage(gServerErrorMsg);
+        return;
     }
 
-    function callbackGetAllEntries(responseString) {
-        var parts = responseString.split("\n");
-        if (parts[0] === "error") {
-            showErrorMessage(parts[1], txtBeginDate);
-            return;
-        }
-
-        if (parts[1] === "[]") {
-            showErrorMessage("No Entries Found.", txtBeginDate);
-            return;
-        }
-
-        var objects = JSON.parse(parts[1]);
-
-        for (var i = 0; i < objects.length; i++) {
-            var entry = new TimeLogEntry();
-            entry.Deserialize(objects[i]);
-            gEntriesList.push(entry);
-        }
-
-        displayAllEntries();
+    if (gEntriesList.length === 0) {
+        showErrorMessage("No Entries Found.", txtBeginDate);
+        return;
     }
+
+    displayAllEntries();
 }
 
 function btnDateWorked_onmousedown() {
@@ -428,27 +416,36 @@ function projectOption_onmousedown() {
 }
 
 function initializeEntriesOptionsArrays() {
-    httpPost(gServerRoot + "action=getProjects&AuthToken=" + gAuthToken, "", callbackGetProjects);
-    httpPost(gServerRoot + "action=getActivities&AuthToken=" + gAuthToken, "", callbackGetActivities);
+    //httpPost(gServerRoot + "action=getProjects&AuthToken=" + gAuthToken, "", callbackGetProjects);
+    //httpPost(gServerRoot + "action=getActivities&AuthToken=" + gAuthToken, "", callbackGetActivities);
 
-    function callbackGetActivities(responseString) {
-        var parts = responseString.split("\n");
-        if (parts[0] === "error") {
-            showErrorMessage(parts[1] + "activities");
-            return;
-        }
+    //function callbackGetActivities(responseString) {
+    //    var parts = responseString.split("\n");
+    //    if (parts[0] === "error") {
+    //        showErrorMessage(parts[1] + "activities");
+    //        return;
+    //    }
 
-        gActivities = JSON.parse(parts[1]);
+    //    gActivities = JSON.parse(parts[1]);
+    //}
+
+    //function callbackGetProjects(responseString) {
+    //    var parts = responseString.split("\n");
+    //    if (parts[0] === "error") {
+    //        showErrorMessage(parts[1] + "projects");
+    //        return;
+    //    }
+
+    //    gProjects = JSON.parse(parts[1]);
+    //}
+
+    gProjects = getProjects(gAuthToken);
+    if (gProjects === null) {
+        showErrorMessage(gServerErrorMsg);
     }
-
-    function callbackGetProjects(responseString) {
-        var parts = responseString.split("\n");
-        if (parts[0] === "error") {
-            showErrorMessage(parts[1] + "projects");
-            return;
-        }
-
-        gProjects = JSON.parse(parts[1]);
+    gActivities = getActivities(gAuthToken);
+    if (gActivities === null) {
+        showErrorMessage(gServerErrorMsg);
     }
 }
 
@@ -563,24 +560,25 @@ function btnSignOut_onmousedown() {
     }
 }
 
-function callbackSignIn(responseString) {
-    var parts = responseString.split("\n");
-    if (parts[0] === "error") {
-        showErrorMessage(parts[1], txtTeamName);
+function btnSignIn_onmousedown() {
+    if (validateSignInPage() === false) {
         return;
     }
 
-    var object = JSON.parse(parts[1]);
+    gUser = SignIn(txtTeamName.value, txtEmail.value, txtPassword.value);
 
-    gTeamID = object.TeamID;
-    gUserID = object.gUserID;
-
-    if (object.AuthToken != null) {
-        gAuthToken = object.AuthToken;
+    if (gUser === null) {
+        showErrorMessage(gServerErrorMsg);
+        return;
     }
 
-    gFirstName = object.FirstName;
-    gLastName = object.LastName;
+    callbackSignIn(gUser);
+}
+
+
+function callbackSignIn(gUser) {
+    alert(JSON.stringify(gUser));
+    gAuthToken = gUser.AuthToken;
 
     btnSignIn.style.backgroundColor = "#1588C7";
 
@@ -597,10 +595,11 @@ function callbackSignIn(responseString) {
     cbxRememberPassword.checked === false;
 
     divSignIn.style.visibility = "hidden";
-    btnAddNewEntry.style.visibility = "visible";
-    btnSignOut.style.visibility = "visible";
     entryOptionsList.style.visibility = "hidden";
     inputInformation.style.visibility = "hidden";
+
+    btnAddNewEntry.style.visibility = "visible";
+    btnSignOut.style.visibility = "visible";
 
     signInBoxOnBlur();
 }
@@ -636,23 +635,6 @@ function validateSignInPage() {
 
     return true;
 }
-
-function btnSignIn_onmousedown() {
-    if (validateSignInPage() === false) {
-        return;
-    }
-
-    var object = {
-        TeamName: txtTeamName.value,
-        EmailAddress: txtEmail.value,
-        Password: txtPassword.value
-    }
-
-    var requestString = JSON.stringify(object)
-
-    httpPost(gServerRoot + "action=signIn", requestString, callbackSignIn);
-}
-
 
 
 function btnSignIn_onmouseup() {
