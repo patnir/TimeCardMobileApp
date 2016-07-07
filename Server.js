@@ -1,5 +1,4 @@
-﻿/// <reference path="TimeCardv10.html">
-var gServerRoot = "http://localhost:50912/Default.aspx?";
+﻿var gServerRoot = "http://localhost:50912/Default.aspx?";
 var gServerErrorMsg;
 
 function SignIn(teamName, emailAddress, password) {
@@ -13,7 +12,7 @@ function SignIn(teamName, emailAddress, password) {
     var responseString = httpPost(gServerRoot + "action=signIn", requestString);
 
     if (gServerErrorMsg !== "") {
-        return null;
+        return;
     }
 
     var user = JSON.parse(responseString);
@@ -21,7 +20,7 @@ function SignIn(teamName, emailAddress, password) {
 }
 
 function tokenSignIn(authToken) {
-    var responseString = httpPost(gServerRoot + "action=tokenSignIn&authToken=" + authToken, "");
+    var responseString = httpPost(gServerRoot + "action=tokenSignIn&authToken=" + authToken);
 
     if (gServerErrorMsg !== "") {
         return;
@@ -31,23 +30,29 @@ function tokenSignIn(authToken) {
     return user;
 }
 
+function signOut(authToken) {
+    var responseString = httpPost(gServerRoot + "action=signOut&authToken=" + authToken);
+
+    return;
+}
+
 function getEntries(userID, projectTitle, taskTitle, activityTitle, hoursWorkedLow,
-   hoursWorkedHigh, fromDate, toDate, entryDescription, billable, payable, inactive, authToken) {
+    hoursWorkedHigh, fromDate, toDate, entryDescription, billable, payable, inactive, authToken) {
 
     var entriesList = [];
     var timeLogCredentials = {
         UserID: userID,
-        //ProjectTitle: projectTitle,
-        //TaskTitle: taskTitle,
-        //HoursWorkedLow: hoursWorkedLow,
-        //HoursWorkedHigh: hoursWorkedHigh,
+        ProjectTitle: projectTitle,
+        TaskTitle: taskTitle,
+        HoursWorkedLow: hoursWorkedLow,
+        HoursWorkedHigh: hoursWorkedHigh,
         FromDate: fromDate,
-        ToDate: toDate
-        //EntryDescription: entryDescription,
-        //ActivityTitle: activityTitle,
-        //BillableIndicator: billable,
-        //PayableIndicator: payable,
-        //IncludeInactiveProjects: inactive,
+        ToDate: toDate,
+        EntryDescription: entryDescription,
+        ActivityTitle: activityTitle,
+        BillableIndicator: billable,
+        PayableIndicator: payable,
+        IncludeInactiveProjects: inactive
     };
 
     requestString = JSON.stringify(timeLogCredentials);
@@ -68,28 +73,82 @@ function getEntries(userID, projectTitle, taskTitle, activityTitle, hoursWorkedL
     return entriesList;
 }
 
+function insertEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
+    entryDescription, activityTitle, billable, payable, authToken) {
+
+    var addEntryCredentials = {
+        UserID: userID,
+        ProjectID: projectID,
+        TaskTitle: taskTitle,
+        HoursWorked: hoursWorked,
+        DateWorked: dateWorked,
+        EntryDescription: entryDescription,
+        ActivityTitle: activityTitle,
+        BillableIndicator: billable,
+        PayableIndicator: payable
+    };
+
+    requestString = JSON.stringify(addEntryCredentials);
+    var responseString = httpPost(gServerRoot + "action=insertEntry&authToken=" + authToken, requestString);
+
+    if (gServerErrorMsg !== "") {
+        return;
+    }
+
+    var entry = JSON.parse(responseString);
+
+    return entry;
+}
+
+function updateEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
+    entryDescription, activityTitle, billable, payable, authToken) {
+
+    var updateEntryCredentials = {
+        UserID: userID,
+        ProjectID: projectID,
+        TaskTitle: taskTitle,
+        HoursWorked: hoursWorked,
+        DateWorked: dateWorked,
+        EntryDescription: entryDescription,
+        ActivityTitle: activityTitle,
+        BillableIndicator: billable,
+        PayableIndicator: payable
+    };
+
+    requestString = JSON.stringify(updateEntryCredentials);
+    var responseString = httpPost(gServerRoot + "action=updateEntry&authToken=" + authToken, requestString);
+
+    if (gServerErrorMsg !== "") {
+        return;
+    }
+
+    var entry = JSON.parse(responseString);
+
+    return entry;
+}
+
 function getProjects(authToken) {
     var responseString = httpPost(gServerRoot + "action=getProjects&authToken=" + authToken);
 
     if (gServerErrorMsg !== "") {
-        return null;
+        return;
     }
 
     var projects = JSON.parse(responseString);
     return projects;
 }
 
-function getTasks(authToken, projectID) {
-    var credentials = {
-        ProjectID: projectID
-    }
+function getTasks(projectID, authToken) {
+    var getTasksCredentials = {
+        ProjectID: projectID,
+    };
 
-    var requestString = JSON.stringify(credentials)
+    requestString = JSON.stringify(getTasksCredentials);
 
     var responseString = httpPost(gServerRoot + "action=getTasks&authToken=" + authToken, requestString);
 
     if (gServerErrorMsg !== "") {
-        return null;
+        return;
     }
 
     var tasks = JSON.parse(responseString);
@@ -100,7 +159,7 @@ function getActivities(authToken) {
     var responseString = httpPost(gServerRoot + "action=getActivities&authToken=" + authToken);
 
     if (gServerErrorMsg !== "") {
-        return null;
+        return;
     }
 
     var activities = JSON.parse(responseString);
@@ -123,3 +182,4 @@ function httpPost(url, reqString) {
 
     return responseParts[1];
 }
+
