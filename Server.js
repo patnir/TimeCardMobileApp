@@ -1,7 +1,7 @@
 ﻿var gServerRoot = "http://localhost:50912/Default.aspx?";
 var gServerErrorMsg;
 
-function SignIn(teamName, emailAddress, password) {
+function serverSignIn(teamName, emailAddress, password) {
     var userCredentials = {
         TeamName: teamName,
         EmailAddress: emailAddress,
@@ -19,7 +19,7 @@ function SignIn(teamName, emailAddress, password) {
     return user;
 }
 
-function tokenSignIn(authToken) {
+function serverTokenSignIn(authToken) {
     var responseString = httpPost(gServerRoot + "action=tokenSignIn&authToken=" + authToken);
 
     if (gServerErrorMsg !== "") {
@@ -36,7 +36,7 @@ function signOut(authToken) {
     return;
 }
 
-function getEntries(userID, projectTitle, taskTitle, activityTitle, hoursWorkedLow,
+function serverGetEntries(userID, projectTitle, taskTitle, activityTitle, hoursWorkedLow,
     hoursWorkedHigh, fromDate, toDate, entryDescription, billable, payable, inactive, authToken) {
 
     var entriesList = [];
@@ -73,7 +73,7 @@ function getEntries(userID, projectTitle, taskTitle, activityTitle, hoursWorkedL
     return entriesList;
 }
 
-function insertEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
+function serverInsertEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
     entryDescription, activityTitle, billable, payable, authToken) {
 
     var addEntryCredentials = {
@@ -100,7 +100,7 @@ function insertEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
     return entry;
 }
 
-function updateEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
+function serverUpdateEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
     entryDescription, activityTitle, billable, payable, authToken) {
 
     var updateEntryCredentials = {
@@ -127,7 +127,7 @@ function updateEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
     return entry;
 }
 
-function getProjects(authToken) {
+function servreGetProjects(authToken) {
     var responseString = httpPost(gServerRoot + "action=getProjects&authToken=" + authToken);
 
     if (gServerErrorMsg !== "") {
@@ -138,7 +138,7 @@ function getProjects(authToken) {
     return projects;
 }
 
-function getTasks(projectID, authToken) {
+function serverGetTasks(projectID, authToken) {
     var getTasksCredentials = {
         ProjectID: projectID,
     };
@@ -155,7 +155,7 @@ function getTasks(projectID, authToken) {
     return tasks;
 }
 
-function getActivities(authToken) {
+function serverGetActivities(authToken) {
     var responseString = httpPost(gServerRoot + "action=getActivities&authToken=" + authToken);
 
     if (gServerErrorMsg !== "") {
