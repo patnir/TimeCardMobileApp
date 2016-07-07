@@ -11,49 +11,7 @@ var gUser;
 
 var gAuthToken = "";
 
-function txtTeamName_onfocus() {
-    txtEmail.style.visibility = "hidden";
-    lblEmail.style.visibility = "hidden";
-    txtPassword.style.visibility = "hidden";
-    lblPassword.style.visibility = "hidden";
-}
-
-function txtEmail_onfocus() {
-    txtPassword.style.visibility = "hidden";
-    lblPassword.style.visibility = "hidden";
-    txtTeamName.style.visibility = "hidden";
-    lblTeamName.style.visibility = "hidden";
-}
-
-function txtPassword_onfocus() {
-    txtEmail.style.visibility = "hidden";
-    lblEmail.style.visibility = "hidden";
-    txtTeamName.style.visibility = "hidden";
-    lblTeamName.style.visibility = "hidden";
-}
-
-function signInBoxOnBlur() {
-    if (divSignIn.style.visibility === "hidden") {
-        txtEmail.style.visibility = "hidden";
-        lblEmail.style.visibility = "hidden";
-        txtTeamName.style.visibility = "hidden";
-        lblTeamName.style.visibility = "hidden";
-        txtPassword.style.visibility = "hidden";
-        lblPassword.style.visibility = "hidden";
-        return;
-    }
-    txtPassword.style.visibility = "visible";
-    txtTeamName.style.visibility = "visible";
-    txtEmail.style.visibility = "visible";
-
-    lblPassword.style.visibility = "visible";
-    lblTeamName.style.visibility = "visible";
-    lblEmail.style.visibility = "visible";
-}
-
 function body_load() {
-    autoSignIn();
-
     txtTeamName.onfocus = txtTeamName_onfocus;
     txtEmail.onfocus = txtEmail_onfocus;
     txtPassword.onfocus = txtPassword_onfocus;
@@ -97,6 +55,8 @@ function body_load() {
 
     gResponseString = "";
 
+    autoSignIn();
+
     window_onresize();
 }
 
@@ -122,7 +82,7 @@ function autoSignIn() {
 
         gUser = tokenSignIn(gAuthToken);
 
-        if (gUser === null) {
+        if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);
             return;
         }
@@ -132,25 +92,6 @@ function autoSignIn() {
     else {
         cbxRememberPassword.checked = false;
     }
-}
-
-function ditHttpGetSync(url) {
-
-    var httpRequest = new XMLHttpRequest();
-    httpRequest.open("GET", url, false);
-    httpRequest.send(null);
-
-    return httpRequest.responseText;
-}
-
-function serializeTabs(array) {
-
-    var serializedString = "";
-    for (var i = 0; i < array.length - 1; ++i) {
-        serializedString += array[i] + "\t";
-    }
-    serializedString += array[array.length - 1];
-    return serializedString;
 }
 
 function validateEntryInput() {
@@ -225,9 +166,9 @@ function btnSave_onmousedown() {
     entry.BillableIndicator = cbxPayable.checked;
 
     if (inputInformation.EntryToEdit === null) {
-        entry.FirstName = gFirstName;
-        entry.LastName = gLastName;
-        entry.UserID = gUserID;
+        entry.FirstName = gUser.FirstName;
+        entry.LastName = gUser.LastName;
+        entry.UserID = gUser.UserID;
         gEntriesList.push(entry);
     }
 
@@ -256,16 +197,10 @@ function btnRefresh_onmousedown() {
     }
     btnRefresh.style.backgroundColor = "#BADCEF";
 
-    //var requestString = getAllEntriesConvertToJSON(txtBeginDate.value, txtEndDate.value);
-
-    //httpPost(gServerRoot + "action=getEntries&AuthToken=" + gAuthToken, requestString, callbackGetAllEntries);
-
-    alert(gUser.UserID);
-
     gEntriesList = getEntries(gUser.UserID, "", "", "", "",
         "", txtBeginDate.value, txtEndDate.value, "", "", "", "", gAuthToken);
 
-    if (gEntriesList === null) {
+    if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
         return;
     }
@@ -397,21 +332,10 @@ function projectOption_onmousedown() {
     selectedProject.innerHTML = project;
     btnBack.style.visibility = "visible";
 
-    var object = {
-        ProjectID: this.typeID
-    };
+    gTasks = getTasks(gAuthToken, this.typeID);
 
-    var requestString = JSON.stringify(object);
-    httpPost(gServerRoot + "action=getTasks&AuthToken=" + gAuthToken, requestString, callbackGetTasks);
-
-    function callbackGetTasks(responseString) {
-        var parts = responseString.split("\n");
-        if (parts[0] === "error") {
-            showErrorMessage(parts[1] + "projects");
-            return;
-        }
-
-        gTasks = JSON.parse(parts[1]);
+    if (gServerErrorMsg != "") {
+        showErrorMessage(gServerErrorMsg);
     }
 }
 
@@ -440,11 +364,11 @@ function initializeEntriesOptionsArrays() {
     //}
 
     gProjects = getProjects(gAuthToken);
-    if (gProjects === null) {
+    if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
     }
     gActivities = getActivities(gAuthToken);
-    if (gActivities === null) {
+    if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
     }
 }
@@ -567,7 +491,7 @@ function btnSignIn_onmousedown() {
 
     gUser = SignIn(txtTeamName.value, txtEmail.value, txtPassword.value);
 
-    if (gUser === null) {
+    if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
         return;
     }
@@ -577,7 +501,6 @@ function btnSignIn_onmousedown() {
 
 
 function callbackSignIn(gUser) {
-    alert(JSON.stringify(gUser));
     gAuthToken = gUser.AuthToken;
 
     btnSignIn.style.backgroundColor = "#1588C7";
@@ -1048,4 +971,44 @@ function errorMessageBody_onresize() {
     errorMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
 
     btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
+}
+
+function txtTeamName_onfocus() {
+    txtEmail.style.visibility = "hidden";
+    lblEmail.style.visibility = "hidden";
+    txtPassword.style.visibility = "hidden";
+    lblPassword.style.visibility = "hidden";
+}
+
+function txtEmail_onfocus() {
+    txtPassword.style.visibility = "hidden";
+    lblPassword.style.visibility = "hidden";
+    txtTeamName.style.visibility = "hidden";
+    lblTeamName.style.visibility = "hidden";
+}
+
+function txtPassword_onfocus() {
+    txtEmail.style.visibility = "hidden";
+    lblEmail.style.visibility = "hidden";
+    txtTeamName.style.visibility = "hidden";
+    lblTeamName.style.visibility = "hidden";
+}
+
+function signInBoxOnBlur() {
+    if (divSignIn.style.visibility === "hidden") {
+        txtEmail.style.visibility = "hidden";
+        lblEmail.style.visibility = "hidden";
+        txtTeamName.style.visibility = "hidden";
+        lblTeamName.style.visibility = "hidden";
+        txtPassword.style.visibility = "hidden";
+        lblPassword.style.visibility = "hidden";
+        return;
+    }
+    txtPassword.style.visibility = "visible";
+    txtTeamName.style.visibility = "visible";
+    txtEmail.style.visibility = "visible";
+
+    lblPassword.style.visibility = "visible";
+    lblTeamName.style.visibility = "visible";
+    lblEmail.style.visibility = "visible";
 }
