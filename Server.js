@@ -79,8 +79,14 @@ function getProjects(authToken) {
     return projects;
 }
 
-function getTasks(authToken) {
-    var responseString = httpPost(gServerRoot + "action=getTasks&authToken=" + authToken);
+function getTasks(authToken, projectID) {
+    var credentials = {
+        ProjectID: projectID
+    }
+
+    var requestString = JSON.stringify(credentials)
+
+    var responseString = httpPost(gServerRoot + "action=getTasks&authToken=" + authToken, requestString);
 
     if (gServerErrorMsg !== "") {
         return null;
