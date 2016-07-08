@@ -64,14 +64,11 @@ function body_load() {
 
 function btnDelete_onmousedown() {
     entry = inputInformation.EntryToEdit;
-    alert(JSON.stringify(entry));
 
     var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
             entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
             selectedDateWorked.innerHTML, txtDescription.value,
             cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
-
-    alert(returnString);
 
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
@@ -659,11 +656,20 @@ function displayAllEntries() {
     btnRefresh.style.backgroundColor = "#1588C7";
 }
 
+function updateFormatUpdateDateWorked(serializedDate) {
+    var date = serializedDate.split("T")[0];
+    date = date.split("-");
+
+    return parseInt(date[1]) + "/" + parseInt(date[2]) + "/" + date[0];
+}
+
 function restoreEntryPage(entry) {
     initializeEntriesOptionsArrays();
     selectedActivity.innerHTML = entry.ActivityTitle;
     selectedActivity.ActivityID = entry.ActivityID;
-    selectedDateWorked.innerHTML = entry.DateWorked;
+
+    selectedDateWorked.innerHTML = updateFormatUpdateDateWorked(entry.DateWorked);
+
     selectedHoursWorked.innerHTML = entry.HoursWorked;
     selectedProject.innerHTML = entry.ProjectTitle;
     selectedProject.ProjectID = entry.ProjectID;
@@ -735,8 +741,6 @@ function formatDateForList(serializedDate) {
     serializedDate = serializedDate.split("T")[0];
 
     serializedDate = serializedDate.replace(/-/g, "/");
-
-    alert(serializedDate);
 
     var dateParts = serializedDate.split("/");
     var formattedString = "";
