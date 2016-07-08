@@ -210,8 +210,8 @@ function btnRefresh_onmousedown() {
     }
     btnRefresh.style.backgroundColor = "#BADCEF";
 
-    gEntriesList = serverGetEntries(gUser.UserID, "", "", "", "",
-        "", txtBeginDate.value, txtEndDate.value, "", "", "", "", gAuthToken);
+    gEntriesList = serverGetEntries(gUser.UserID, "", "", "", 0,
+        0, txtBeginDate.value, txtEndDate.value, "", "", "", false, gAuthToken);
 
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
@@ -329,7 +329,7 @@ function dateOption_onmousedown() {
     inputInformation.style.visibility = "visible";
     this.style.backgroundColor = "#E0E0E0";
     btnDateWorked.style.backgroundColor = "#FFFFFF";
-    var formattedDate = this.innerHTML.split(" ");
+    var formattedDate = this.innerHTML;
     selectedDateWorked.innerHTML = formattedDate[0];
     btnBack.style.visibility = "visible";
 }
@@ -341,11 +341,11 @@ function projectOption_onmousedown() {
     inputInformation.style.visibility = "visible";
     this.style.backgroundColor = "#E0E0E0";
     btnProject.style.backgroundColor = "#FFFFFF";
-    var project = this.innerHTML.split(" ");
+    var project = this.innerHTML;
     selectedProject.innerHTML = project;
     btnBack.style.visibility = "visible";
 
-    gTasks = serverGetTasks(this.typeID, gAuthToken);
+    gTasks = serverGetTasks(gAuthToken, this.typeID, false);
 
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
@@ -355,13 +355,13 @@ function projectOption_onmousedown() {
 }
 
 function initializeEntriesOptionsArrays() {
-    gProjects = serverGetProjects(gAuthToken);
+    gProjects = serverGetProjects(gAuthToken, false);
     if (gServerErrorMsg != "") {
-        showErrorMessage(gServerErrorMsg);
+        showErrorMessage(gServerErrorMsg + "project");
     }
-    gActivities = serverGetActivities(gAuthToken);
+    gActivities = serverGetActivities(gAuthToken, false);
     if (gServerErrorMsg != "") {
-        showErrorMessage(gServerErrorMsg);
+        showErrorMessage(gServerErrorMsg + "activities");
     }
 }
 
@@ -396,7 +396,7 @@ function taskOption_onmousedown() {
     entryOptionsList.style.visibility = "hidden";
     this.style.backgroundColor = "#E0E0E0";
     btnTask.style.backgroundColor = "#FFFFFF";
-    var task = this.innerHTML.split(" ");
+    var task = this.innerHTML;
     selectedTask.innerHTML = task;
     btnBack.style.visibility = "visible";
 }
@@ -408,7 +408,7 @@ function activityOption_onmousedown() {
     this.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "hidden";
     btnActivity.style.backgroundColor = "#FFFFFF";
-    var activity = this.innerHTML.split(" ");
+    var activity = this.innerHTML;
     selectedActivity.innerHTML = activity;
     btnBack.style.visibility = "visible";
 }
