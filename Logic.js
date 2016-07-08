@@ -156,25 +156,14 @@ function btnSave_onmousedown() {
         entry = new TimeLogEntry();
     }
 
-    entry.ProjectID = gTasks.ProjectID;
-    entry.HoursWorked = parseFloat(selectedHoursWorked.innerHTML);
-    entry.DateWorked = selectedDateWorked.innerHTML;
-    entry.ActivityTitle = selectedActivity.innerHTML;
-    entry.ProjectTitle = selectedProject.innerHTML;
-    entry.TaskTitle = selectedTask.innerHTML;
-    entry.EntryDescription = txtDescription.value;
-    entry.PayableIndicator = cbxBillable.checked;
-    entry.BillableIndicator = cbxPayable.checked;
-    entry.AuthToken = gAuthToken;
-    entry.FirstName = gUser.FirstName;
-    entry.LastName = gUser.LastName;
-    entry.UserID = gUser.UserID;
-
     if (inputInformation.EntryToEdit === null) {
+
         var newEntry = serverInsertEntry(gUser.UserID, gTasks.ProjectID,
             selectedTask.TaskID, selectedActivity.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
             selectedDateWorked.innerHTML, txtDescription.value, 
             cbxBillable.checked, cbxPayable.checked, gAuthToken);
+
+        console.log(JSON.stringify(newEntry));
 
         alert(JSON.stringify(newEntry));
 
@@ -188,15 +177,31 @@ function btnSave_onmousedown() {
 
         gEntriesList.push(newEntry);
     } else {
-        var newEntry = serverUpdateEntry(entry.EntryID, gUser.UserID, gTasks.ProjectID,
-            selectedTask.TaskID, selectedActivity.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
+
+        entry.ProjectID = selectedProject.ProjectID;
+        entry.TaskID = selectedTask.TaskID;
+        entry.ActivityID = selectedActivity.ActivityID;
+
+        var newEntry = serverUpdateEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
+            entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
             selectedDateWorked.innerHTML, txtDescription.value,
-            cbxBillable.checked, cbxPayable.checked, gAuthToken);
+            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
 
         alert(JSON.stringify(newEntry));
 
-        newEntry.FirstName = gUser.FirstName;
-        newEntry.LastName = gUser.LastName;
+        if (gServerErrorMsg != "") {
+            showErrorMessage(gServerErrorMsg);
+            
+        } else {
+            newEntry.FirstName = gUser.FirstName;
+            newEntry.LastName = gUser.LastName;
+
+            for (var i = 0; i < gEntriesList.length; i++) {
+                if (gEntriesList[i].EntryID === newEntry.EntryID) {
+                    gEntriesList[i] = newEntry;
+                }
+            }
+        }
     }
 
     btnBack_onmousedown();
@@ -366,6 +371,7 @@ function projectOption_onmousedown() {
     }
 
     gTasks.ProjectID = this.typeID;
+
 }
 
 function initializeEntriesOptionsArrays() {
@@ -595,8 +601,12 @@ function btnRefresh_onmouseup() {
     btnRefresh.style.backgroundColor = "#1588C7";
 }
 
-function displayAllEntries(serializedString) {
+function displayAllEntries() {
     entriesList.innerHTML = "";
+
+    //var gTasks.ProjectID = null;
+    //var selectedTask.TaskID = null;
+    //var selectedActivity.ActivityID = null;
 
     for (var i = 0; i < gEntriesList.length; i++) {
         addEntryToList(gEntriesList[i], i);
@@ -606,12 +616,16 @@ function displayAllEntries(serializedString) {
 }
 
 function restoreEntryPage(entry) {
+    initializeEntriesOptionsArrays();
     selectedActivity.innerHTML = entry.ActivityTitle;
+    selectedActivity.ActivityID = entry.ActivityID;
     selectedDateWorked.innerHTML = entry.DateWorked;
     selectedHoursWorked.innerHTML = entry.HoursWorked;
     selectedProject.innerHTML = entry.ProjectTitle;
+    selectedProject.ProjectID = entry.ProjectID;
     txtDescription.value = entry.EntryDescription;
     selectedTask.innerHTML = entry.TaskTitle;
+    selectedTask.TaskID = entry.TaskID;
 
     cbxBillable.checked = entry.BillableIndicator;
     cbxPayable.checked = entry.PayableIndicator;
