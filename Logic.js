@@ -39,6 +39,8 @@ function body_load() {
 
     btnSignOut.style.visibility = "hidden";
 
+    btnDelete.onmousedown = btnDelete_onmousedown;
+
     btnDateWorked.onmousedown = btnDateWorked_onmousedown;
     btnProject.onmousedown = btnProject_onmousedown;
     btnTask.onmousedown = btnTask_onmousedown;
@@ -58,6 +60,31 @@ function body_load() {
     autoSignIn();
 
     window_onresize();
+}
+
+function btnDelete_onmousedown() {
+    entry = inputInformation.EntryToEdit;
+    alert(JSON.stringify(entry));
+
+    var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
+            entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
+            selectedDateWorked.innerHTML, txtDescription.value,
+            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
+
+    alert(returnString);
+
+    if (gServerErrorMsg != "") {
+        showErrorMessage(gServerErrorMsg);
+    }
+
+    for (var i = 0; i < gEntriesList.length; i++) {
+        if (gEntriesList[i].EntryID === entry.EntryID) {
+            gEntriesList.splice(i, 1);
+        }
+    }
+
+    btnBack_onmousedown();
+    displayAllEntries();
 }
 
 function btnForgotPassword_onmousedown() {
@@ -625,10 +652,6 @@ function btnRefresh_onmouseup() {
 function displayAllEntries() {
     entriesList.innerHTML = "";
 
-    //var gTasks.ProjectID = null;
-    //var selectedTask.TaskID = null;
-    //var selectedActivity.ActivityID = null;
-
     for (var i = 0; i < gEntriesList.length; i++) {
         addEntryToList(gEntriesList[i], i);
     }
@@ -666,8 +689,6 @@ function entryListElement_onmousedown() {
     restoreEntryPage(this.entryToBeEditted);
 }
 
-//===============================================================================================//
-
 function addEntryToList(entry, i) {
     var entryDiv = document.createElement('div');
     entryDiv.id = "entriesListElement";
@@ -688,7 +709,8 @@ function addEntryToList(entry, i) {
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
     entryDivDateWorked.style.top = (81 * i + 3).toString() + "px";
-    entryDivDateWorked.innerHTML = entry.DateWorked;
+    
+    entryDivDateWorked.innerHTML = formatDateForList(entry.DateWorked);
 
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
@@ -710,11 +732,17 @@ function addEntryToList(entry, i) {
 }
 
 function formatDateForList(serializedDate) {
+    serializedDate = serializedDate.split("T")[0];
+
+    serializedDate = serializedDate.replace(/-/g, "/");
+
+    alert(serializedDate);
+
     var dateParts = serializedDate.split("/");
     var formattedString = "";
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-    formattedString += months[dateParts[0] - 1] + " " + dateParts[1] + ", " + dateParts[2];
+    formattedString += months[dateParts[1] - 1] + " " + dateParts[2] + ", " + dateParts[0];
 
     return formattedString;
 }
