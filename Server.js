@@ -30,8 +30,12 @@ function serverTokenSignIn(authToken) {
     return user;
 }
 
-function signOut(authToken) {
+function serverSignOut(authToken) {
     var responseString = httpPost(gServerRoot + "action=signOut&authToken=" + authToken);
+
+    if (gServerErrorMsg !== "") {
+        return;
+    }
 
     return;
 }
@@ -127,7 +131,7 @@ function serverUpdateEntry(userID, projectID, taskTitle, hoursWorked, dateWorked
     return entry;
 }
 
-function servreGetProjects(authToken) {
+function serverGetProjects(authToken) {
     var responseString = httpPost(gServerRoot + "action=getProjects&authToken=" + authToken);
 
     if (gServerErrorMsg !== "") {
