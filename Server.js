@@ -77,17 +77,17 @@ function serverGetEntries(userID, projectTitle, taskTitle, activityTitle, hoursW
     return entriesList;
 }
 
-function serverInsertEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
-    entryDescription, activityTitle, billable, payable, authToken) {
+function serverInsertEntry(userID, projectID, taskID, activityID, hoursWorked, dateWorked,
+    entryDescription, billable, payable, authToken) {
 
     var addEntryCredentials = {
         UserID: userID,
         ProjectID: projectID,
-        TaskTitle: taskTitle,
+        TaskID: taskID,
         HoursWorked: hoursWorked,
         DateWorked: dateWorked,
         EntryDescription: entryDescription,
-        ActivityTitle: activityTitle,
+        ActivityID: activityID,
         BillableIndicator: billable,
         PayableIndicator: payable
     };
@@ -104,19 +104,21 @@ function serverInsertEntry(userID, projectID, taskTitle, hoursWorked, dateWorked
     return entry;
 }
 
-function serverUpdateEntry(userID, projectID, taskTitle, hoursWorked, dateWorked,
-    entryDescription, activityTitle, billable, payable, authToken) {
+function serverUpdateEntry(entryID, userID, projectID, taskID, activityID, hoursWorked, dateWorked,
+    entryDescription, billable, payable, lastMaintUTC, authToken) {
 
     var updateEntryCredentials = {
+        EntryID: entryID,
         UserID: userID,
         ProjectID: projectID,
-        TaskTitle: taskTitle,
+        TaskID: taskID,
+        ActivityID: activityID,
         HoursWorked: hoursWorked,
         DateWorked: dateWorked,
         EntryDescription: entryDescription,
-        ActivityTitle: activityTitle,
         BillableIndicator: billable,
-        PayableIndicator: payable
+        PayableIndicator: payable,
+        LastMaintUTC: lastMaintUTC
     };
 
     requestString = JSON.stringify(updateEntryCredentials);
