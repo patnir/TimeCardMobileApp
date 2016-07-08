@@ -3,6 +3,8 @@ function TimeLogEntry() {
     this.EntryID = null; // int
     this.UserID = null; // int
     this.ProjectID = null; // int
+    this.TaskID = null;
+    this.ActivityID = null;
     this.TaskTitle = "";
     this.HoursWorked = null; // float
     this.DateWorked = ""; // string
@@ -29,8 +31,9 @@ TimeLogEntry.prototype.Deserialize = function (obj) {
     this.UserID = obj.UserID; // int
     this.ProjectID = obj.ProjectID; // int
     this.TaskTitle = obj.TaskTitle;
+    this.TaskID = obj.TaskID;
     this.HoursWorked = obj.HoursWorked; // float
-
+    this.ActivityID = obj.ActivityID;
     // Only the date is required, not the time
     this.DateWorked = obj.DateWorked.split(" ")[0];
 
