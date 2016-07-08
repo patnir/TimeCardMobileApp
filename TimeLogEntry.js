@@ -15,6 +15,7 @@ function TimeLogEntry() {
     this.FirstName = ""; // string
     this.LastName = ""; // string
     this.ProjectTitle = ""; //string
+    this.AuthToken = "";
 }
 
 TimeLogEntry.prototype.Serialize = function () {
