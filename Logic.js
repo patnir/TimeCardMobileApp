@@ -156,6 +156,7 @@ function btnSave_onmousedown() {
         entry = new TimeLogEntry();
     }
 
+    entry.ProjectID = gTasks.ProjectID;
     entry.HoursWorked = parseFloat(selectedHoursWorked.innerHTML);
     entry.DateWorked = selectedDateWorked.innerHTML;
     entry.ActivityTitle = selectedActivity.innerHTML;
@@ -164,12 +165,24 @@ function btnSave_onmousedown() {
     entry.EntryDescription = txtDescription.value;
     entry.PayableIndicator = cbxBillable.checked;
     entry.BillableIndicator = cbxPayable.checked;
+    entry.AuthToken = gAuthToken;
 
     if (inputInformation.EntryToEdit === null) {
         entry.FirstName = gUser.FirstName;
         entry.LastName = gUser.LastName;
         entry.UserID = gUser.UserID;
-        gEntriesList.push(entry);
+        
+        var newEntry = serverInsertEntry(gUser.UserID, gTasks.ProjectID,
+            selectedTask.innerHTML, parseFloat(selectedHoursWorked.innerHTML), 
+            selectedDateWorked.innerHTML, txtDescription.value, selectedActivity.innerHTML, 
+            cbxBillable.checked, cbxPayable.checked, gAuthToken);
+
+        alert(JSON.stringify(newEntry));
+
+        if (gServerErrorMsg != "") {
+            showErrorMessage(gServerErrorMsg);
+            return;
+        }
     }
 
     btnBack_onmousedown();
@@ -337,6 +350,8 @@ function projectOption_onmousedown() {
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
     }
+
+    gTasks.ProjectID = this.typeID;
 }
 
 function initializeEntriesOptionsArrays() {
