@@ -190,7 +190,7 @@ function btnSave_onmousedown() {
 
         console.log(JSON.stringify(newEntry));
 
-        alert(JSON.stringify(newEntry));
+        // alert(JSON.stringify(newEntry));
 
         if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);
@@ -212,7 +212,7 @@ function btnSave_onmousedown() {
             selectedDateWorked.innerHTML, txtDescription.value,
             cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
 
-        alert(JSON.stringify(newEntry));
+        // alert(JSON.stringify(newEntry));
 
         if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);

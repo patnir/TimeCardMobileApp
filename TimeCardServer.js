@@ -1,4 +1,4 @@
-﻿var gServerRoot = "http://localhost:50912/Default.aspx?";
+﻿var gServerRoot = "http://1c5cbb09.ngrok.io/Default.aspx?";
 var gServerErrorMsg;
 
 function serverSignIn(teamName, emailAddress, password) {
