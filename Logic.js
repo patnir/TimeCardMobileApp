@@ -80,7 +80,7 @@ function autoSignIn() {
     if (cbxRememberPassword.value === "on") {
         cbxRememberPassword.checked = true;
 
-        gUser = tokenSignIn(gAuthToken);
+        gUser = serverTokenSignIn(gAuthToken);
 
         if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);
@@ -197,7 +197,7 @@ function btnRefresh_onmousedown() {
     }
     btnRefresh.style.backgroundColor = "#BADCEF";
 
-    gEntriesList = getEntries(gUser.UserID, "", "", "", "",
+    gEntriesList = serverGetEntries(gUser.UserID, "", "", "", "",
         "", txtBeginDate.value, txtEndDate.value, "", "", "", "", gAuthToken);
 
     if (gServerErrorMsg != "") {
@@ -332,7 +332,7 @@ function projectOption_onmousedown() {
     selectedProject.innerHTML = project;
     btnBack.style.visibility = "visible";
 
-    gTasks = getTasks(gAuthToken, this.typeID);
+    gTasks = serverGetTasks(this.typeID, gAuthToken);
 
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
@@ -340,34 +340,11 @@ function projectOption_onmousedown() {
 }
 
 function initializeEntriesOptionsArrays() {
-    //httpPost(gServerRoot + "action=getProjects&AuthToken=" + gAuthToken, "", callbackGetProjects);
-    //httpPost(gServerRoot + "action=getActivities&AuthToken=" + gAuthToken, "", callbackGetActivities);
-
-    //function callbackGetActivities(responseString) {
-    //    var parts = responseString.split("\n");
-    //    if (parts[0] === "error") {
-    //        showErrorMessage(parts[1] + "activities");
-    //        return;
-    //    }
-
-    //    gActivities = JSON.parse(parts[1]);
-    //}
-
-    //function callbackGetProjects(responseString) {
-    //    var parts = responseString.split("\n");
-    //    if (parts[0] === "error") {
-    //        showErrorMessage(parts[1] + "projects");
-    //        return;
-    //    }
-
-    //    gProjects = JSON.parse(parts[1]);
-    //}
-
-    gProjects = getProjects(gAuthToken);
+    gProjects = serverGetProjects(gAuthToken);
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
     }
-    gActivities = getActivities(gAuthToken);
+    gActivities = serverGetActivities(gAuthToken);
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
     }
@@ -463,25 +440,21 @@ function btnSignOut_onmousedown() {
 
     localStorage.clear();
 
-    httpPost(gServerRoot + "action=signOut&AuthToken=" + gAuthToken, "", callbackSignOut);
+    serverSignOut(gAuthToken);
 
-    function callbackSignOut(responseString) {
-        var parts = responseString.split("\n");
+    btnSignOut.style.color = "#1588C7";
 
-        btnSignOut.style.color = "#1588C7";
-
-        if (parts[0] === "error") {
-            showErrorMessage(parts[1], txtBeginDate);
-            return;
-        }
-
-        cbxRememberPassword.checked = false;
-
-        divSignIn.style.visibility = "visible";
-        btnAddNewEntry.style.visibility = "hidden";
-        btnSignOut.style.visibility = "hidden";
-        signInBoxOnBlur();
+    if (gServerErrorMsg != "") {
+        showErrorMessage(gServerErrorMsg);
+        return;
     }
+
+    cbxRememberPassword.checked = false;
+
+    divSignIn.style.visibility = "visible";
+    btnAddNewEntry.style.visibility = "hidden";
+    btnSignOut.style.visibility = "hidden";
+    signInBoxOnBlur();
 }
 
 function btnSignIn_onmousedown() {
@@ -489,7 +462,7 @@ function btnSignIn_onmousedown() {
         return;
     }
 
-    gUser = SignIn(txtTeamName.value, txtEmail.value, txtPassword.value);
+    gUser = serverSignIn(txtTeamName.value, txtEmail.value, txtPassword.value);
 
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
@@ -627,6 +600,8 @@ function entryListElement_onmousedown() {
     restoreEntryPage(this.entryToBeEditted);
 }
 
+//===============================================================================================//
+
 function addEntryToList(entry, i) {
     var entryDiv = document.createElement('div');
     entryDiv.id = "entriesListElement";
@@ -667,8 +642,6 @@ function addEntryToList(entry, i) {
 
     entriesList.appendChild(entryDiv);
 }
-
-// Nothing to change from here.
 
 function formatDateForList(serializedDate) {
     var dateParts = serializedDate.split("/");
