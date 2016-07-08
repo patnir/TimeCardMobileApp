@@ -129,6 +129,7 @@ function btnAddNewEntry_onmousedown() {
     initializeEntriesOptionsArrays();
     inputInformation.style.visibility = "visible";
     btnBack.style.visibility = "visible";
+    btnDelete.style.visibility = "hidden";
     inputInformation.style.left = "0px";
     showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
     btnAddNewEntry.style.visibility = "hidden";
@@ -246,6 +247,7 @@ function btnRefresh_onmousedown() {
 }
 
 function btnDateWorked_onmousedown() {
+    btnDelete.style.visibility = "hidden";
     btnDateWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "visible";
     entryOptionsList.style.left = "0px";
@@ -257,6 +259,7 @@ function btnDateWorked_onmousedown() {
 }
 
 function btnProject_onmousedown() {
+    btnDelete.style.visibility = "hidden";
     btnProject.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -267,6 +270,7 @@ function btnProject_onmousedown() {
 }
 
 function btnActivity_onmousedown() {
+    btnDelete.style.visibility = "hidden";
     btnActivity.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "visible";
     entryOptionsList.style.left = "0px";
@@ -288,7 +292,7 @@ function btnTask_onmousedown() {
         btnBack.style.visibility = "visible";
         return;
     }
-
+    btnDelete.style.visibility = "hidden";
     btnTask.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -299,6 +303,7 @@ function btnTask_onmousedown() {
 }
 
 function btnHoursWorked_onmousedown() {
+    btnDelete.style.visibility = "hidden";
     btnHoursWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -309,6 +314,9 @@ function btnHoursWorked_onmousedown() {
 }
 
 function hoursWorkedOption_onmousedown() {
+    if (inputInformation.EntryToEdit != null) {
+        btnDelete.style.visibility = "visible";
+    }
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -342,6 +350,9 @@ function displayHoursWorkedOptions() {
 }
 
 function dateOption_onmousedown() {
+    if (inputInformation.EntryToEdit != null) {
+        btnDelete.style.visibility = "visible";
+    }
     entryOptionsList.style.visibility = "hidden";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -354,6 +365,9 @@ function dateOption_onmousedown() {
 }
 
 function projectOption_onmousedown() {
+    if (inputInformation.EntryToEdit != null) {
+        btnDelete.style.visibility = "visible";
+    }
     entryOptionsList.style.visibility = "hidden";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -410,6 +424,9 @@ function displayEntriesOptions(array, type, function_onmousdown) {
 }
 
 function taskOption_onmousedown() {
+    if (inputInformation.EntryToEdit != null) {
+        btnDelete.style.visibility = "visible";
+    }
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -423,6 +440,9 @@ function taskOption_onmousedown() {
 }
 
 function activityOption_onmousedown() {
+    if (inputInformation.EntryToEdit != null) {
+        btnDelete.style.visibility = "visible";
+    }
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -585,6 +605,7 @@ function addDefaultDates() {
 
 
 function btnBack_onmousedown() {
+    btnDelete.style.visibility = "hidden";
     showEntries.style.visibility = "visible";
     btnSave.style.backgroundColor = "#1588C7";
     showEntries.style.visibility = "visible";
@@ -635,7 +656,7 @@ function restoreEntryPage(entry) {
 
 function entryListElement_onmousedown() {
     btnAddNewEntry.style.visibility = "hidden";
-    
+    btnDelete.style.visibility = "visible";
     btnSignOut.style.visibility = "hidden";
     btnBack.style.visibility = "visible";
     inputInformation.style.visibility = "visible";
