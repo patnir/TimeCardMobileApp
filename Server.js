@@ -131,8 +131,14 @@ function serverUpdateEntry(userID, projectID, taskTitle, hoursWorked, dateWorked
     return entry;
 }
 
-function serverGetProjects(authToken) {
-    var responseString = httpPost(gServerRoot + "action=getProjects&authToken=" + authToken);
+function serverGetProjects(authToken, inactiveIndicator) {
+    var credentials = {
+        InactiveIndicator: inactiveIndicator
+    }
+
+    var requestString = JSON.stringify(credentials);
+
+    var responseString = httpPost(gServerRoot + "action=getProjects&authToken=" + authToken, requestString);
 
     if (gServerErrorMsg !== "") {
         return;
@@ -142,9 +148,10 @@ function serverGetProjects(authToken) {
     return projects;
 }
 
-function serverGetTasks(projectID, authToken) {
+function serverGetTasks(authToken, projectID, inactiveIndicator) {
     var getTasksCredentials = {
         ProjectID: projectID,
+        InactiveIndicator: inactiveIndicator
     };
 
     requestString = JSON.stringify(getTasksCredentials);
@@ -159,8 +166,14 @@ function serverGetTasks(projectID, authToken) {
     return tasks;
 }
 
-function serverGetActivities(authToken) {
-    var responseString = httpPost(gServerRoot + "action=getActivities&authToken=" + authToken);
+function serverGetActivities(authToken, inactiveIndicator) {
+    var credentials = {
+        InactiveIndicator: inactiveIndicator
+    }
+
+    var requestString = JSON.stringify(credentials);
+
+    var responseString = httpPost(gServerRoot + "action=getActivities&authToken=" + authToken, requestString);
 
     if (gServerErrorMsg !== "") {
         return;
