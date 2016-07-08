@@ -166,15 +166,14 @@ function btnSave_onmousedown() {
     entry.PayableIndicator = cbxBillable.checked;
     entry.BillableIndicator = cbxPayable.checked;
     entry.AuthToken = gAuthToken;
+    entry.FirstName = gUser.FirstName;
+    entry.LastName = gUser.LastName;
+    entry.UserID = gUser.UserID;
 
     if (inputInformation.EntryToEdit === null) {
-        entry.FirstName = gUser.FirstName;
-        entry.LastName = gUser.LastName;
-        entry.UserID = gUser.UserID;
-        
         var newEntry = serverInsertEntry(gUser.UserID, gTasks.ProjectID,
-            selectedTask.innerHTML, parseFloat(selectedHoursWorked.innerHTML), 
-            selectedDateWorked.innerHTML, txtDescription.value, selectedActivity.innerHTML, 
+            selectedTask.TaskID, selectedActivity.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
+            selectedDateWorked.innerHTML, txtDescription.value, 
             cbxBillable.checked, cbxPayable.checked, gAuthToken);
 
         alert(JSON.stringify(newEntry));
@@ -183,6 +182,21 @@ function btnSave_onmousedown() {
             showErrorMessage(gServerErrorMsg);
             return;
         }
+
+        newEntry.FirstName = gUser.FirstName;
+        newEntry.LastName = gUser.LastName;
+
+        gEntriesList.push(newEntry);
+    } else {
+        var newEntry = serverUpdateEntry(entry.EntryID, gUser.UserID, gTasks.ProjectID,
+            selectedTask.TaskID, selectedActivity.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
+            selectedDateWorked.innerHTML, txtDescription.value,
+            cbxBillable.checked, cbxPayable.checked, gAuthToken);
+
+        alert(JSON.stringify(newEntry));
+
+        newEntry.FirstName = gUser.FirstName;
+        newEntry.LastName = gUser.LastName;
     }
 
     btnBack_onmousedown();
@@ -329,7 +343,7 @@ function dateOption_onmousedown() {
     inputInformation.style.visibility = "visible";
     this.style.backgroundColor = "#E0E0E0";
     btnDateWorked.style.backgroundColor = "#FFFFFF";
-    var formattedDate = this.innerHTML;
+    var formattedDate = this.innerHTML.split(" ");
     selectedDateWorked.innerHTML = formattedDate[0];
     btnBack.style.visibility = "visible";
 }
@@ -398,6 +412,7 @@ function taskOption_onmousedown() {
     btnTask.style.backgroundColor = "#FFFFFF";
     var task = this.innerHTML;
     selectedTask.innerHTML = task;
+    selectedTask.TaskID = this.typeID;
     btnBack.style.visibility = "visible";
 }
 
@@ -410,6 +425,7 @@ function activityOption_onmousedown() {
     btnActivity.style.backgroundColor = "#FFFFFF";
     var activity = this.innerHTML;
     selectedActivity.innerHTML = activity;
+    selectedActivity.ActivityID = this.typeID;
     btnBack.style.visibility = "visible";
 }
 
