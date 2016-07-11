@@ -30,8 +30,17 @@ function body_load() {
 
     btnSignIn.onmousedown = btnSignIn_onmousedown;
     btnSignIn.onmouseup = btnSignIn_onmouseup;
+
+
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
-    errorMessageMain.style.visibility = 'hidden';
+    errorMessageMain.style.visibility = "hidden";
+
+    btnDeleteMessageOK.onmousedown = btnDeleteMessageOK_onmousedown;
+    btnDeleteMessageCancel.onmousedown = btnDeleteMessageCancel_onmousedown;
+    deleteMessageMain.style.visibility = "hidden";
+    deleteMessageMain.DeleteEntry = false;
+
+
     btnAddNewEntry.style.visibility = "hidden";
     btnBack.style.visibility = "hidden";
 
@@ -62,7 +71,45 @@ function body_load() {
     window_onresize();
 }
 
+function btnDeleteMessageOK_onmousedown() {
+    deleteMessageMain.style.visibility = 'hidden';
+    inputInformation.style.pointerEvents = 'all';
+
+    deleteMessageMain.DeleteEntry = true;
+    return;
+}
+
+function btnDeleteMessageCancel_onmousedown() {
+    deleteMessageMain.style.visibility = 'hidden';
+    inputInformation.style.pointerEvents = 'all';
+
+    deleteMessageMain.DeleteEntry = false;
+    return;
+}
+
+function showDeleteMessage() {
+    deleteMessageMain.style.visibility = 'visible';
+    inputInformation.style.pointerEvents = 'none';
+
+
+    var fontSize = (window.innerWidth / 3) / 10;
+    deleteMessageString.style.fontSize = fontSize.toString() + "px";
+    deleteMessageString.innerHTML = "Are you sure you want to delete this entry?";
+
+    //errorMessageMain.ObjectToFocus = objectToFocus;
+
+    btnRefresh.style.backgroundColor = "#1588C7";
+}
+
 function btnDelete_onmousedown() {
+    showDeleteMessage();
+
+    if (deleteMessageMain.DeleteEntry === false) {
+        return;
+    }
+
+    deleteMessageMain.DeleteEntry = false;
+
     entry = inputInformation.EntryToEdit;
 
     var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
@@ -150,7 +197,6 @@ function validateEntryInput() {
 }
 
 function btnAddNewEntry_onmousedown() {
-    initializeEntriesOptionsArrays();
     inputInformation.style.visibility = "visible";
     btnBack.style.visibility = "visible";
     btnDelete.style.visibility = "hidden";
@@ -166,6 +212,23 @@ function btnAddNewEntry_onmousedown() {
 
     inputInformation.EntryToEdit = null;
 }
+
+function entryListElement_onmousedown() {
+    btnAddNewEntry.style.visibility = "hidden";
+    btnDelete.style.visibility = "visible";
+    btnSignOut.style.visibility = "hidden";
+    btnBack.style.visibility = "visible";
+    inputInformation.style.visibility = "visible";
+    inputInformation.style.left = "0px";
+    showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
+
+    entryOptionsList.style.visibility = "hidden";
+
+    showEntries.style.visibility = "hidden";
+
+    restoreEntryPage(this.entryToBeEditted);
+}
+
 
 function btnSave_onmousedown() {
     btnSave.style.backgroundColor = "#BADCEF";
@@ -404,6 +467,10 @@ function projectOption_onmousedown() {
 
     gTasks = serverGetTasks(gAuthToken, this.typeID, false);
 
+    alert(JSON.stringify(gTasks));
+
+    displayTasks(gTasks, 0);
+
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
     }
@@ -412,7 +479,21 @@ function projectOption_onmousedown() {
 
 }
 
-function initializeEntriesOptionsArrays() {
+function displayTasks(tasksList, level) {
+    if (tasksList === []) {
+        return;
+    }
+    for (var i = 0; i < tasksList.length; i++) {
+        res = "";
+        for (var j = 0; j < level; j++) {
+            res += "T";
+        }
+        alert(tasksList[i].TaskTitle);
+        displayTasks2(tasksList[i].SubTasks, level + 1);
+    }
+}
+
+function getProjectsAndActivites() {
     gProjects = serverGetProjects(gAuthToken, false);
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg + "project");
@@ -579,6 +660,7 @@ function callbackSignIn(gUser) {
     btnSignOut.style.visibility = "visible";
 
     signInBoxOnBlur();
+    getProjectsAndActivites();
 }
 
 function storeCredentials() {
@@ -664,7 +746,6 @@ function updateFormatUpdateDateWorked(serializedDate) {
 }
 
 function restoreEntryPage(entry) {
-    initializeEntriesOptionsArrays();
     selectedActivity.innerHTML = entry.ActivityTitle;
     selectedActivity.ActivityID = entry.ActivityID;
 
@@ -681,18 +762,6 @@ function restoreEntryPage(entry) {
     cbxPayable.checked = entry.PayableIndicator;
 
     inputInformation.EntryToEdit = entry;
-}
-
-function entryListElement_onmousedown() {
-    btnAddNewEntry.style.visibility = "hidden";
-    btnDelete.style.visibility = "visible";
-    btnSignOut.style.visibility = "hidden";
-    btnBack.style.visibility = "visible";
-    inputInformation.style.visibility = "visible";
-    inputInformation.style.left = "0px";
-    showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
-
-    restoreEntryPage(this.entryToBeEditted);
 }
 
 function addEntryToList(entry, i) {
@@ -991,6 +1060,9 @@ function window_onresize() {
     // Error Messages
     errorMessageBody_onresize();
 
+    // Delete Message
+    deleteMessageBody_onresize();
+
     gCharactersToShow = (window.innerWidth / 8);
 
     if (window.innerWidth < 700) {
@@ -1043,6 +1115,21 @@ function errorMessageBody_onresize() {
 
     btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
 }
+
+function deleteMessageBody_onresize() {
+    deleteMessageMain.style.width = window.innerWidth.toString() + "px";
+    deleteMessageMain.style.height = window.innerHeight.toString() + "px";
+    deleteMessageMain.style.top = (window.innerHeight / 3).toString() + "px";
+    deleteMessageBody.style.left = (window.innerWidth / 3).toString() + "px";
+    deleteMessageBody.style.height = (window.innerHeight / 3).toString() + "px";
+    deleteMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
+
+    btnDeleteMessageOK.style.width = (window.innerWidth / 6).toString() + "px";
+    btnDeleteMessageCancel.style.width = (window.innerWidth / 6).toString() + "px";
+    btnDeleteMessageCancel.style.left = (window.innerWidth / 6).toString() + "px";
+}
+
+
 
 function txtTeamName_onfocus() {
     txtEmail.style.visibility = "hidden";
