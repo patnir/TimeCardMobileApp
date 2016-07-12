@@ -71,66 +71,6 @@ function body_load() {
     window_onresize();
 }
 
-//function btnDeleteMessageOK_onmousedown() {
-//    deleteMessageMain.style.visibility = 'hidden';
-//    inputInformation.style.pointerEvents = 'all';
-
-//    deleteMessageMain.DeleteEntry = true;
-//    return;
-//}
-
-//function btnDeleteMessageCancel_onmousedown() {
-//    deleteMessageMain.style.visibility = 'hidden';
-//    inputInformation.style.pointerEvents = 'all';
-
-//    deleteMessageMain.DeleteEntry = false;
-//    return;
-//}
-
-//function showDeleteMessage() {
-//    deleteMessageMain.style.visibility = 'visible';
-//    inputInformation.style.pointerEvents = 'none';
-
-
-//    var fontSize = (window.innerWidth / 3) / 10;
-//    deleteMessageString.style.fontSize = fontSize.toString() + "px";
-//    deleteMessageString.innerHTML = "Are you sure you want to delete this entry?";
-
-//    //errorMessageMain.ObjectToFocus = objectToFocus;
-
-//    btnRefresh.style.backgroundColor = "#1588C7";
-//}
-
-//function btnDelete_onmousedown() {
-//    showDeleteMessage();
-
-//    if (deleteMessageMain.DeleteEntry === false) {
-//        return;
-//    }
-
-//    deleteMessageMain.DeleteEntry = false;
-
-//    entry = inputInformation.EntryToEdit;
-
-//    var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
-//            entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
-//            selectedDateWorked.innerHTML, txtDescription.value,
-//            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
-
-//    if (gServerErrorMsg != "") {
-//        showErrorMessage(gServerErrorMsg);
-//    }
-
-//    for (var i = 0; i < gEntriesList.length; i++) {
-//        if (gEntriesList[i].EntryID === entry.EntryID) {
-//            gEntriesList.splice(i, 1);
-//        }
-//    }
-
-//    btnBack_onmousedown();
-//    displayAllEntries();
-//}
-
 function btnForgotPassword_onmousedown() {
     if (txtTeamName.value.trim() === "") {
         showErrorMessage("Enter a team name.", txtTeamName);
@@ -251,8 +191,6 @@ function btnSave_onmousedown() {
             selectedDateWorked.innerHTML, txtDescription.value, 
             cbxBillable.checked, cbxPayable.checked, gAuthToken);
 
-        console.log(JSON.stringify(newEntry));
-
         // alert(JSON.stringify(newEntry));
 
         if (gServerErrorMsg != "") {
@@ -345,16 +283,7 @@ function btnDateWorked_onmousedown() {
     displayLastSevenDays();
 }
 
-function btnProject_onmousedown() {
-    //btnDelete.style.visibility = "hidden";
-    btnProject.style.backgroundColor = "#E0E0E0";
-    entryOptionsList.style.left = "0px";
-    entryOptionsList.style.visibility = "visible";
-    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
-    inputInformation.style.visibility = "hidden";
-    btnBack.style.visibility = "hidden";
-    displayEntriesOptions(gProjects, 'project', projectOption_onmousedown);
-}
+
 
 function btnActivity_onmousedown() {
     //btnDelete.style.visibility = "hidden";
@@ -364,7 +293,7 @@ function btnActivity_onmousedown() {
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     inputInformation.style.visibility = "hidden";
     btnBack.style.visibility = "hidden";
-    displayEntriesOptions(gActivities, 'activity', activityOption_onmousedown);
+    displayActivityOptions(gActivities, activityOption_onmousedown);
 }
 
 function btnHoursWorked_onmousedown() {
@@ -455,9 +384,7 @@ function projectOption_onmousedown() {
 
     gTasks = serverGetTasks(gAuthToken, this.TypeID, false);
 
-    console.log(JSON.stringify(gTasks));
-
-    tasksHeirarchy(gTasks, 0);
+    initializeTasksHeirarchy(gTasks, 0);
 
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
@@ -466,7 +393,7 @@ function projectOption_onmousedown() {
     gTasks.ProjectID = this.TypeID;
 }
 
-function tasksHeirarchy(tasksList, level) {
+function initializeTasksHeirarchy(tasksList, level) {
     for (var i = 0; i < tasksList.length; i++) {
         tasksList[i].ShowChildren = false;
 
@@ -474,7 +401,7 @@ function tasksHeirarchy(tasksList, level) {
             tasksList[i].IsBottom = true;
         } else {
             tasksList[i].IsBottom = false;
-            tasksHeirarchy(tasksList[i].SubTasks, level + 1);
+            initializeTasksHeirarchy(tasksList[i].SubTasks, level + 1);
         }
     }
 }
@@ -570,25 +497,98 @@ function btnTask_onmousedown() {
     displayTasks(gTasks, 0);
 }
 
+function btnProject_onmousedown() {
+    //btnDelete.style.visibility = "hidden";
+    btnProject.style.backgroundColor = "#E0E0E0";
+    entryOptionsList.style.left = "0px";
+    entryOptionsList.style.visibility = "visible";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    inputInformation.style.visibility = "hidden";
+    btnBack.style.visibility = "hidden";
 
+    initializeProjectOptionsList();
 
-function displayEntriesOptions(array, type, function_onmousdown) {
+    displayProjectOptions();
+}
+
+function initializeProjectOptionsList() {
     entryOptionsList.innerHTML = "";
-    for (var i = 0; i < array.length; i++) {
+
+    var projectSearch = document.createElement('input');
+    projectSearch.id = "searchProjects";
+    projectSearch.type = "text";
+    projectSearch.style.width = window.innerWidth.toString() + "px";
+    projectSearch.style.paddingLeft = "5px";
+    projectSearch.placeholder = "Search projects...";
+    projectSearch.style.height = "46px";
+    projectSearch.style.borderStyle = "hidden";
+    projectSearch.style.borderBottomStyle = "solid";
+    projectSearch.style.borderBottomWidth = "2px";
+    projectSearch.style.borderColor = "#808080";
+
+    projectSearch.onblur = filterProjects;
+
+    entryOptionsList.appendChild(projectSearch);
+
+    projectOptionsList = document.createElement('div');
+    projectOptionsList.id = "projectOptions";
+    projectOptionsList.style.width = window.innerWidth.toString() + "px";
+    projectOptionsList.style.height = (window.innerHeight - 94).toString() + "px"
+    projectOptionsList.style.top = "50px";
+
+    entryOptionsList.appendChild(projectOptionsList);
+
+    function filterProjects() {
+        projectOptionsList.innerHTML = "";
+        var searchString = projectSearch.value.toLowerCase();
+
+        var numberAdded = 0;
+
+        for (var i = 0; i < gProjects.length; i++) {
+            if (gProjects[i].ProjectTitle.toLowerCase().indexOf(searchString) != -1) {
+                var projectOption = document.createElement('div');
+                projectOption.id = "entryOption";
+                projectOption.style.width = window.innerWidth.toString() + "px";
+                projectOption.style.top = (50 * numberAdded).toString() + "px";
+                projectOption.onmousedown = projectOption_onmousedown;
+                projectOption.TypeID = gProjects[i].ProjectID;
+                projectOption.innerHTML = gProjects[i].ProjectTitle;
+
+                projectOptionsList.appendChild(projectOption);
+                numberAdded++;
+            }
+        }
+    }
+}
+
+function displayProjectOptions() {
+    projectOptionsList.innerHTML = "";
+
+    for (var i = 0; i < gProjects.length; i++) {
         var projectOption = document.createElement('div');
         projectOption.id = "entryOption";
         projectOption.style.width = window.innerWidth.toString() + "px";
         projectOption.style.top = (50 * i).toString() + "px";
-        projectOption.onmousedown = function_onmousdown;
-        if (type === 'project') {
-            projectOption.TypeID = array[i].ProjectID;
-            projectOption.innerHTML = array[i].ProjectTitle;
-        }
-        else if (type === 'activity') {
-            projectOption.TypeID = array[i].ActivityID;
-            projectOption.innerHTML = array[i].ActivityTitle;
-        }
-        entryOptionsList.appendChild(projectOption);
+        projectOption.onmousedown = projectOption_onmousedown;
+        projectOption.TypeID = gProjects[i].ProjectID;
+        projectOption.innerHTML = gProjects[i].ProjectTitle;
+
+        projectOptionsList.appendChild(projectOption);
+    }
+}
+
+function displayActivityOptions(array, function_onmousdown) {
+    entryOptionsList.innerHTML = "";
+    for (var i = 0; i < array.length; i++) {
+        var activityOption = document.createElement('div');
+        activityOption.id = "entryOption";
+        activityOption.style.width = window.innerWidth.toString() + "px";
+        activityOption.style.top = (50 * i).toString() + "px";
+        activityOption.onmousedown = function_onmousdown;
+        activityOption.TypeID = array[i].ActivityID;
+        activityOption.innerHTML = array[i].ActivityTitle;
+
+        entryOptionsList.appendChild(activityOption);
     }
 }
 
@@ -1232,3 +1232,63 @@ function signInBoxOnBlur() {
     lblTeamName.style.visibility = "visible";
     lblEmail.style.visibility = "visible";
 }
+
+//function btnDeleteMessageOK_onmousedown() {
+//    deleteMessageMain.style.visibility = 'hidden';
+//    inputInformation.style.pointerEvents = 'all';
+
+//    deleteMessageMain.DeleteEntry = true;
+//    return;
+//}
+
+//function btnDeleteMessageCancel_onmousedown() {
+//    deleteMessageMain.style.visibility = 'hidden';
+//    inputInformation.style.pointerEvents = 'all';
+
+//    deleteMessageMain.DeleteEntry = false;
+//    return;
+//}
+
+//function showDeleteMessage() {
+//    deleteMessageMain.style.visibility = 'visible';
+//    inputInformation.style.pointerEvents = 'none';
+
+
+//    var fontSize = (window.innerWidth / 3) / 10;
+//    deleteMessageString.style.fontSize = fontSize.toString() + "px";
+//    deleteMessageString.innerHTML = "Are you sure you want to delete this entry?";
+
+//    //errorMessageMain.ObjectToFocus = objectToFocus;
+
+//    btnRefresh.style.backgroundColor = "#1588C7";
+//}
+
+//function btnDelete_onmousedown() {
+//    showDeleteMessage();
+
+//    if (deleteMessageMain.DeleteEntry === false) {
+//        return;
+//    }
+
+//    deleteMessageMain.DeleteEntry = false;
+
+//    entry = inputInformation.EntryToEdit;
+
+//    var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
+//            entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
+//            selectedDateWorked.innerHTML, txtDescription.value,
+//            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
+
+//    if (gServerErrorMsg != "") {
+//        showErrorMessage(gServerErrorMsg);
+//    }
+
+//    for (var i = 0; i < gEntriesList.length; i++) {
+//        if (gEntriesList[i].EntryID === entry.EntryID) {
+//            gEntriesList.splice(i, 1);
+//        }
+//    }
+
+//    btnBack_onmousedown();
+//    displayAllEntries();
+//}
