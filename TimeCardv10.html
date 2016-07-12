@@ -232,6 +232,14 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        #projectOptions {
+            position: absolute;
+            background-color: #FFFFFF;
+            overflow: scroll;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
         #entryOption {
             position: absolute;
             height: 39px;
@@ -265,6 +273,11 @@
             text-align: left;
             color: #1588C7;
             font-size: 20px;
+        }
+        #searchProjects {
+            position:absolute;
+            text-align: left;
+            font-size: 18px;
         }
     </style>
 
@@ -660,7 +673,7 @@
             <div id="btnSignOut">Sign Out</div>
             <div id="btnDelete">Delete</div>
         </div>
-        <div id="inputInformation" onload="inputLoad()">
+        <div id="inputInformation">
             <div id="btnDateWorked">
                 <div id="addEntryButtonText">Date</div>
                 <div id="selectedDateWorked"></div>
