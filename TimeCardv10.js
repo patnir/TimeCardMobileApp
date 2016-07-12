@@ -35,10 +35,10 @@ function body_load() {
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
     errorMessageMain.style.visibility = "hidden";
 
-    btnDeleteMessageOK.onmousedown = btnDeleteMessageOK_onmousedown;
-    btnDeleteMessageCancel.onmousedown = btnDeleteMessageCancel_onmousedown;
-    deleteMessageMain.style.visibility = "hidden";
-    deleteMessageMain.DeleteEntry = false;
+    //btnDeleteMessageOK.onmousedown = btnDeleteMessageOK_onmousedown;
+    //btnDeleteMessageCancel.onmousedown = btnDeleteMessageCancel_onmousedown;
+    //deleteMessageMain.style.visibility = "hidden";
+    //deleteMessageMain.DeleteEntry = false;
 
 
     btnAddNewEntry.style.visibility = "hidden";
@@ -48,7 +48,7 @@ function body_load() {
 
     btnSignOut.style.visibility = "hidden";
 
-    btnDelete.onmousedown = btnDelete_onmousedown;
+    //btnDelete.onmousedown = btnDelete_onmousedown;
 
     btnDateWorked.onmousedown = btnDateWorked_onmousedown;
     btnProject.onmousedown = btnProject_onmousedown;
@@ -71,65 +71,65 @@ function body_load() {
     window_onresize();
 }
 
-function btnDeleteMessageOK_onmousedown() {
-    deleteMessageMain.style.visibility = 'hidden';
-    inputInformation.style.pointerEvents = 'all';
+//function btnDeleteMessageOK_onmousedown() {
+//    deleteMessageMain.style.visibility = 'hidden';
+//    inputInformation.style.pointerEvents = 'all';
 
-    deleteMessageMain.DeleteEntry = true;
-    return;
-}
+//    deleteMessageMain.DeleteEntry = true;
+//    return;
+//}
 
-function btnDeleteMessageCancel_onmousedown() {
-    deleteMessageMain.style.visibility = 'hidden';
-    inputInformation.style.pointerEvents = 'all';
+//function btnDeleteMessageCancel_onmousedown() {
+//    deleteMessageMain.style.visibility = 'hidden';
+//    inputInformation.style.pointerEvents = 'all';
 
-    deleteMessageMain.DeleteEntry = false;
-    return;
-}
+//    deleteMessageMain.DeleteEntry = false;
+//    return;
+//}
 
-function showDeleteMessage() {
-    deleteMessageMain.style.visibility = 'visible';
-    inputInformation.style.pointerEvents = 'none';
+//function showDeleteMessage() {
+//    deleteMessageMain.style.visibility = 'visible';
+//    inputInformation.style.pointerEvents = 'none';
 
 
-    var fontSize = (window.innerWidth / 3) / 10;
-    deleteMessageString.style.fontSize = fontSize.toString() + "px";
-    deleteMessageString.innerHTML = "Are you sure you want to delete this entry?";
+//    var fontSize = (window.innerWidth / 3) / 10;
+//    deleteMessageString.style.fontSize = fontSize.toString() + "px";
+//    deleteMessageString.innerHTML = "Are you sure you want to delete this entry?";
 
-    //errorMessageMain.ObjectToFocus = objectToFocus;
+//    //errorMessageMain.ObjectToFocus = objectToFocus;
 
-    btnRefresh.style.backgroundColor = "#1588C7";
-}
+//    btnRefresh.style.backgroundColor = "#1588C7";
+//}
 
-function btnDelete_onmousedown() {
-    showDeleteMessage();
+//function btnDelete_onmousedown() {
+//    showDeleteMessage();
 
-    if (deleteMessageMain.DeleteEntry === false) {
-        return;
-    }
+//    if (deleteMessageMain.DeleteEntry === false) {
+//        return;
+//    }
 
-    deleteMessageMain.DeleteEntry = false;
+//    deleteMessageMain.DeleteEntry = false;
 
-    entry = inputInformation.EntryToEdit;
+//    entry = inputInformation.EntryToEdit;
 
-    var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
-            entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
-            selectedDateWorked.innerHTML, txtDescription.value,
-            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
+//    var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
+//            entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
+//            selectedDateWorked.innerHTML, txtDescription.value,
+//            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
 
-    if (gServerErrorMsg != "") {
-        showErrorMessage(gServerErrorMsg);
-    }
+//    if (gServerErrorMsg != "") {
+//        showErrorMessage(gServerErrorMsg);
+//    }
 
-    for (var i = 0; i < gEntriesList.length; i++) {
-        if (gEntriesList[i].EntryID === entry.EntryID) {
-            gEntriesList.splice(i, 1);
-        }
-    }
+//    for (var i = 0; i < gEntriesList.length; i++) {
+//        if (gEntriesList[i].EntryID === entry.EntryID) {
+//            gEntriesList.splice(i, 1);
+//        }
+//    }
 
-    btnBack_onmousedown();
-    displayAllEntries();
-}
+//    btnBack_onmousedown();
+//    displayAllEntries();
+//}
 
 function btnForgotPassword_onmousedown() {
     if (txtTeamName.value.trim() === "") {
@@ -199,7 +199,7 @@ function validateEntryInput() {
 function btnAddNewEntry_onmousedown() {
     inputInformation.style.visibility = "visible";
     btnBack.style.visibility = "visible";
-    btnDelete.style.visibility = "hidden";
+    //btnDelete.style.visibility = "hidden";
     inputInformation.style.left = "0px";
     showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
     btnAddNewEntry.style.visibility = "hidden";
@@ -215,7 +215,7 @@ function btnAddNewEntry_onmousedown() {
 
 function entryListElement_onmousedown() {
     btnAddNewEntry.style.visibility = "hidden";
-    btnDelete.style.visibility = "visible";
+    //btnDelete.style.visibility = "visible";
     btnSignOut.style.visibility = "hidden";
     btnBack.style.visibility = "visible";
     inputInformation.style.visibility = "visible";
@@ -334,7 +334,7 @@ function btnRefresh_onmousedown() {
 }
 
 function btnDateWorked_onmousedown() {
-    btnDelete.style.visibility = "hidden";
+    //btnDelete.style.visibility = "hidden";
     btnDateWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "visible";
     entryOptionsList.style.left = "0px";
@@ -346,7 +346,7 @@ function btnDateWorked_onmousedown() {
 }
 
 function btnProject_onmousedown() {
-    btnDelete.style.visibility = "hidden";
+    //btnDelete.style.visibility = "hidden";
     btnProject.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -357,7 +357,7 @@ function btnProject_onmousedown() {
 }
 
 function btnActivity_onmousedown() {
-    btnDelete.style.visibility = "hidden";
+    //btnDelete.style.visibility = "hidden";
     btnActivity.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "visible";
     entryOptionsList.style.left = "0px";
@@ -368,7 +368,7 @@ function btnActivity_onmousedown() {
 }
 
 function btnHoursWorked_onmousedown() {
-    btnDelete.style.visibility = "hidden";
+    //btnDelete.style.visibility = "hidden";
     btnHoursWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -379,9 +379,9 @@ function btnHoursWorked_onmousedown() {
 }
 
 function hoursWorkedOption_onmousedown() {
-    if (inputInformation.EntryToEdit != null) {
-        btnDelete.style.visibility = "visible";
-    }
+    //if (inputInformation.EntryToEdit != null) {
+    //    btnDelete.style.visibility = "visible";
+    //}
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -391,9 +391,6 @@ function hoursWorkedOption_onmousedown() {
     selectedHoursWorked.innerHTML = this.innerHTML;
     btnBack.style.visibility = "visible";
 }
-
-// Goal to combine all entry options displaying with the same for loop;
-// +=========================================================================================================================================================================+
 
 function displayHoursWorkedOptions() {
     var i = 0.00;
@@ -415,9 +412,9 @@ function displayHoursWorkedOptions() {
 }
 
 function dateOption_onmousedown() {
-    if (inputInformation.EntryToEdit != null) {
-        btnDelete.style.visibility = "visible";
-    }
+    //if (inputInformation.EntryToEdit != null) {
+    //    btnDelete.style.visibility = "visible";
+    //}
     entryOptionsList.style.visibility = "hidden";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -441,9 +438,9 @@ function getProjectsAndActivites() {
 }
 
 function projectOption_onmousedown() {
-    if (inputInformation.EntryToEdit != null) {
-        btnDelete.style.visibility = "visible";
-    }
+    //if (inputInformation.EntryToEdit != null) {
+    //    btnDelete.style.visibility = "visible";
+    //}
     entryOptionsList.style.visibility = "hidden";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -457,6 +454,8 @@ function projectOption_onmousedown() {
     // gTasks = serverGetTasks(gAuthToken, this.TypeID, false);
 
     gTasks = serverGetTasks(gAuthToken, this.TypeID, false);
+
+    console.log(JSON.stringify(gTasks));
 
     tasksHeirarchy(gTasks, 0);
 
@@ -481,7 +480,7 @@ function tasksHeirarchy(tasksList, level) {
 }
 
 function displayTasks(tasksList, level) {
-    if (tasksList === []) {
+    if (tasksList.length === 0) {
         return;
     }
     for (var i = 0; i < tasksList.length; i++) {
@@ -558,7 +557,7 @@ function btnTask_onmousedown() {
         btnBack.style.visibility = "visible";
         return;
     }
-    btnDelete.style.visibility = "hidden";
+    //btnDelete.style.visibility = "hidden";
     btnTask.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -594,9 +593,9 @@ function displayEntriesOptions(array, type, function_onmousdown) {
 }
 
 function taskOption_onmousedown() {
-    if (inputInformation.EntryToEdit != null) {
-        btnDelete.style.visibility = "visible";
-    }
+    //if (inputInformation.EntryToEdit != null) {
+    //    btnDelete.style.visibility = "visible";
+    //}
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -610,9 +609,9 @@ function taskOption_onmousedown() {
 }
 
 function activityOption_onmousedown() {
-    if (inputInformation.EntryToEdit != null) {
-        btnDelete.style.visibility = "visible";
-    }
+    //if (inputInformation.EntryToEdit != null) {
+    //    btnDelete.style.visibility = "visible";
+    //}
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -649,8 +648,6 @@ function displayLastSevenDays() {
         entryOptionsList.appendChild(dateOption);
     }
 }
-
-// +=========================================================================================================================================================================+
 
 function formatNumberToTwoDecimalPlaces(number) {
     if (number % 1 === 0) {
@@ -776,7 +773,7 @@ function addDefaultDates() {
 
 
 function btnBack_onmousedown() {
-    btnDelete.style.visibility = "hidden";
+    //btnDelete.style.visibility = "hidden";
     showEntries.style.visibility = "visible";
     btnSave.style.backgroundColor = "#1588C7";
     showEntries.style.visibility = "visible";
@@ -1126,7 +1123,7 @@ function window_onresize() {
     errorMessageBody_onresize();
 
     // Delete Message
-    deleteMessageBody_onresize();
+    // deleteMessageBody_onresize();
 
     gCharactersToShow = (window.innerWidth / 8);
 
@@ -1181,18 +1178,18 @@ function errorMessageBody_onresize() {
     btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
 }
 
-function deleteMessageBody_onresize() {
-    deleteMessageMain.style.width = window.innerWidth.toString() + "px";
-    deleteMessageMain.style.height = window.innerHeight.toString() + "px";
-    deleteMessageMain.style.top = (window.innerHeight / 3).toString() + "px";
-    deleteMessageBody.style.left = (window.innerWidth / 3).toString() + "px";
-    deleteMessageBody.style.height = (window.innerHeight / 3).toString() + "px";
-    deleteMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
+//function deleteMessageBody_onresize() {
+//    deleteMessageMain.style.width = window.innerWidth.toString() + "px";
+//    deleteMessageMain.style.height = window.innerHeight.toString() + "px";
+//    deleteMessageMain.style.top = (window.innerHeight / 3).toString() + "px";
+//    deleteMessageBody.style.left = (window.innerWidth / 3).toString() + "px";
+//    deleteMessageBody.style.height = (window.innerHeight / 3).toString() + "px";
+//    deleteMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
 
-    btnDeleteMessageOK.style.width = (window.innerWidth / 6).toString() + "px";
-    btnDeleteMessageCancel.style.width = (window.innerWidth / 6).toString() + "px";
-    btnDeleteMessageCancel.style.left = (window.innerWidth / 6).toString() + "px";
-}
+//    //btnDeleteMessageOK.style.width = (window.innerWidth / 6).toString() + "px";
+//    //btnDeleteMessageCancel.style.width = (window.innerWidth / 6).toString() + "px";
+//    //btnDeleteMessageCancel.style.left = (window.innerWidth / 6).toString() + "px";
+//}
 
 
 
