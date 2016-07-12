@@ -507,8 +507,6 @@ function btnProject_onmousedown() {
     btnBack.style.visibility = "hidden";
 
     initializeProjectOptionsList();
-
-    displayProjectOptions();
 }
 
 function initializeProjectOptionsList() {
@@ -526,8 +524,6 @@ function initializeProjectOptionsList() {
     projectSearch.style.borderBottomWidth = "2px";
     projectSearch.style.borderColor = "#808080";
 
-    projectSearch.onblur = filterProjects;
-
     entryOptionsList.appendChild(projectSearch);
 
     projectOptionsList = document.createElement('div');
@@ -538,9 +534,12 @@ function initializeProjectOptionsList() {
 
     entryOptionsList.appendChild(projectOptionsList);
 
-    function filterProjects() {
+    filterProjects("");
+
+    manageProjectSearch();
+
+    function filterProjects(searchString) {
         projectOptionsList.innerHTML = "";
-        var searchString = projectSearch.value.toLowerCase();
 
         var numberAdded = 0;
 
@@ -559,21 +558,25 @@ function initializeProjectOptionsList() {
             }
         }
     }
-}
 
-function displayProjectOptions() {
-    projectOptionsList.innerHTML = "";
+    function manageProjectSearch() {
+        projectSearch.SearchPause = filterProjects2;
 
-    for (var i = 0; i < gProjects.length; i++) {
-        var projectOption = document.createElement('div');
-        projectOption.id = "entryOption";
-        projectOption.style.width = window.innerWidth.toString() + "px";
-        projectOption.style.top = (50 * i).toString() + "px";
-        projectOption.onmousedown = projectOption_onmousedown;
-        projectOption.TypeID = gProjects[i].ProjectID;
-        projectOption.innerHTML = gProjects[i].ProjectTitle;
+        projectSearch.onkeydown = timerEnd;
 
-        projectOptionsList.appendChild(projectOption);
+        function timerStart() {
+            projectSearch.TimeoutID = setTimeout(search, 1000);
+        }
+
+        function search() {
+            searchText = projectSearch.value.toLowerCase();
+            projectSearch.SearchPause(searchText);
+        }
+
+        function timerEnd() {
+            clearTimeout(projectSearch.TimeoutID);
+            timerStart();
+        }
     }
 }
 
