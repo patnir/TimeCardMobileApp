@@ -78,3 +78,28 @@
 //    //btnDeleteMessageCancel.style.width = (window.innerWidth / 6).toString() + "px";
 //    //btnDeleteMessageCancel.style.left = (window.innerWidth / 6).toString() + "px";
 //}
+
+//function serverDeleteEntry(entryID, userID, projectID, taskID, activityID, hoursWorked, dateWorked,
+//    entryDescription, billable, payable, lastMaintUTC, authToken) {
+
+//    var updateEntryCredentials = {
+//        EntryID: entryID,
+//        UserID: userID,
+//        ProjectID: projectID,
+//        TaskID: taskID,
+//        ActivityID: activityID,
+//        HoursWorked: hoursWorked,
+//        DateWorked: dateWorked,
+//        EntryDescription: entryDescription,
+//        BillableIndicator: billable,
+//        PayableIndicator: payable,
+//        LastMaintUTC: lastMaintUTC
+//    };
+
+//    requestString = JSON.stringify(updateEntryCredentials);
+//    httpPost(gServerRoot + "action=deleteEntry&authToken=" + authToken, requestString);
+
+//    if (gServerErrorMsg !== "") {
+//        return;
+//    }
+//}
