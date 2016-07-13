@@ -223,7 +223,7 @@ function btnSave_onmousedown() {
         var billable = (cbxBillable.Value === "on" ? true : false);
         var payable = (cbxPayable.Value === "on" ? true : false);
 
-        var newEntry = serverInsertEntry(gUser.UserID, gTasks.ProjectID,
+        var newEntry = serverInsertEntry(gUser.UserID, selectedProject.ProjectID,
             selectedTask.TaskID, selectedActivity.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
             selectedDateWorked.innerHTML, txtDescription.value, 
             billable, payable, gAuthToken);
@@ -459,7 +459,10 @@ function projectOption_onmousedown() {
     btnProject.style.backgroundColor = "#FFFFFF";
     var project = this.innerHTML;
     selectedProject.innerHTML = project;
+    selectedProject.ProjectID = this.TypeID;
     btnBack.style.visibility = "visible";
+
+    selectedTask.innerHTML = "";
 
     gTasks = serverGetTasks(gAuthToken, this.TypeID, false);
 
@@ -468,8 +471,6 @@ function projectOption_onmousedown() {
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
     }
-
-    gTasks.ProjectID = this.TypeID;
 }
 
 function initializeTasksHeirarchy(tasksList, level) {
@@ -1176,13 +1177,14 @@ function showEntriesPanel_onresize() {
     showEntries.style.width = window.innerWidth.toString() + "px";
     showEntries.style.height = (window.innerHeight - 44).toString() + "px";
 
-    txtBeginDate.style.width = (window.innerWidth - 210).toString() + "px";
-    txtEndDate.style.width = (window.innerWidth - 210).toString() + "px";
+    txtBeginDate.style.width = (window.innerWidth / 2 - 106).toString() + "px";
+    lblEndDate.style.left = (window.innerWidth / 2).toString() + "px";
+    txtEndDate.style.width = (window.innerWidth / 2- 86).toString() + "px";
 
-    btnRefresh.style.width = (window.innerWidth - 80).toString() + "px";
+    btnRefresh.style.width = (window.innerWidth - 40).toString() + "px";
 
     entriesList.style.width = (window.innerWidth).toString() + "px";
-    entriesList.style.height = (window.innerHeight - 242).toString() + "px";
+    entriesList.style.height = (window.innerHeight - 172).toString() + "px";
 }
 
 function errorMessageBody_onresize() {
