@@ -103,3 +103,25 @@
 //        return;
 //    }
 //}
+
+//if (inputInformation.EntryToEdit != null) {
+//    btnDelete.style.visibility = "visible";
+//}
+
+// Onload:
+//btnDeleteMessageOK.onmousedown = btnDeleteMessageOK_onmousedown;
+//btnDeleteMessageCancel.onmousedown = btnDeleteMessageCancel_onmousedown;
+//deleteMessageMain.style.visibility = "hidden";
+//deleteMessageMain.DeleteEntry = false;
+//btnDelete.onmousedown = btnDelete_onmousedown;
+//btnDelete.style.visibility = "hidden";
+
+
+// icon for bottom tasks:
+//else {
+//    var taskOptionButton = document.createElement('div');
+//    taskOptionButton.id = "taskOptionButton";
+//    taskOptionButton.innerHTML = "<img src=\"Images/Circle30.png\">"
+//    taskOptionButton.style.left = (30 * level + 10).toString() + "px";
+//    taskOption.appendChild(taskOptionButton);
+//}

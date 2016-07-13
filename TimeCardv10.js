@@ -35,20 +35,12 @@ function body_load() {
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
     errorMessageMain.style.visibility = "hidden";
 
-    //btnDeleteMessageOK.onmousedown = btnDeleteMessageOK_onmousedown;
-    //btnDeleteMessageCancel.onmousedown = btnDeleteMessageCancel_onmousedown;
-    //deleteMessageMain.style.visibility = "hidden";
-    //deleteMessageMain.DeleteEntry = false;
-
-
     btnAddNewEntry.style.visibility = "hidden";
     btnBack.style.visibility = "hidden";
 
     btnSignOut.onmousedown = btnSignOut_onmousedown;
 
     btnSignOut.style.visibility = "hidden";
-
-    //btnDelete.onmousedown = btnDelete_onmousedown;
 
     btnDateWorked.onmousedown = btnDateWorked_onmousedown;
     btnProject.onmousedown = btnProject_onmousedown;
@@ -156,7 +148,6 @@ function btnAddNewEntry_onmousedown() {
 
 function entryListElement_onmousedown() {
     btnAddNewEntry.style.visibility = "hidden";
-    //btnDelete.style.visibility = "visible";
     btnSignOut.style.visibility = "hidden";
     btnBack.style.visibility = "visible";
     inputInformation.style.visibility = "visible";
@@ -195,8 +186,6 @@ function btnSave_onmousedown() {
             selectedDateWorked.innerHTML, txtDescription.value, 
             cbxBillable.checked, cbxPayable.checked, gAuthToken);
 
-        // alert(JSON.stringify(newEntry));
-
         if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);
             return;
@@ -216,8 +205,6 @@ function btnSave_onmousedown() {
             entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
             selectedDateWorked.innerHTML, txtDescription.value,
             cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
-
-        // alert(JSON.stringify(newEntry));
 
         if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);
@@ -278,7 +265,6 @@ function btnRefresh_onmousedown() {
 }
 
 function btnDateWorked_onmousedown() {
-    //btnDelete.style.visibility = "hidden";
     btnDateWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "visible";
     entryOptionsList.style.left = "0px";
@@ -292,7 +278,6 @@ function btnDateWorked_onmousedown() {
 
 
 function btnActivity_onmousedown() {
-    //btnDelete.style.visibility = "hidden";
     btnActivity.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "visible";
     entryOptionsList.style.left = "0px";
@@ -303,7 +288,6 @@ function btnActivity_onmousedown() {
 }
 
 function btnHoursWorked_onmousedown() {
-    //btnDelete.style.visibility = "hidden";
     btnHoursWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -314,9 +298,6 @@ function btnHoursWorked_onmousedown() {
 }
 
 function hoursWorkedOption_onmousedown() {
-    //if (inputInformation.EntryToEdit != null) {
-    //    btnDelete.style.visibility = "visible";
-    //}
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -347,9 +328,6 @@ function displayHoursWorkedOptions() {
 }
 
 function dateOption_onmousedown() {
-    //if (inputInformation.EntryToEdit != null) {
-    //    btnDelete.style.visibility = "visible";
-    //}
     entryOptionsList.style.visibility = "hidden";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -373,9 +351,6 @@ function getProjectsAndActivitesFromServer() {
 }
 
 function projectOption_onmousedown() {
-    //if (inputInformation.EntryToEdit != null) {
-    //    btnDelete.style.visibility = "visible";
-    //}
     entryOptionsList.style.visibility = "hidden";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -385,8 +360,6 @@ function projectOption_onmousedown() {
     var project = this.innerHTML;
     selectedProject.innerHTML = project;
     btnBack.style.visibility = "visible";
-
-    // gTasks = serverGetTasks(gAuthToken, this.TypeID, false);
 
     gTasks = serverGetTasks(gAuthToken, this.TypeID, false);
 
@@ -445,13 +418,6 @@ function displayTasks(tasksList, level) {
             taskOptionButton.onmousedown = taskOptionButton_onmousedown;
             taskOption.appendChild(taskOptionButton);
         }
-        //else {
-        //    var taskOptionButton = document.createElement('div');
-        //    taskOptionButton.id = "taskOptionButton";
-        //    taskOptionButton.innerHTML = "<img src=\"Images/Circle30.png\">"
-        //    taskOptionButton.style.left = (30 * level + 10).toString() + "px";
-        //    taskOption.appendChild(taskOptionButton);
-        //}
         
         taskOption.appendChild(taskOptionText);
 
@@ -490,7 +456,6 @@ function btnTask_onmousedown() {
         btnBack.style.visibility = "visible";
         return;
     }
-    //btnDelete.style.visibility = "hidden";
     btnTask.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -504,7 +469,6 @@ function btnTask_onmousedown() {
 }
 
 function btnProject_onmousedown() {
-    //btnDelete.style.visibility = "hidden";
     btnProject.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
@@ -606,9 +570,6 @@ function displayActivityOptions(array, function_onmousdown) {
 }
 
 function taskOption_onmousedown() {
-    //if (inputInformation.EntryToEdit != null) {
-    //    btnDelete.style.visibility = "visible";
-    //}
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -622,9 +583,6 @@ function taskOption_onmousedown() {
 }
 
 function activityOption_onmousedown() {
-    //if (inputInformation.EntryToEdit != null) {
-    //    btnDelete.style.visibility = "visible";
-    //}
     inputInformation.style.visibility = "visible";
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
     inputInformation.style.left = "0px";
@@ -790,7 +748,6 @@ function addDefaultDates() {
 
 
 function btnBack_onmousedown() {
-    //btnDelete.style.visibility = "hidden";
     showEntries.style.visibility = "visible";
     btnSave.style.backgroundColor = "#1588C7";
     showEntries.style.visibility = "visible";
@@ -813,8 +770,6 @@ function displayAllEntries() {
     for (var i = 0; i < gEntriesList.length; i++) {
         addEntryToList(gEntriesList[i], i);
     }
-
-    //btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function updateFormatUpdateDateWorked(serializedDate) {
