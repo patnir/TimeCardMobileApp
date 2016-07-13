@@ -1148,12 +1148,17 @@ function window_onresize() {
     // Error Messages
     errorMessageBody_onresize();
 
-    //gCharactersToShow = (window.innerWidth / 8);
+    inputInformation_onresize();
 
-    //if (window.innerWidth < 700) {
-    //    gCharactersToShow -= 20;
-    //}
     displayAllEntries(gResponseString);
+}
+
+function inputInformation_onresize() {
+    selectedHoursWorked.style.width = (innerWidth - 120).toString() + "px";
+    selectedActivity.style.width = (innerWidth - 120).toString() + "px";
+    selectedDateWorked.style.width = (innerWidth - 120).toString() + "px";
+    selectedProject.style.width = (innerWidth - 120).toString() + "px";
+    selectedTask.style.width = (innerWidth - 120).toString() + "px";
 }
 
 function signInPage_onresize() {
