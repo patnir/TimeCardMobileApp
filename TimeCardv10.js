@@ -18,6 +18,8 @@ function body_load() {
     btnRefresh.onmousedown = btnRefresh_onmousedown;
     btnRefresh.onmouseup = btnRefresh_onmouseup;
 
+    cbxRememberPassword.onmousedown = cbxRememberPassword_onmousedown;
+
     btnForgotPassword.onmousedown = btnForgotPassword_onmousedown;
 
     btnSignIn.onmousedown = btnSignIn_onmousedown;
@@ -56,6 +58,17 @@ function body_load() {
     window_onresize();
 }
 
+function cbxRememberPassword_onmousedown() {
+    if (cbxRememberPassword.Value === "on") {
+        cbxRememberPassword.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
+        cbxRememberPassword.Value = "off";
+    } else {
+        cbxRememberPassword.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
+        cbxRememberPassword.Value = "on";
+    }
+}
+
+
 function btnForgotPassword_onmousedown() {
     if (txtTeamName.value.trim() === "") {
         showErrorMessage("Enter a team name.", txtTeamName);
@@ -70,11 +83,11 @@ function btnForgotPassword_onmousedown() {
 function autoSignIn() {
     txtEmail.value = ditStorageGet('email', "");
     txtTeamName.value = ditStorageGet('teamName', "");
-    cbxRememberPassword.value = ditStorageGet('cbxValue', "off");
+    cbxRememberPassword.Value = ditStorageGet('cbxValue', "off");
     gAuthToken = ditStorageGet('authToken', "");
 
-    if (cbxRememberPassword.value === "on") {
-        cbxRememberPassword.checked = true;
+    if (cbxRememberPassword.Value === "on") {
+        cbxRememberPassword.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
 
         gUser = serverTokenSignIn(gAuthToken);
 
@@ -86,7 +99,7 @@ function autoSignIn() {
         callbackSignIn(gUser);
     }
     else {
-        cbxRememberPassword.checked = false;
+        cbxRememberPassword.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
     }
 }
 
@@ -662,12 +675,11 @@ function btnSignOut_onmousedown() {
         return;
     }
 
-    cbxRememberPassword.checked = false;
+    cbxRememberPassword.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
 
     divSignIn.style.visibility = "visible";
     btnAddNewEntry.style.visibility = "hidden";
     btnSignOut.style.visibility = "hidden";
-    signInBoxOnBlur();
 }
 
 function btnSignIn_onmousedown() {
@@ -691,7 +703,7 @@ function callbackSignIn(gUser) {
 
     btnSignIn.style.backgroundColor = "#1588C7";
 
-    if (cbxRememberPassword.checked === true) {
+    if (cbxRememberPassword.Value === "on") {
         storeCredentials();
     }   
     else {
@@ -701,7 +713,7 @@ function callbackSignIn(gUser) {
     txtTeamName.value = "";
     txtPassword.value = "";
     txtEmail.value = "";
-    cbxRememberPassword.checked === false;
+    cbxRememberPassword.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
 
     divSignIn.style.visibility = "hidden";
     entryOptionsList.style.visibility = "hidden";
