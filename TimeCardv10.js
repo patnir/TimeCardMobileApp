@@ -57,6 +57,7 @@ function body_load() {
     btnHoursWorked.onmousedown = btnHoursWorked_onmousedown;
 
     btnSave.onmousedown = btnSave_onmousedown;
+    btnSave.onmouseup = btnSave_onmouseup;
 
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
 
@@ -169,6 +170,9 @@ function entryListElement_onmousedown() {
     restoreEntryPage(this.entryToBeEditted);
 }
 
+function btnSave_onmouseup() {
+    btnSave.style.backgroundColor = "#1588C7";
+}
 
 function btnSave_onmousedown() {
     btnSave.style.backgroundColor = "#BADCEF";
@@ -250,10 +254,12 @@ function clearEntryPage() {
 }
 
 function btnRefresh_onmousedown() {
+    btnRefresh.style.backgroundColor = "#BADCEF";
+
     if (validateShowEntriesDates() === false) {
+        btnRefresh.style.backgroundColor = "#1588C7";
         return;
     }
-    btnRefresh.style.backgroundColor = "#BADCEF";
 
     gEntriesList = serverGetEntries(gUser.UserID, "", "", "", 0,
         0, txtBeginDate.value, txtEndDate.value, "", "", "", false, gAuthToken);
@@ -355,7 +361,7 @@ function dateOption_onmousedown() {
     btnBack.style.visibility = "visible";
 }
 
-function getProjectsAndActivites() {
+function getProjectsAndActivitesFromServer() {
     gProjects = serverGetProjects(gAuthToken, false);
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg + "project");
@@ -506,10 +512,10 @@ function btnProject_onmousedown() {
     inputInformation.style.visibility = "hidden";
     btnBack.style.visibility = "hidden";
 
-    initializeProjectOptionsList();
+    initializeProjectOptionsListAndSearch();
 }
 
-function initializeProjectOptionsList() {
+function initializeProjectOptionsListAndSearch() {
     entryOptionsList.innerHTML = "";
 
     var projectSearch = document.createElement('input');
@@ -518,10 +524,10 @@ function initializeProjectOptionsList() {
     projectSearch.style.width = window.innerWidth.toString() + "px";
     projectSearch.style.paddingLeft = "5px";
     projectSearch.placeholder = "Search projects...";
-    projectSearch.style.height = "46px";
+    projectSearch.style.height = "47px";
     projectSearch.style.borderStyle = "hidden";
     projectSearch.style.borderBottomStyle = "solid";
-    projectSearch.style.borderBottomWidth = "2px";
+    projectSearch.style.borderBottomWidth = "1px";
     projectSearch.style.borderColor = "#808080";
 
     entryOptionsList.appendChild(projectSearch);
@@ -549,6 +555,8 @@ function initializeProjectOptionsList() {
                 projectOption.id = "entryOption";
                 projectOption.style.width = window.innerWidth.toString() + "px";
                 projectOption.style.top = (50 * numberAdded).toString() + "px";
+                projectOption.style.paddingLeft = "15px";
+                projectOption.style.textAlign = "left";
                 projectOption.onmousedown = projectOption_onmousedown;
                 projectOption.TypeID = gProjects[i].ProjectID;
                 projectOption.innerHTML = gProjects[i].ProjectTitle;
@@ -560,12 +568,12 @@ function initializeProjectOptionsList() {
     }
 
     function manageProjectSearch() {
-        projectSearch.SearchPause = filterProjects2;
+        projectSearch.SearchPause = filterProjects;
 
         projectSearch.onkeydown = timerEnd;
 
         function timerStart() {
-            projectSearch.TimeoutID = setTimeout(search, 1000);
+            projectSearch.TimeoutID = setTimeout(search, 750);
         }
 
         function search() {
@@ -587,6 +595,8 @@ function displayActivityOptions(array, function_onmousdown) {
         activityOption.id = "entryOption";
         activityOption.style.width = window.innerWidth.toString() + "px";
         activityOption.style.top = (50 * i).toString() + "px";
+        activityOption.style.textAlign = "left";
+        activityOption.style.paddingLeft = "15px";
         activityOption.onmousedown = function_onmousdown;
         activityOption.TypeID = array[i].ActivityID;
         activityOption.innerHTML = array[i].ActivityTitle;
@@ -641,6 +651,8 @@ function displayLastSevenDays() {
         dateOption.id = "entryOption";
         dateOption.style.width = window.innerWidth.toString() + "px";
         dateOption.style.top = (50 * i).toString() + "px";
+        dateOption.style.textAlign = "left";
+        dateOption.style.paddingLeft = "15px";
         dateOption.onmousedown = dateOption_onmousedown;
         if (i === 0) {
             dateOption.innerHTML = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " (Today)";
@@ -725,7 +737,9 @@ function callbackSignIn(gUser) {
     btnSignOut.style.visibility = "visible";
 
     signInBoxOnBlur();
-    getProjectsAndActivites();
+    getProjectsAndActivitesFromServer();
+    btnRefresh_onmousedown();
+    btnRefresh_onmouseup();
 }
 
 function storeCredentials() {
@@ -800,7 +814,7 @@ function displayAllEntries() {
         addEntryToList(gEntriesList[i], i);
     }
 
-    btnRefresh.style.backgroundColor = "#1588C7";
+    //btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function updateFormatUpdateDateWorked(serializedDate) {
@@ -855,7 +869,7 @@ function addEntryToList(entry, i) {
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
     entryDivHoursWorked.style.top = (81 * i + 53).toString() + "px";
-    entryDivHoursWorked.innerHTML = entry.HoursWorked;
+    entryDivHoursWorked.innerHTML = formatNumberToTwoDecimalPlaces(entry.HoursWorked);
 
     var entryDivDescription = document.createElement('div');
     entryDivDescription.id = "entryDescription";
@@ -1181,21 +1195,6 @@ function errorMessageBody_onresize() {
     btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
 }
 
-//function deleteMessageBody_onresize() {
-//    deleteMessageMain.style.width = window.innerWidth.toString() + "px";
-//    deleteMessageMain.style.height = window.innerHeight.toString() + "px";
-//    deleteMessageMain.style.top = (window.innerHeight / 3).toString() + "px";
-//    deleteMessageBody.style.left = (window.innerWidth / 3).toString() + "px";
-//    deleteMessageBody.style.height = (window.innerHeight / 3).toString() + "px";
-//    deleteMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
-
-//    //btnDeleteMessageOK.style.width = (window.innerWidth / 6).toString() + "px";
-//    //btnDeleteMessageCancel.style.width = (window.innerWidth / 6).toString() + "px";
-//    //btnDeleteMessageCancel.style.left = (window.innerWidth / 6).toString() + "px";
-//}
-
-
-
 function txtTeamName_onfocus() {
     txtEmail.style.visibility = "hidden";
     lblEmail.style.visibility = "hidden";
@@ -1235,63 +1234,3 @@ function signInBoxOnBlur() {
     lblTeamName.style.visibility = "visible";
     lblEmail.style.visibility = "visible";
 }
-
-//function btnDeleteMessageOK_onmousedown() {
-//    deleteMessageMain.style.visibility = 'hidden';
-//    inputInformation.style.pointerEvents = 'all';
-
-//    deleteMessageMain.DeleteEntry = true;
-//    return;
-//}
-
-//function btnDeleteMessageCancel_onmousedown() {
-//    deleteMessageMain.style.visibility = 'hidden';
-//    inputInformation.style.pointerEvents = 'all';
-
-//    deleteMessageMain.DeleteEntry = false;
-//    return;
-//}
-
-//function showDeleteMessage() {
-//    deleteMessageMain.style.visibility = 'visible';
-//    inputInformation.style.pointerEvents = 'none';
-
-
-//    var fontSize = (window.innerWidth / 3) / 10;
-//    deleteMessageString.style.fontSize = fontSize.toString() + "px";
-//    deleteMessageString.innerHTML = "Are you sure you want to delete this entry?";
-
-//    //errorMessageMain.ObjectToFocus = objectToFocus;
-
-//    btnRefresh.style.backgroundColor = "#1588C7";
-//}
-
-//function btnDelete_onmousedown() {
-//    showDeleteMessage();
-
-//    if (deleteMessageMain.DeleteEntry === false) {
-//        return;
-//    }
-
-//    deleteMessageMain.DeleteEntry = false;
-
-//    entry = inputInformation.EntryToEdit;
-
-//    var returnString = serverDeleteEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
-//            entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
-//            selectedDateWorked.innerHTML, txtDescription.value,
-//            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
-
-//    if (gServerErrorMsg != "") {
-//        showErrorMessage(gServerErrorMsg);
-//    }
-
-//    for (var i = 0; i < gEntriesList.length; i++) {
-//        if (gEntriesList[i].EntryID === entry.EntryID) {
-//            gEntriesList.splice(i, 1);
-//        }
-//    }
-
-//    btnBack_onmousedown();
-//    displayAllEntries();
-//}
