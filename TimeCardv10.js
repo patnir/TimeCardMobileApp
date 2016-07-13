@@ -45,6 +45,12 @@ function body_load() {
     btnSave.onmousedown = btnSave_onmousedown;
     btnSave.onmouseup = btnSave_onmouseup;
 
+    cbxBillable.onmousedown = cbxBillable_onmousedown;
+    cbxBillable.Value = "on";
+
+    cbxPayable.onmousedown = cbxPayable_onmousedown;
+    cbxPayable.Value = "on";
+
     entryOptionsList.style.left = window.innerWidth.toString() + "px";
 
     gEntriesList = [];
@@ -56,6 +62,26 @@ function body_load() {
     autoSignIn();
 
     window_onresize();
+}
+
+function cbxPayable_onmousedown() {
+    if (cbxPayable.Value === "on") {
+        cbxPayable.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
+        cbxPayable.Value = "off";
+    } else {
+        cbxPayable.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
+        cbxPayable.Value = "on";
+    }
+}
+
+function cbxBillable_onmousedown() {
+    if (cbxBillable.Value === "on") {
+        cbxBillable.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
+        cbxBillable.Value = "off";
+    } else {
+        cbxBillable.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
+        cbxBillable.Value = "on";
+    }
 }
 
 function cbxRememberPassword_onmousedown() {
@@ -137,7 +163,9 @@ function validateEntryInput() {
 function btnAddNewEntry_onmousedown() {
     inputInformation.style.visibility = "visible";
     btnBack.style.visibility = "visible";
+
     //btnDelete.style.visibility = "hidden";
+
     inputInformation.style.left = "0px";
     showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
     btnAddNewEntry.style.visibility = "hidden";
@@ -150,8 +178,11 @@ function btnAddNewEntry_onmousedown() {
 
     inputInformation.EntryToEdit = null;
 
-    cbxBillable.checked = true;
-    cbxPayable.checked = true;
+    cbxBillable.Value = "on";
+    cbxPayable.Value = "on";
+
+    cbxPayable.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
+    cbxBillable.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
 }
 
 function entryListElement_onmousedown() {
@@ -189,10 +220,13 @@ function btnSave_onmousedown() {
 
     if (inputInformation.EntryToEdit === null) {
 
+        var billable = (cbxBillable.Value === "on" ? true : false);
+        var payable = (cbxPayable.Value === "on" ? true : false);
+
         var newEntry = serverInsertEntry(gUser.UserID, gTasks.ProjectID,
             selectedTask.TaskID, selectedActivity.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
             selectedDateWorked.innerHTML, txtDescription.value, 
-            cbxBillable.checked, cbxPayable.checked, gAuthToken);
+            billable, payable, gAuthToken);
 
         if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);
@@ -204,6 +238,8 @@ function btnSave_onmousedown() {
 
         gEntriesList.push(newEntry);
     } else {
+        var billable = (cbxBillable.Value === "on" ? true : false);
+        var payable = (cbxPayable.Value === "on" ? true : false);
 
         entry.ProjectID = selectedProject.ProjectID;
         entry.TaskID = selectedTask.TaskID;
@@ -212,7 +248,7 @@ function btnSave_onmousedown() {
         var newEntry = serverUpdateEntry(entry.EntryID, gUser.UserID, entry.ProjectID,
             entry.TaskID, entry.ActivityID, parseFloat(selectedHoursWorked.innerHTML),
             selectedDateWorked.innerHTML, txtDescription.value,
-            cbxBillable.checked, cbxPayable.checked, entry.LastMaintUTC, gAuthToken);
+            billable, payable, entry.LastMaintUTC, gAuthToken);
 
         if (gServerErrorMsg != "") {
             showErrorMessage(gServerErrorMsg);
@@ -804,8 +840,21 @@ function restoreEntryPage(entry) {
     selectedTask.innerHTML = entry.TaskTitle;
     selectedTask.TaskID = entry.TaskID;
 
-    cbxBillable.checked = entry.BillableIndicator;
-    cbxPayable.checked = entry.PayableIndicator;
+    if (entry.BillableIndicator === true) {
+        cbxBillable.Value = "on";
+        cbxBillable.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
+    } else {
+        cbxBillable.Value = "off";
+        cbxBillable.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
+    }
+
+    if (entry.PayableIndicator === true) {
+        cbxPayable.Value = "on";
+        cbxPayable.innerHTML = "<img src=\"Images/CheckedCheckbox20.png\"/>";
+    } else {
+        cbxPayable.Value = "off";
+        cbxPayable.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
+    }
 
     inputInformation.EntryToEdit = entry;
 }
@@ -1073,13 +1122,13 @@ function addEntryPanel_onresize() {
     btnHoursWorked.style.top = (4.25 * pageHeight / 12).toString() + "px";
     btnHoursWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
 
-    lblPayable.style.top = (5.25 * pageHeight / 12).toString() + "px";
-    cbxPayable.style.top = (5.25 * pageHeight / 12).toString() + "px";
+    lblPayable.style.top = (5.3 * pageHeight / 12 + 1).toString() + "px";
+    cbxPayable.style.top = (5.3 * pageHeight / 12).toString() + "px";
 
-    lblBillable.style.top = (5.25 * pageHeight / 12).toString() + "px";
-    cbxBillable.style.top = (5.25 * pageHeight / 12).toString() + "px";
+    lblBillable.style.top = (5.3 * pageHeight / 12 + 1).toString() + "px";
+    cbxBillable.style.top = (5.3 * pageHeight / 12).toString() + "px";
 
-    txtDescription.style.top = (6 * pageHeight / 12).toString() + "px";
+    txtDescription.style.top = (6.1 * pageHeight / 12).toString() + "px";
     txtDescription.style.height = (4.5 * pageHeight / 12).toString() + "px";
     txtDescription.style.width = (window.innerWidth - 40).toString() + "px";
 
