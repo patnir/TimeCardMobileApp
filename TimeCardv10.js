@@ -890,8 +890,8 @@ function addEntryToList(entry, i) {
     var entryDivDescription = document.createElement('div');
     entryDivDescription.id = "entryDescription";
     entryDivDescription.style.top = (81 * i + 45).toString() + "px";
-    entryDivDescription.innerHTML = formatDescriptionForList(entry.EntryDescription);
-    entryDivDescription.style.width = (4 * window.innerWidth / 5).toString() + "px"
+    entryDivDescription.innerHTML = entry.EntryDescription;
+    entryDivDescription.style.width = (window.innerWidth - 70).toString() + "px"
 
     entryDiv.appendChild(entryDivName);
     entryDiv.appendChild(entryDivDateWorked);
@@ -913,13 +913,6 @@ function formatDateForList(serializedDate) {
     formattedString += months[dateParts[1] - 1] + " " + dateParts[2] + ", " + dateParts[0];
 
     return formattedString;
-}
-
-function formatDescriptionForList(description) {
-    if (description.length > gCharactersToShow) {
-        return description.substring(0, gCharactersToShow - 3) + "...";
-    }
-    return description;
 }
 
 function showErrorMessage(message, objectToFocus) {
@@ -1122,10 +1115,10 @@ function addEntryPanel_onresize() {
     btnHoursWorked.style.top = (4.25 * pageHeight / 12).toString() + "px";
     btnHoursWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
 
-    lblPayable.style.top = (5.3 * pageHeight / 12 + 1).toString() + "px";
+    lblPayable.style.top = (5.3 * pageHeight / 12 + 0.5).toString() + "px";
     cbxPayable.style.top = (5.3 * pageHeight / 12).toString() + "px";
 
-    lblBillable.style.top = (5.3 * pageHeight / 12 + 1).toString() + "px";
+    lblBillable.style.top = (5.3 * pageHeight / 12 + 0.5).toString() + "px";
     cbxBillable.style.top = (5.3 * pageHeight / 12).toString() + "px";
 
     txtDescription.style.top = (6.1 * pageHeight / 12).toString() + "px";
@@ -1155,11 +1148,11 @@ function window_onresize() {
     // Error Messages
     errorMessageBody_onresize();
 
-    gCharactersToShow = (window.innerWidth / 8);
+    //gCharactersToShow = (window.innerWidth / 8);
 
-    if (window.innerWidth < 700) {
-        gCharactersToShow -= 20;
-    }
+    //if (window.innerWidth < 700) {
+    //    gCharactersToShow -= 20;
+    //}
     displayAllEntries(gResponseString);
 }
 

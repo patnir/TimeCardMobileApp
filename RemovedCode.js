@@ -205,3 +205,18 @@
 //    left: 40px;
 //    font-family: Helvetica;
 //}
+
+
+// Description for entry dynamic:
+//function formatDescriptionForList(description) {
+//    if (description.length > gCharactersToShow) {
+//        return description.substring(0, gCharactersToShow - 3) + "...";
+//    }
+//    return description;
+//}
+
+//gCharactersToShow = (window.innerWidth / 8);
+
+//if (window.innerWidth < 700) {
+//    gCharactersToShow -= 20;
+//}
