@@ -710,7 +710,6 @@ function callbackSignIn(gUser) {
     btnAddNewEntry.style.visibility = "visible";
     btnSignOut.style.visibility = "visible";
 
-    signInBoxOnBlur();
     getProjectsAndActivitesFromServer();
     btnRefresh_onmousedown();
     btnRefresh_onmouseup();
@@ -1043,37 +1042,37 @@ function addEntryPanel_onresize() {
     inputInformation.style.height = pageHeight.toString() + "px";
 
     btnDateWorked.style.width = (window.innerWidth).toString() + "px";
-    btnDateWorked.style.top = (0.5 * pageHeight / 12).toString() + "px";
+    btnDateWorked.style.top = (0.25 * pageHeight / 12).toString() + "px";
     btnDateWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
 
     btnProject.style.width = (window.innerWidth).toString() + "px";
-    btnProject.style.top = (1.5 * pageHeight / 12).toString() + "px";
+    btnProject.style.top = (1.25 * pageHeight / 12).toString() + "px";
     btnProject.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
 
     btnTask.style.width = (window.innerWidth).toString() + "px";
-    btnTask.style.top = (2.5 * pageHeight / 12).toString() + "px";
+    btnTask.style.top = (2.25 * pageHeight / 12).toString() + "px";
     btnTask.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
 
     btnActivity.style.width = (window.innerWidth).toString() + "px";
-    btnActivity.style.top = (3.5 * pageHeight / 12).toString() + "px";
+    btnActivity.style.top = (3.25 * pageHeight / 12).toString() + "px";
     btnActivity.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
 
     btnHoursWorked.style.width = (window.innerWidth).toString() + "px";
-    btnHoursWorked.style.top = (4.5 * pageHeight / 12).toString() + "px";
+    btnHoursWorked.style.top = (4.25 * pageHeight / 12).toString() + "px";
     btnHoursWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
 
-    lblPayable.style.top = (6 * pageHeight / 12).toString() + "px";
-    cbxPayable.style.top = (6 * pageHeight / 12).toString() + "px";
+    lblPayable.style.top = (5.25 * pageHeight / 12).toString() + "px";
+    cbxPayable.style.top = (5.25 * pageHeight / 12).toString() + "px";
 
-    lblBillable.style.top = (6 * pageHeight / 12).toString() + "px";
-    cbxBillable.style.top = (6 * pageHeight / 12).toString() + "px";
+    lblBillable.style.top = (5.25 * pageHeight / 12).toString() + "px";
+    cbxBillable.style.top = (5.25 * pageHeight / 12).toString() + "px";
 
-    txtDescription.style.top = (7 * pageHeight / 12).toString() + "px";
-    txtDescription.style.height = (3.00 * pageHeight / 12).toString() + "px";
+    txtDescription.style.top = (6 * pageHeight / 12).toString() + "px";
+    txtDescription.style.height = (4.5 * pageHeight / 12).toString() + "px";
     txtDescription.style.width = (window.innerWidth - 40).toString() + "px";
 
     btnSave.style.width = (window.innerWidth - 40).toString() + "px";
-    btnSave.style.top = (10.625 * pageHeight / 12).toString() + "px";
+    btnSave.style.top = (11 * pageHeight / 12).toString() + "px";
 
     entryOptionsList.style.width = (window.innerWidth).toString() + "px";
     entryOptionsList.style.height = (window.innerHeight - 44).toString() + "px";
