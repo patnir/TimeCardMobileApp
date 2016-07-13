@@ -12,14 +12,6 @@ var gUser;
 var gAuthToken = "";
 
 function body_load() {
-    txtTeamName.onfocus = txtTeamName_onfocus;
-    txtEmail.onfocus = txtEmail_onfocus;
-    txtPassword.onfocus = txtPassword_onfocus;
-
-    txtTeamName.onblur = signInBoxOnBlur;
-    txtEmail.onblur = signInBoxOnBlur;
-    txtPassword.onblur = signInBoxOnBlur;
-
     window.onresize = window_onresize;
     btnAddNewEntry.onmousedown = btnAddNewEntry_onmousedown;
     btnBack.onmousedown = btnBack_onmousedown;
@@ -144,6 +136,9 @@ function btnAddNewEntry_onmousedown() {
     showEntries.style.visibility = "hidden";
 
     inputInformation.EntryToEdit = null;
+
+    cbxBillable.checked = true;
+    cbxPayable.checked = true;
 }
 
 function entryListElement_onmousedown() {
@@ -264,13 +259,50 @@ function btnRefresh_onmousedown() {
     displayAllEntries();
 }
 
+function dateOption_onmousedown() {
+    entryOptionsList.style.visibility = "hidden";
+    entryOptionsList.style.left = window.innerWidth.toString() + "px";
+    inputInformation.style.left = "0px";
+    inputInformation.style.visibility = "visible";
+    this.style.backgroundColor = "#E0E0E0";
+    btnDateWorked.style.backgroundColor = "#FFFFFF";
+    var formattedDate = this.innerHTML.split(" ");
+    selectedDateWorked.innerHTML = formattedDate[0];
+    btnBack.style.visibility = "visible";
+}
+
+function btnBack_onmousedown() {
+    if (inputInformation.style.visibility === "hidden") {
+        entryOptionsList.style.visibility = "hidden";
+        entryOptionsList.style.left = window.innerWidth.toString() + "px";
+        inputInformation.style.left = "0px";
+        inputInformation.style.visibility = "visible";
+        btnDateWorked.style.backgroundColor = "#FFFFFF";
+        btnActivity.style.backgroundColor = "#FFFFFF";
+        btnHoursWorked.style.backgroundColor = "#FFFFFF";
+        btnProject.style.backgroundColor = "#FFFFFF";
+        btnTask.style.backgroundColor = "#FFFFFF";
+    }
+    else {
+        showEntries.style.visibility = "visible";
+        btnSave.style.backgroundColor = "#1588C7";
+        showEntries.style.visibility = "visible";
+        showEntries.style.left = "0px";
+        inputInformation.style.left = window.innerWidth.toString() + "px";
+        inputInformation.style.visibility = "hidden";
+        btnAddNewEntry.style.visibility = "visible";
+        btnSignOut.style.visibility = "visible";
+        btnBack.style.visibility = "hidden";
+        clearEntryPage();
+    }
+}
+
 function btnDateWorked_onmousedown() {
     btnDateWorked.style.backgroundColor = "#E0E0E0";
     entryOptionsList.style.visibility = "visible";
     entryOptionsList.style.left = "0px";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     inputInformation.style.visibility = "hidden";
-    btnBack.style.visibility = "hidden";
 
     displayLastSevenDays();
 }
@@ -283,7 +315,6 @@ function btnActivity_onmousedown() {
     entryOptionsList.style.left = "0px";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     inputInformation.style.visibility = "hidden";
-    btnBack.style.visibility = "hidden";
     displayActivityOptions(gActivities, activityOption_onmousedown);
 }
 
@@ -292,9 +323,41 @@ function btnHoursWorked_onmousedown() {
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
-    btnBack.style.visibility = "hidden";
 
     displayHoursWorkedOptions();
+}
+
+function btnTask_onmousedown() {
+    if (selectedProject.innerHTML === "") {
+        showErrorMessage("Select a project.", btnSave);
+        btnTask.style.backgroundColor = "#FFFFFF";
+        inputInformation.style.visibility = "visible";
+        entryOptionsList.style.left = window.innerWidth.toString() + "px";
+        entryOptionsList.style.visibility = "hidden";
+        inputInformation.style.left = "0px";
+
+        btnBack.style.visibility = "visible";
+        return;
+    }
+    btnTask.style.backgroundColor = "#E0E0E0";
+    entryOptionsList.style.left = "0px";
+    entryOptionsList.style.visibility = "visible";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    inputInformation.style.visibility = "hidden";
+    gTopTask = 0;
+    entryOptionsList.innerHTML = "";
+
+    displayTasks(gTasks, 0);
+}
+
+function btnProject_onmousedown() {
+    btnProject.style.backgroundColor = "#E0E0E0";
+    entryOptionsList.style.left = "0px";
+    entryOptionsList.style.visibility = "visible";
+    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    inputInformation.style.visibility = "hidden";
+
+    initializeProjectOptionsListAndSearch();
 }
 
 function hoursWorkedOption_onmousedown() {
@@ -325,18 +388,6 @@ function displayHoursWorkedOptions() {
         i = i + 0.25;
         counter += 1;
     }
-}
-
-function dateOption_onmousedown() {
-    entryOptionsList.style.visibility = "hidden";
-    entryOptionsList.style.left = window.innerWidth.toString() + "px";
-    inputInformation.style.left = "0px";
-    inputInformation.style.visibility = "visible";
-    this.style.backgroundColor = "#E0E0E0";
-    btnDateWorked.style.backgroundColor = "#FFFFFF";
-    var formattedDate = this.innerHTML.split(" ");
-    selectedDateWorked.innerHTML = formattedDate[0];
-    btnBack.style.visibility = "visible";
 }
 
 function getProjectsAndActivitesFromServer() {
@@ -442,41 +493,6 @@ function taskOptionButton_onmousedown() {
     entryOptionsList.innerHTML = "";
 
     displayTasks(gTasks, 0);
-}
-
-function btnTask_onmousedown() {
-    if (selectedProject.innerHTML === "") {
-        showErrorMessage("Select a project.", btnSave);
-        btnTask.style.backgroundColor = "#FFFFFF";
-        inputInformation.style.visibility = "visible";
-        entryOptionsList.style.left = window.innerWidth.toString() + "px";
-        entryOptionsList.style.visibility = "hidden";
-        inputInformation.style.left = "0px";
-
-        btnBack.style.visibility = "visible";
-        return;
-    }
-    btnTask.style.backgroundColor = "#E0E0E0";
-    entryOptionsList.style.left = "0px";
-    entryOptionsList.style.visibility = "visible";
-    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
-    btnBack.style.visibility = "hidden";
-    inputInformation.style.visibility = "hidden";
-    gTopTask = 0;
-    entryOptionsList.innerHTML = "";
-
-    displayTasks(gTasks, 0);
-}
-
-function btnProject_onmousedown() {
-    btnProject.style.backgroundColor = "#E0E0E0";
-    entryOptionsList.style.left = "0px";
-    entryOptionsList.style.visibility = "visible";
-    inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
-    inputInformation.style.visibility = "hidden";
-    btnBack.style.visibility = "hidden";
-
-    initializeProjectOptionsListAndSearch();
 }
 
 function initializeProjectOptionsListAndSearch() {
@@ -743,21 +759,6 @@ function addDefaultDates() {
 
     dateToday = new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate() - 7);
     txtBeginDate.defaultValue = (dateToday.getMonth() + 1) + "/" + dateToday.getDate() + "/" + dateToday.getFullYear();
-}
-
-
-
-function btnBack_onmousedown() {
-    showEntries.style.visibility = "visible";
-    btnSave.style.backgroundColor = "#1588C7";
-    showEntries.style.visibility = "visible";
-    showEntries.style.left = "0px";
-    inputInformation.style.left = window.innerWidth.toString() + "px";
-    inputInformation.style.visibility = "hidden";
-    btnAddNewEntry.style.visibility = "visible";
-    btnSignOut.style.visibility = "visible";
-    btnBack.style.visibility = "hidden";
-    clearEntryPage();
 }
 
 function btnRefresh_onmouseup() {
@@ -1094,9 +1095,6 @@ function window_onresize() {
     // Error Messages
     errorMessageBody_onresize();
 
-    // Delete Message
-    // deleteMessageBody_onresize();
-
     gCharactersToShow = (window.innerWidth / 8);
 
     if (window.innerWidth < 700) {
@@ -1106,24 +1104,14 @@ function window_onresize() {
 }
 
 function signInPage_onresize() {
-    divSignIn.style.width = window.innerWidth.toString() + "px";
     divSignIn.style.height = (window.innerHeight - 44).toString() + "px";
-    btnSignIn.style.width = (window.innerWidth / 2).toString() + "px";
-    btnForgotPassword.style.width = (window.innerWidth / 4).toString() + "px";
+    divSignIn.style.width = (window.innerWidth).toString() + "px";
+    btnSignIn.style.width = (window.innerWidth - 40).toString() + "px";
+    btnForgotPassword.style.width = (window.innerWidth - 40).toString() + "px";
 
-    lblTeamName.style.width = (window.innerWidth - 80).toString() + "px";
-    lblTeamName.style.top = (1 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
-    lblEmail.style.width = (window.innerWidth - 80).toString() + "px";
-    lblEmail.style.top = (7 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
-    lblPassword.style.width = (window.innerWidth - 80).toString() + "px";
-    lblPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
-
-    txtTeamName.style.width = (window.innerWidth - 80).toString() + "px";
-    txtTeamName.style.top = (1 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
-    txtEmail.style.width = (window.innerWidth - 80).toString() + "px";
-    txtEmail.style.top = (7 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
-    txtPassword.style.width = (window.innerWidth - 80).toString() + "px";
-    txtPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+    txtTeamName.style.width = (window.innerWidth - 52).toString() + "px";
+    txtEmail.style.width = (window.innerWidth - 52).toString() + "px";
+    txtPassword.style.width = (window.innerWidth - 52).toString() + "px";
 }
 
 function showEntriesPanel_onresize() {
@@ -1148,44 +1136,4 @@ function errorMessageBody_onresize() {
     errorMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
 
     btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
-}
-
-function txtTeamName_onfocus() {
-    txtEmail.style.visibility = "hidden";
-    lblEmail.style.visibility = "hidden";
-    txtPassword.style.visibility = "hidden";
-    lblPassword.style.visibility = "hidden";
-}
-
-function txtEmail_onfocus() {
-    txtPassword.style.visibility = "hidden";
-    lblPassword.style.visibility = "hidden";
-    txtTeamName.style.visibility = "hidden";
-    lblTeamName.style.visibility = "hidden";
-}
-
-function txtPassword_onfocus() {
-    txtEmail.style.visibility = "hidden";
-    lblEmail.style.visibility = "hidden";
-    txtTeamName.style.visibility = "hidden";
-    lblTeamName.style.visibility = "hidden";
-}
-
-function signInBoxOnBlur() {
-    if (divSignIn.style.visibility === "hidden") {
-        txtEmail.style.visibility = "hidden";
-        lblEmail.style.visibility = "hidden";
-        txtTeamName.style.visibility = "hidden";
-        lblTeamName.style.visibility = "hidden";
-        txtPassword.style.visibility = "hidden";
-        lblPassword.style.visibility = "hidden";
-        return;
-    }
-    txtPassword.style.visibility = "visible";
-    txtTeamName.style.visibility = "visible";
-    txtEmail.style.visibility = "visible";
-
-    lblPassword.style.visibility = "visible";
-    lblTeamName.style.visibility = "visible";
-    lblEmail.style.visibility = "visible";
 }

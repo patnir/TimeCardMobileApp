@@ -125,3 +125,83 @@
 //    taskOptionButton.style.left = (30 * level + 10).toString() + "px";
 //    taskOption.appendChild(taskOptionButton);
 //}
+
+
+// resize and hide sign in page elements:
+//function txtTeamName_onfocus() {
+//    txtEmail.style.visibility = "hidden";
+//    lblEmail.style.visibility = "hidden";
+//    txtPassword.style.visibility = "hidden";
+//    lblPassword.style.visibility = "hidden";
+//}
+
+//function txtEmail_onfocus() {
+//    txtPassword.style.visibility = "hidden";
+//    lblPassword.style.visibility = "hidden";
+//    txtTeamName.style.visibility = "hidden";
+//    lblTeamName.style.visibility = "hidden";
+//}
+
+//function txtPassword_onfocus() {
+//    txtEmail.style.visibility = "hidden";
+//    lblEmail.style.visibility = "hidden";
+//    txtTeamName.style.visibility = "hidden";
+//    lblTeamName.style.visibility = "hidden";
+//}
+
+//function signInBoxOnBlur() {
+//    if (divSignIn.style.visibility === "hidden") {
+//        txtEmail.style.visibility = "hidden";
+//        lblEmail.style.visibility = "hidden";
+//        txtTeamName.style.visibility = "hidden";
+//        lblTeamName.style.visibility = "hidden";
+//        txtPassword.style.visibility = "hidden";
+//        lblPassword.style.visibility = "hidden";
+//        return;
+//    }
+//    txtPassword.style.visibility = "visible";
+//    txtTeamName.style.visibility = "visible";
+//    txtEmail.style.visibility = "visible";
+
+//    lblPassword.style.visibility = "visible";
+//    lblTeamName.style.visibility = "visible";
+//    lblEmail.style.visibility = "visible";
+//}
+
+
+//lblTeamName.style.width = (window.innerWidth - 80).toString() + "px";
+//lblTeamName.style.top = (1 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
+//lblEmail.style.width = (window.innerWidth - 80).toString() + "px";
+//lblEmail.style.top = (7 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
+//lblPassword.style.width = (window.innerWidth - 80).toString() + "px";
+//lblPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20).toString() + "px";
+//txtTeamName.style.top = (1 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+//txtEmail.style.top = (7 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+//txtPassword.style.top = (13 * (window.innerHeight - 44 - 32 - 55) / 20 + 20).toString() + "px";
+
+//txtTeamName.onfocus = txtTeamName_onfocus;
+//txtEmail.onfocus = txtEmail_onfocus;
+//txtPassword.onfocus = txtPassword_onfocus;
+
+//txtTeamName.onblur = signInBoxOnBlur;
+//txtEmail.onblur = signInBoxOnBlur;
+//txtPassword.onblur = signInBoxOnBlur;
+
+
+//#lblTeamName {
+//    position: absolute;
+//    left: 40px;
+//    font-family: Helvetica;
+//}
+
+//#lblEmail {
+//    position: absolute;
+//    left: 40px;
+            
+//    font-family: Helvetica;
+//}
+//        #lblPassword {
+//    position: absolute;
+//    left: 40px;
+//    font-family: Helvetica;
+//}

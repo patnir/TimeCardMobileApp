@@ -561,43 +561,42 @@
             background-color: #FFFFFF;
         }
 
-        #lblTeamName {
-            position: absolute;
-            left: 40px;
-            font-family: Helvetica;
-        }
-
         #txtTeamName {
+            padding: 4px;
+            padding-left: 8px;
             position: absolute;
-            left: 40px;
+            left: 20px;
             font-size: 22px;
             font-family: Helvetica;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            top: 30px;
         }
 
-        #lblEmail {
-            position: absolute;
-            left: 40px;
-            font-family: Helvetica;
-        }
 
         #txtEmail {
+            padding: 4px;
+            padding-left: 8px;
             position: absolute;
-            left: 40px;
+            left: 20px;
+            top: 68px;
+            border: groove;
+            border-right:none;
+            border-bottom: none;
             font-size: 22px;
-            font-family: Helvetica;
-        }
-
-        #lblPassword {
-            position: absolute;
-            left: 40px;
             font-family: Helvetica;
         }
 
         #txtPassword {
+            padding: 4px;
+            padding-left: 8px;
             position: absolute;
-            left: 40px;
+            left: 20px;
+            top: 106px;
             font-size: 22px;
             font-family: Helvetica;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
         }
 
         #btnSignIn {
@@ -607,7 +606,8 @@
             font-size: 22px;
             font-family: Helvetica;
             border-radius: 2px;
-            left: 40px;
+            left: 20px;
+            top: 180px;
             bottom: 55px;
             padding-top: 4px;
             height: 28px;
@@ -620,9 +620,11 @@
             font-size: 15px;
             font-family: Helvetica;
             border-radius: 2px;
-            right: 40px;
+            top: 150px;
+            left: 20px;
             bottom: 50px;
             padding-top: 4px;
+            text-decoration: none;
             height: 28px;
             text-align: center;
         }
@@ -634,6 +636,7 @@
             font-family: Helvetica;
             border-radius: 2px;
             left: 40px;
+            top: 217px;
             bottom: 20px;
             padding-top: 4px;
             height: 28px;
@@ -647,6 +650,7 @@
             font-family: Helvetica;
             border-radius: 2px;
             left: 60px;
+            top: 220px;
             bottom: 18px;
             padding-top: 4px;
             height: 28px;
@@ -707,14 +711,11 @@
         <div id="entryOptionsList">
         </div>
         <div id="divSignIn">
-            <label id="lblTeamName">Team Name:</label>
-            <input id="txtTeamName" type="text"/>
-            <label id="lblEmail">Email:</label>
-            <input id="txtEmail" type="text"/>
-            <label id="lblPassword">Password:</label>
-            <input id="txtPassword" type="password"/>
+            <input id="txtTeamName" placeholder="team name" type="text" />
+            <input id="txtEmail" placeholder="email" type="text" />
+            <input id="txtPassword" placeholder="password" type="password" />
             <div id="btnSignIn">Sign In</div>
-            <a href="#" id="btnForgotPassword">Forgot Password</a>
+            <a href="#" id="btnForgotPassword">Forgot Password?</a>
             <input id="cbxRememberPassword" type="checkbox" />
             <label id="lblRememberPassword">Keep me signed in</label>
         </div>
