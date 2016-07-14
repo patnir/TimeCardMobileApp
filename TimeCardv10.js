@@ -9,6 +9,9 @@ var gTasks;
 
 var gUser;
 
+var gTodayHours = 0.00;
+var gTotalHours = 0.00;
+
 var gAuthToken = "";
 
 var gStartDate;// = new dmDate();
@@ -18,8 +21,6 @@ function body_load() {
     window.onresize = window_onresize;
     btnAddNewEntry.onmousedown = btnAddNewEntry_onmousedown;
     btnBack.onmousedown = btnBack_onmousedown;
-    //btnRefresh.onmousedown = btnRefresh_onmousedown;
-    //btnRefresh.onmouseup = btnRefresh_onmouseup;
 
     cbxRememberPassword.onmousedown = cbxRememberPassword_onmousedown;
 
@@ -201,8 +202,6 @@ function validateEntryInput() {
 function btnAddNewEntry_onmousedown() {
     inputInformation.style.visibility = "visible";
     btnBack.style.visibility = "visible";
-
-    //btnDelete.style.visibility = "hidden";
 
     inputInformation.style.left = "0px";
     showEntries.style.left = (-1 * window.innerWidth).toString() + "px";
@@ -605,11 +604,11 @@ function initializeProjectOptionsListAndSearch() {
 
     entryOptionsList.appendChild(projectOptionsList);
 
-    filterProjects("");
+    filterDisplayProjects("");
 
-    manageProjectSearch();
+    projectSearchOnWait();
 
-    function filterProjects(searchString) {
+    function filterDisplayProjects(searchString) {
         projectOptionsList.innerHTML = "";
 
         var numberAdded = 0;
@@ -632,8 +631,8 @@ function initializeProjectOptionsListAndSearch() {
         }
     }
 
-    function manageProjectSearch() {
-        projectSearch.SearchPause = filterProjects;
+    function projectSearchOnWait() {
+        projectSearch.SearchPause = filterDisplayProjects;
 
         projectSearch.onkeydown = timerEnd;
 
@@ -790,7 +789,6 @@ function callbackSignIn(gUser) {
     entriesList.innerHTML = "";
 
     btnRefresh_onmousedown();
-    //btnRefresh_onmouseup();
 }
 
 function storeCredentials() {
@@ -836,14 +834,22 @@ function addDefaultDates() {
 
     gEndDate = new dmDate(todayDate.getFullYear(), todayDate.getMonth() + 1, todayDate.getDate());
     gStartDate = new dmDate(twoWeeksAgo.getFullYear(), twoWeeksAgo.getMonth() + 1, twoWeeksAgo.getDate());
+
+    showDateRange.innerHTML = gStartDate.ToMonthNameDayYearString() + " - Today " + gEndDate.ToMonthNameDayYearString();
 }
 
 function displayAllEntries() {
     entriesList.innerHTML = "";
 
+    gTotalHours = 0;
+    gTodayHours = 0;
+
     for (var i = 0; i < gEntriesList.length; i++) {
         addEntryToList(gEntriesList[i], i);
     }
+
+    lblTodayHours.innerHTML = formatNumberToTwoDecimalPlaces(gTodayHours);
+    lblTotalHours.innerHTML = formatNumberToTwoDecimalPlaces(gTotalHours);
 }
 
 function updateFormatUpdateDateWorked(serializedDate) {
@@ -906,7 +912,7 @@ function addEntryToList(entry, i) {
     entryDivDateWorked.id = "entryDateWorked";
     entryDivDateWorked.style.top = (81 * i + 3).toString() + "px";
     
-    entryDivDateWorked.innerHTML = formatDateForList(entry.DateWorked);
+    entryDivDateWorked.innerHTML = compareDateToEndDate(entry.DateWorked, entry.HoursWorked);
 
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
@@ -927,10 +933,18 @@ function addEntryToList(entry, i) {
     entriesList.appendChild(entryDiv);
 }
 
-function formatDateForList(serializedDate) {
+function compareDateToEndDate(serializedDate, hours) {
     serializedDate = serializedDate.split("T")[0];
 
     serializedDate = serializedDate.replace(/-/g, "/");
+
+    var compareDate = gEndDate.ToYearMonthDayString();
+
+    if (serializedDate === compareDate) {
+        gTodayHours += hours;
+    } else {
+        gTotalHours += hours;
+    }
 
     var dateParts = serializedDate.split("/");
     var formattedString = "";
@@ -945,20 +959,17 @@ function showErrorMessage(message, objectToFocus) {
     errorMessageMain.style.visibility = 'visible';
     inputInformation.style.pointerEvents = 'none';
 
-
     var fontSize = (window.innerWidth / 3) / 10;
     errorMessageString.style.fontSize = fontSize.toString() + "px";
     errorMessageString.innerHTML = message;
 
     errorMessageMain.ObjectToFocus = objectToFocus;
-
-    //btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function btnErrorMessageOK_onmousedown() {
     errorMessageMain.style.visibility = 'hidden';
     inputInformation.style.pointerEvents = 'all';
-    //btnRefresh.style.backgroundColor = "#1588C7";
+
     if (errorMessageMain.ObjectToFocus != null) {
         window.setTimeout(function () {
             errorMessageMain.ObjectToFocus.focus();
@@ -989,67 +1000,6 @@ function addEventToListElement(object, eventFunction) {
     }
 }
 
-function validateShowEntriesDates() {
-    var beginDateErrorMessage = "Enter a valid begin date.";
-    var endDateErrorMessage = "Enter a valid end date that is no later than today's date.";
-
-    if (tryParseDate(txtBeginDate.value.trim()) === false) {
-        showErrorMessage(beginDateErrorMessage, txtBeginDate);
-        return false;
-    }
-
-    if (tryParseDate(txtEndDate.value.trim()) === false) {
-        showErrorMessage(endDateErrorMessage, txtEndDate);
-        return false;
-    }
-
-    var dateRangeError = validateDateRanges();
-
-    if (dateRangeError[0].length != 0) {
-        showErrorMessage(dateRangeError[0], dateRangeError[1]);
-        return false;
-    }
-
-    return true;
-}
-
-function validateDateRanges() {
-    var endDateAfterTodayErrorMessage = "Enter an end date that is no later than today.";
-    var beginDateAfterEndErrorMessage = "Enter a begin date that is not after the end date.";
-
-    var beginDateParts = txtBeginDate.value.trim().split('/');
-    var endDateParts = txtEndDate.value.trim().split('/');
-    dateToday = new Date();
-
-    if (parseInt(endDateParts[2]) > dateToday.getFullYear()) {
-        return [endDateAfterTodayErrorMessage, txtEndDate];
-    }
-    if (parseInt(endDateParts[2]) === dateToday.getFullYear()
-        && parseInt(endDateParts[0]) > dateToday.getMonth() + 1) {
-        return [endDateAfterTodayErrorMessage, txtEndDate];
-    }
-    if (parseInt(endDateParts[2]) === dateToday.getFullYear()
-        && parseInt(endDateParts[0]) === dateToday.getMonth() + 1
-        && parseInt(endDateParts[1]) > dateToday.getDate()) {
-        return [endDateAfterTodayErrorMessage, txtEndDate];
-    }
-
-    if (parseInt(endDateParts[2]) < parseInt(beginDateParts[2])) {
-        return [beginDateAfterEndErrorMessage, txtBeginDate];
-    }
-    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[2])
-        && parseInt(endDateParts[0]) < parseInt(beginDateParts[0])) {
-        return [beginDateAfterEndErrorMessage, txtBeginDate];
-    }
-    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[2])
-        && parseInt(endDateParts[0]) === parseInt(beginDateParts[0])
-        && parseInt(endDateParts[1]) < parseInt(beginDateParts[1])) {
-        return [beginDateAfterEndErrorMessage, txtBeginDate];
-    }
-
-    return ["", null];
-}
-
 function checkIfStringIsNumber(numberString) {
     var checkDigits = numberString.split("");
     if (checkDigits.length === 0) {
@@ -1062,57 +1012,6 @@ function checkIfStringIsNumber(numberString) {
             return false;
         }
     }
-    return true;
-}
-
-function tryParseDate(dateString) {
-    birthDateParts = dateString.split("/");
-    if (birthDateParts.length != 3) {
-        return false;
-    }
-    if (checkIfStringIsNumber(birthDateParts[0]) === false
-        || checkIfStringIsNumber(birthDateParts[1]) === false
-        || checkIfStringIsNumber(birthDateParts[2]) === false) {
-        return false;
-    }
-
-    var month = parseInt(birthDateParts[0]);
-    var day = parseInt(birthDateParts[1]);
-    var year = parseInt(birthDateParts[2]);
-
-    if (year < 1 || year > 9999
-        || month < 1 || month > 12
-        || day < 1 || day > 31) {
-        return false;
-    }
-
-    // check leap year
-
-    var isLeapYear = false;
-    if (year % 4 === 0
-        && !(year % 100 === 0 && year % 400 != 0)) {
-        isLeapYear = true;
-    }
-    if (isLeapYear === false && month === 2 && day > 28) {
-        return false;
-    }
-    if (isLeapYear === true && month === 2 && day > 29) {
-        return false;
-    }
-
-    if ((month === 1
-        || month === 3
-        || month === 5
-        || month === 7
-        || month === 8
-        || month === 10
-        || month === 12) && day > 31) {
-        return false;
-    }
-    else if (day > 30) {
-        return false;
-    }
-
     return true;
 }
 
@@ -1207,19 +1106,15 @@ function signInPage_onresize() {
 }
 
 function showEntriesPanel_onresize() {
+    showDateRange.style.width = (window.innerWidth - 10).toString() + "px";
     showEntries.style.width = window.innerWidth.toString() + "px";
     showEntries.style.height = (window.innerHeight - 44).toString() + "px";
 
-    //txtBeginDate.style.width = (window.innerWidth / 2 - 106).toString() + "px";
-    //lblEndDate.style.left = (window.innerWidth / 2).toString() + "px";
-    //txtEndDate.style.width = (window.innerWidth / 2- 86).toString() + "px";
-
-    //btnRefresh.style.width = (window.innerWidth - 40).toString() + "px";
-
     entriesList.style.width = (window.innerWidth).toString() + "px";
-    entriesList.style.height = (window.innerHeight - 172).toString() + "px";
-}
+    entriesList.style.height = (window.innerHeight - 132).toString() + "px";
 
+    lblTotalHoursText.style.right = (parseFloat(lblTotalHours.clientWidth) + 15).toString() + "px";
+}
 function errorMessageBody_onresize() {
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";

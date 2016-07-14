@@ -459,67 +459,52 @@
             top: 44px;
             left: 0px;
         }
-
-        #lblBeginDate {
-            font-family: Helvetica;
-            font-size: 20px;
-            position: absolute;
-            color: #1588C7;
-            left: 20px;
-            top: 27px;
-            height: 35px;
-            width: 110px;
-        }
-
-        #txtBeginDate {
-            font-family: Helvetica;
-            font-size: 20px;
+        #lblTodayHours {
             position: absolute;
             color: #000000;
-            top: 20px;
-            padding-left: 5px;
-            left: 80px;
-            height: 35px;
-        }
-
-        #lblEndDate {
+            font-size: 18px;
+            top: 50px;
+            left: 69px;
             font-family: Helvetica;
-            font-size: 20px;
+        }
+        #lblTodayHoursText {
             position: absolute;
             color: #1588C7;
-            height: 35px;
-            top: 27px;
-            width: 110px;
-        }
-
-        #txtEndDate {
+            font-size: 18px;
+            top: 50px;
             font-family: Helvetica;
-            font-size: 20px;
+            left: 10px;
+        }
+        #lblTotalHoursText {
             position: absolute;
-            right: 25px;
-            top: 20px;
-            padding-left: 5px;
-            height: 35px;
+            color: #1588C7;
+            font-size: 18px;
+            top: 50px;
+            font-family: Helvetica;
+            right: 50px;
+        }
+        #lblTotalHours {
+            position: absolute;
             color: #000000;
-        }
-
-        #btnRefresh {
-            position: absolute;
-            color: white;
-            background-color: #1588C7;
-            font-size: 22px;
+            font-size: 18px;
+            top: 50px;
             font-family: Helvetica;
-            border-radius: 2px;
-            left: 20px;
-            top: 80px;
-            padding-top: 4px;
-            height: 28px;
-            text-align: center;
+            right: 10px;
+        }
+        #showDateRange {
+            position: absolute;
+            color: #1588C7;
+            top: 0px;
+            padding-left: 10px;
+            padding-top: 6px;
+            font-size: 20px;
+            font-family: Helvetica;
+            height: 34px;
         }
 
         #entriesList {
             position: absolute;
-            top: 130px;
+            top: 90px;
             left: 0px;
             background-color: #BADCEF;
             overflow: scroll;
@@ -532,7 +517,7 @@
             height: 80px;
             border-top: solid;
             border-width: 1px;
-            border-color: #808080;
+            border-color: #F0F0F0;
         }
 
         #entryName {
@@ -725,10 +710,14 @@
             <div id="btnSave">Save</div>
         </div>
         <div id="showEntries">
-
-            <div id="entriesList">
+            <div id="showDateRange"></div>
+            <label id="lblTodayHoursText">Today:</label>
+            <label id="lblTodayHours">0.00</label>
+            <label id="lblTotalHoursText">Total:</label>
+            <label id="lblTotalHours">7.25</label>
+                <div id="entriesList">
+                </div>
             </div>
-        </div>
         <div id="entryOptionsList">
         </div>
         <div id="divSignIn">
