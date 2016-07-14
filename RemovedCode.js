@@ -220,3 +220,14 @@
 //if (window.innerWidth < 700) {
 //    gCharactersToShow -= 20;
 //}
+
+// DATE STUFF
+
+//if (i === 0) {
+//    dateOption.innerHTML = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " (Today)";
+//} else {
+//    // var dayOfTheWeek = daysOfTheWeek[date.getDay()];
+//    dateOption.innerHTML = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " (" + dayOfTheWeek + ")";
+//}
+
+// var daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
