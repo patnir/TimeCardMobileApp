@@ -231,3 +231,117 @@
 //}
 
 // var daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+// Removing date validation
+//function validateShowEntriesDates() {
+//    var beginDateErrorMessage = "Enter a valid begin date.";
+//    var endDateErrorMessage = "Enter a valid end date that is no later than today's date.";
+
+//    if (tryParseDate(txtBeginDate.value.trim()) === false) {
+//        showErrorMessage(beginDateErrorMessage, txtBeginDate);
+//        return false;
+//    }
+
+//    if (tryParseDate(txtEndDate.value.trim()) === false) {
+//        showErrorMessage(endDateErrorMessage, txtEndDate);
+//        return false;
+//    }
+
+//    var dateRangeError = validateDateRanges();
+
+//    if (dateRangeError[0].length != 0) {
+//        showErrorMessage(dateRangeError[0], dateRangeError[1]);
+//        return false;
+//    }
+
+//    return true;
+//}
+
+//function validateDateRanges() {
+//    var endDateAfterTodayErrorMessage = "Enter an end date that is no later than today.";
+//    var beginDateAfterEndErrorMessage = "Enter a begin date that is not after the end date.";
+
+//    var beginDateParts = txtBeginDate.value.trim().split('/');
+//    var endDateParts = txtEndDate.value.trim().split('/');
+//    dateToday = new Date();
+
+//    if (parseInt(endDateParts[2]) > dateToday.getFullYear()) {
+//        return [endDateAfterTodayErrorMessage, txtEndDate];
+//    }
+//    if (parseInt(endDateParts[2]) === dateToday.getFullYear()
+//        && parseInt(endDateParts[0]) > dateToday.getMonth() + 1) {
+//        return [endDateAfterTodayErrorMessage, txtEndDate];
+//    }
+//    if (parseInt(endDateParts[2]) === dateToday.getFullYear()
+//        && parseInt(endDateParts[0]) === dateToday.getMonth() + 1
+//        && parseInt(endDateParts[1]) > dateToday.getDate()) {
+//        return [endDateAfterTodayErrorMessage, txtEndDate];
+//    }
+
+//    if (parseInt(endDateParts[2]) < parseInt(beginDateParts[2])) {
+//        return [beginDateAfterEndErrorMessage, txtBeginDate];
+//    }
+//    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[2])
+//        && parseInt(endDateParts[0]) < parseInt(beginDateParts[0])) {
+//        return [beginDateAfterEndErrorMessage, txtBeginDate];
+//    }
+//    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[2])
+//        && parseInt(endDateParts[0]) === parseInt(beginDateParts[0])
+//        && parseInt(endDateParts[1]) < parseInt(beginDateParts[1])) {
+//        return [beginDateAfterEndErrorMessage, txtBeginDate];
+//    }
+
+//    return ["", null];
+//}
+
+
+//function tryParseDate(dateString) {
+//    birthDateParts = dateString.split("/");
+//    if (birthDateParts.length != 3) {
+//        return false;
+//    }
+//    if (checkIfStringIsNumber(birthDateParts[0]) === false
+//        || checkIfStringIsNumber(birthDateParts[1]) === false
+//        || checkIfStringIsNumber(birthDateParts[2]) === false) {
+//        return false;
+//    }
+
+//    var month = parseInt(birthDateParts[0]);
+//    var day = parseInt(birthDateParts[1]);
+//    var year = parseInt(birthDateParts[2]);
+
+//    if (year < 1 || year > 9999
+//        || month < 1 || month > 12
+//        || day < 1 || day > 31) {
+//        return false;
+//    }
+
+//    // check leap year
+
+//    var isLeapYear = false;
+//    if (year % 4 === 0
+//        && !(year % 100 === 0 && year % 400 != 0)) {
+//        isLeapYear = true;
+//    }
+//    if (isLeapYear === false && month === 2 && day > 28) {
+//        return false;
+//    }
+//    if (isLeapYear === true && month === 2 && day > 29) {
+//        return false;
+//    }
+
+//    if ((month === 1
+//        || month === 3
+//        || month === 5
+//        || month === 7
+//        || month === 8
+//        || month === 10
+//        || month === 12) && day > 31) {
+//        return false;
+//    }
+//    else if (day > 30) {
+//        return false;
+//    }
+
+//    return true;
+//}
