@@ -840,27 +840,6 @@ function addDefaultDates() {
     showDateRange.innerHTML = gStartDate.ToMonthNameDayYearString() + " - Today " + gEndDate.ToMonthNameDayYearString();
 }
 
-function displayAllEntries() {
-    entriesList.innerHTML = "";
-
-    gTotalHours = 0;
-    gTodayHours = 0;
-
-    for (var i = 0; i < gEntriesList.length; i++) {
-        addEntryToList(gEntriesList[i], i);
-    }
-
-    lblTodayHours.innerHTML = formatNumberToTwoDecimalPlaces(gTodayHours);
-    lblTotalHours.innerHTML = formatNumberToTwoDecimalPlaces(gTotalHours);
-}
-
-function updateFormatUpdateDateWorked(serializedDate) {
-    var date = serializedDate.split("T")[0];
-    date = date.split("-");
-
-    return parseInt(date[1]) + "/" + parseInt(date[2]) + "/" + date[0];
-}
-
 function restoreEntryPage(entry) {
     selectedActivity.innerHTML = entry.ActivityTitle;
     selectedActivity.ActivityID = entry.ActivityID;
@@ -893,42 +872,92 @@ function restoreEntryPage(entry) {
     inputInformation.EntryToEdit = entry;
 }
 
-function addEntryToList(entry, i) {
+function updateFormatUpdateDateWorked(serializedDate) {
+    var date = serializedDate.split("T")[0];
+    date = date.split("-");
+
+    return parseInt(date[1]) + "/" + parseInt(date[2]) + "/" + date[0];
+}
+
+function displayAllEntries() {
+
+    entriesList.innerHTML = "";
+
+    gTotalHours = 0;
+    gTodayHours = 0;
+
+    counter = 0
+    prevDate = "";
+    for (var i = 0; i < gEntriesList.length; i++) {
+        if (prevDate != gEntriesList[i].DateWorked) {
+            prevDate = gEntriesList[i].DateWorked;
+            addDateToList(i, counter, prevDate);
+            counter += 1;
+        }
+        addEntryToList(gEntriesList[i], i, counter);
+    }
+
+    lblTodayHours.innerHTML = formatNumberToTwoDecimalPlaces(gTodayHours);
+    lblTotalHours.innerHTML = formatNumberToTwoDecimalPlaces(gTotalHours);
+
+    showEntriesPanel_onresize();
+
+}
+
+function addDateToList(i, counter, dateString) {
+    var element = document.createElement('div');
+    element.id = "entriesListElement";
+    element.style.border = "none";
+    element.style.height = "21px";
+    var div = document.createElement('div');
+    div.id = "showEntryDate";
+    div.style.width = (window.innerWidth - 10).toString() + "px";
+
+    serializedDate = dateString.split("T")[0].replace(/-/g, "/");
+
+    var date = new dmDate(0, 0, 0);
+    date.Deserialize(serializedDate);
+
+    div.style.top = (81 * i + counter * 21).toString() + "px";
+    div.innerHTML = date.GetDayOfWeekName() + ", " + date.GetMonthOfYearName() + " " + date.GetDay();
+    element.appendChild(div);
+    entriesList.appendChild(element);
+}
+
+function addEntryToList(entry, i, counter) {
     var entryDiv = document.createElement('div');
     entryDiv.id = "entriesListElement";
-    entryDiv.style.width = (window.innerWidth - 80).toString();
     entryDiv.EntryIndex = i;
-
+    entryDiv.style.top = (counter * 21) + "px";
     addEventToListElement(entryDiv);
 
     entryDiv.onmousedown = entryListElement_onmousedown;
     entryDiv.entryToBeEditted = entry;
 
-
     var entryDivName = document.createElement('div');
     entryDivName.id = "entryProjectName";
-    entryDivName.style.top = (81 * i + 3).toString() + "px";
+    entryDivName.style.top = (81 * i + 3 + counter * 21).toString() + "px";
     entryDivName.innerHTML = entry.ProjectTitle;
 
     var entryDivTaskName = document.createElement('div');
     entryDivTaskName.id = "entryTaskName";
-    entryDivTaskName.style.top = (81 * i + 25).toString() + "px";
+    entryDivTaskName.style.top = (81 * i + 25 + counter * 21).toString() + "px";
     entryDivTaskName.innerHTML = entry.TaskTitle;
 
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
-    entryDivDateWorked.style.top = (81 * i + 3).toString() + "px";
+    entryDivDateWorked.style.top = (81 * i + 3 + counter * 21).toString() + "px";
     
     entryDivDateWorked.innerHTML = compareDateToEndDate(entry.DateWorked, entry.HoursWorked);
 
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
-    entryDivHoursWorked.style.top = (81 * i + 53).toString() + "px";
+    entryDivHoursWorked.style.top = (81 * i + 53 + counter * 21).toString() + "px";
     entryDivHoursWorked.innerHTML = formatNumberToTwoDecimalPlaces(entry.HoursWorked);
 
     var entryDivDescription = document.createElement('div');
     entryDivDescription.id = "entryDescription";
-    entryDivDescription.style.top = (81 * i + 45).toString() + "px";
+    entryDivDescription.style.top = (81 * i + 45 + counter * 21).toString() + "px";
     entryDivDescription.innerHTML = entry.EntryDescription;
     entryDivDescription.style.width = (window.innerWidth - 70).toString() + "px"
 
