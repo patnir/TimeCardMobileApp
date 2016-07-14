@@ -42,6 +42,13 @@ dmDate.prototype.ToMonthNameDayYearString = function () {
     return formattedString;
 }
 
+dmDate.prototype.Deserialize = function (serializedString) {
+    var parts = serializedString.split("/");
+    this.Day = parts[2];
+    this.Month = parts[1];
+    this.Year = parts[0];
+}
+
 dmDate.prototype.GetYear = function () {
     return this.Year;
 }
@@ -61,16 +68,15 @@ dmDate.prototype.ToString = function () {
 }
 
 dmDate.prototype.GetDayOfWeekName = function () {
-    var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    var dmDate = new dmDate(this.Year, this.Month - 1, this.Day);
-
-    return days[dmDate.getDay()];
+    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var date = new Date(this.Year, this.Month - 1, this.Day);
+    return days[date.getDay()];
 }
 
 dmDate.prototype.GetDayOfWeek = function () {
-    var dmDate = new dmDate(this.Year, this.Month - 1, this.Day);
+    var date = new Date(this.Year, this.Month - 1, this.Day);
 
-    return days[dmDate.getDay()];
+    return date.getDay();
 }
 
 dmDate.prototype.GetMonthOfYearName = function () {
