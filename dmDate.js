@@ -1,26 +1,34 @@
-﻿function dmDate() {
+﻿function dmDate(year, month, day) {
     this.Month = month;
     this.Day = day;
     this.Year = year;
 }
 
-dmDate.prototype.Serialize = function () {
-    return this.Year.ToString() + '\t'
-            + this.Month.ToString() + '\t'
-            + this.Day.ToString();
-}
+//function dmDate() {
+//    this.Month = 0;
+//    this.Day = 0;
+//    this.Year = 0;
+//}
 
-dmDate.prototype.Deserialize = function (serializedString) {
-    var values = serializedString.split("\t");
-
-    this.Month = parseInt(values[0]);
-    this.Day = parseInt(values[1]);
-    this.Year = parseInt(values[2]);
+function formatNumberToTwoDigits(number) {
+    if (number < 10) {
+        return "0" + number.toString();
+    }
+    return number.toString();
 }
 
 dmDate.prototype.ToYearMonthDayString = function () {
     // return 1995/14/1
-    return this.Year + "/" + this.Month + "/" + this.Day;
+    return this.Year + "/" + formatNumberToTwoDigits(this.Month) + "/" + formatNumberToTwoDigits(this.Day);
+}
+
+dmDate.prototype.NumberOfDaysFromTodayString = function (days) {
+    var today = new Date();
+    var fromToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + days);
+
+    return fromToday.getFullYear() + "/"
+        + (formatNumberToTwoDigits(fromToday.getMonth() + 1)).toString()
+        + "/" + formatNumberToTwoDigits(fromToday.getDate());
 }
 
 dmDate.prototype.ToMonthNameDayYearString = function () {
@@ -35,20 +43,38 @@ dmDate.prototype.ToMonthNameDayYearString = function () {
     return formattedString;
 }
 
+dmDate.prototype.GetYear = function () {
+    return this.Year;
+}
+
+dmDate.prototype.GetDay = function () {
+    return this.Day;
+}
+
+dmDate.prototype.GetMonth = function () {
+    return this.Month;
+}
+
 dmDate.prototype.ToString = function () {
     // return 14/01/1994
 
     return this.Month + "/" + this.Day + "/" + this.Year;
 }
 
-dmDate.prototype.GetMonthName = function () {
+dmDate.prototype.GetDayOfWeekName = function () {
     var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     var dmDate = new dmDate(this.Year, this.Month - 1, this.Day);
 
     return days[dmDate.getDay()];
 }
 
-dmDate.prototype.GetDayName = function () {
+dmDate.prototype.GetDayOfWeek = function () {
+    var dmDate = new dmDate(this.Year, this.Month - 1, this.Day);
+
+    return days[dmDate.getDay()];
+}
+
+dmDate.prototype.GetMonthOfYearName = function () {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     return months[this.Month - 1];
@@ -130,6 +156,5 @@ dmDate.prototype.IsEmpty = function () {
     if (this.Year === 0 && this.Month === 0 && this.Day === 0) {
         return true;
     }
-
     return false;
 }
