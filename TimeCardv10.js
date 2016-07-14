@@ -83,6 +83,7 @@ function txtDescription_onfocus() {
     cbxBillable.style.visibility = "hidden";
     lblBillable.style.visibility = "hidden";
     btnSave.style.visibility = "hidden";
+    btnBack.style.visibility = "hidden";
     txtDescription.Focused = true;
 
     txtDescription.style.top = "20px";
@@ -98,6 +99,7 @@ function txtDescription_onblur() {
     cbxBillable.style.visibility = "visible";
     lblBillable.style.visibility = "visible";
     btnSave.style.visibility = "visible";
+    btnBack.style.visibility = "visible";
     txtDescription.Focused = false;
 
     window_onresize();
@@ -904,9 +906,14 @@ function addEntryToList(entry, i) {
 
 
     var entryDivName = document.createElement('div');
-    entryDivName.id = "entryName";
+    entryDivName.id = "entryProjectName";
     entryDivName.style.top = (81 * i + 3).toString() + "px";
-    entryDivName.innerHTML = entry.FirstName + " " + entry.LastName;
+    entryDivName.innerHTML = entry.ProjectTitle;
+
+    var entryDivTaskName = document.createElement('div');
+    entryDivTaskName.id = "entryTaskName";
+    entryDivTaskName.style.top = (81 * i + 25).toString() + "px";
+    entryDivTaskName.innerHTML = entry.TaskTitle;
 
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
@@ -926,6 +933,7 @@ function addEntryToList(entry, i) {
     entryDivDescription.style.width = (window.innerWidth - 70).toString() + "px"
 
     entryDiv.appendChild(entryDivName);
+    entryDiv.appendChild(entryDivTaskName);
     entryDiv.appendChild(entryDivDateWorked);
     entryDiv.appendChild(entryDivHoursWorked);
     entryDiv.appendChild(entryDivDescription);
@@ -942,6 +950,7 @@ function compareDateToEndDate(serializedDate, hours) {
 
     if (serializedDate === compareDate) {
         gTodayHours += hours;
+        gTotalHours += hours;
     } else {
         gTotalHours += hours;
     }
