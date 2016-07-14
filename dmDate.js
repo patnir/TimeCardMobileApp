@@ -34,7 +34,6 @@ dmDate.prototype.NumberOfDaysFromTodayString = function (days) {
 dmDate.prototype.ToMonthNameDayYearString = function () {
     // return = Jan 14, 1994
 
-    var dmDateParts = serializeddmDate.split("/");
     var formattedString = "";
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
