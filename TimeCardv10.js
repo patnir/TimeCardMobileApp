@@ -11,12 +11,15 @@ var gUser;
 
 var gAuthToken = "";
 
+var gStartDate;// = new dmDate();
+var gEndDate;// = new dmDate();
+
 function body_load() {
     window.onresize = window_onresize;
     btnAddNewEntry.onmousedown = btnAddNewEntry_onmousedown;
     btnBack.onmousedown = btnBack_onmousedown;
-    btnRefresh.onmousedown = btnRefresh_onmousedown;
-    btnRefresh.onmouseup = btnRefresh_onmouseup;
+    //btnRefresh.onmousedown = btnRefresh_onmousedown;
+    //btnRefresh.onmouseup = btnRefresh_onmouseup;
 
     cbxRememberPassword.onmousedown = cbxRememberPassword_onmousedown;
 
@@ -25,6 +28,10 @@ function body_load() {
     btnSignIn.onmousedown = btnSignIn_onmousedown;
     btnSignIn.onmouseup = btnSignIn_onmouseup;
 
+    txtDescription.Focused = false;
+
+    txtDescription.onfocus = txtDescription_onfocus;
+    txtDescription.onblur = txtDescription_onblur;
 
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
     errorMessageMain.style.visibility = "hidden";
@@ -64,6 +71,37 @@ function body_load() {
     window_onresize();
 }
 
+function txtDescription_onfocus() {
+    btnDateWorked.style.visibility = "hidden";
+    btnProject.style.visibility = "hidden";
+    btnActivity.style.visibility = "hidden";
+    btnTask.style.visibility = "hidden";
+    btnHoursWorked.style.visibility = "hidden";
+    cbxPayable.style.visibility = "hidden";
+    lblPayable.style.visibility = "hidden";
+    cbxBillable.style.visibility = "hidden";
+    lblBillable.style.visibility = "hidden";
+    btnSave.style.visibility = "hidden";
+    txtDescription.Focused = true;
+
+    txtDescription.style.top = "20px";
+}
+function txtDescription_onblur() {
+    btnDateWorked.style.visibility = "visible";
+    btnProject.style.visibility = "visible";
+    btnActivity.style.visibility = "visible";
+    btnTask.style.visibility = "visible";
+    btnHoursWorked.style.visibility = "visible";
+    cbxPayable.style.visibility = "visible";
+    lblPayable.style.visibility = "visible";
+    cbxBillable.style.visibility = "visible";
+    lblBillable.style.visibility = "visible";
+    btnSave.style.visibility = "visible";
+    txtDescription.Focused = false;
+
+    window_onresize();
+}
+
 function cbxPayable_onmousedown() {
     if (cbxPayable.Value === "on") {
         cbxPayable.innerHTML = "<img src=\"Images/UncheckedCheckbox20.png\"/>";
@@ -97,11 +135,11 @@ function cbxRememberPassword_onmousedown() {
 
 function btnForgotPassword_onmousedown() {
     if (txtTeamName.value.trim() === "") {
-        showErrorMessage("Enter a team name.", txtTeamName);
+        showErrorMessage("Team name required.", txtTeamName);
         return;
     }
     if (txtEmail.value.trim() === "") {
-        showErrorMessage("Enter an email address.", txtEmail);
+        showErrorMessage("Email address required.", txtEmail);
         return;
     }
 }
@@ -135,19 +173,19 @@ function validateEntryInput() {
         return false;
     }
     if (selectedProject.innerHTML === "") {
-        showErrorMessage("Select a Project.", null);
+        showErrorMessage("Project is required.", null);
         return false;
     }
     if (selectedTask.innerHTML === "") {
-        showErrorMessage("Select a Task.", null);
+        showErrorMessage("Task is required.", null);
         return false;
     }
     if (selectedActivity.innerHTML === "") {
-        showErrorMessage("Select a Activity.", null);
+        showErrorMessage("Activity is required.", null);
         return false;
     }
     if (selectedHoursWorked.innerHTML === "" || parseFloat(selectedHoursWorked.innerHTML) === 0.00) {
-        showErrorMessage("Select number of Hours Worked greater than zero.", null);
+        showErrorMessage("Hours worked is required.", null);
         return false;
     }
 
@@ -269,7 +307,7 @@ function btnSave_onmousedown() {
 
     clearEntryPage();
 
-    displayAllEntries();
+    btnRefresh_onmousedown();
 }
 
 function clearEntryPage() {
@@ -285,15 +323,11 @@ function clearEntryPage() {
 }
 
 function btnRefresh_onmousedown() {
-    btnRefresh.style.backgroundColor = "#BADCEF";
-
-    if (validateShowEntriesDates() === false) {
-        btnRefresh.style.backgroundColor = "#1588C7";
-        return;
-    }
+    var beginDate = gStartDate.ToYearMonthDayString();
+    var endDate = gEndDate.ToYearMonthDayString();
 
     gEntriesList = serverGetEntries(gUser.UserID, "", "", "", 0,
-        0, txtBeginDate.value, txtEndDate.value, "", "", "", false, gAuthToken);
+        0, beginDate, endDate, "", "", "", false, gAuthToken);
 
     if (gServerErrorMsg != "") {
         showErrorMessage(gServerErrorMsg);
@@ -301,7 +335,7 @@ function btnRefresh_onmousedown() {
     }
 
     if (gEntriesList.length === 0) {
-        showErrorMessage("No Entries Found.", txtBeginDate);
+        showErrorMessage("No entries found.", null);
         return;
     }
 
@@ -353,7 +387,7 @@ function btnDateWorked_onmousedown() {
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
     inputInformation.style.visibility = "hidden";
 
-    displayLastSevenDays();
+    displayDateWorkedOptions();
 }
 
 
@@ -372,6 +406,7 @@ function btnHoursWorked_onmousedown() {
     entryOptionsList.style.left = "0px";
     entryOptionsList.style.visibility = "visible";
     inputInformation.style.left = -1 * window.innerWidth.toString() + "px";
+    inputInformation.style.visibility = "hidden";
 
     displayHoursWorkedOptions();
 }
@@ -421,7 +456,7 @@ function hoursWorkedOption_onmousedown() {
 }
 
 function displayHoursWorkedOptions() {
-    var i = 0.00;
+    var i = 0.25;
     var counter = 0;
     
     entryOptionsList.innerHTML = "";
@@ -603,7 +638,7 @@ function initializeProjectOptionsListAndSearch() {
         projectSearch.onkeydown = timerEnd;
 
         function timerStart() {
-            projectSearch.TimeoutID = setTimeout(search, 750);
+            projectSearch.TimeoutID = setTimeout(search, 600);
         }
 
         function search() {
@@ -661,29 +696,20 @@ function activityOption_onmousedown() {
     btnBack.style.visibility = "visible";
 }
 
-function displayLastSevenDays() {
-    var dateToday = new Date();
+function displayDateWorkedOptions() {
+    var dateToday = new dmDate();
 
     entryOptionsList.innerHTML = "";
 
-    var daysOfTheWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-    for (var i = 0; i < 7; i++) {
-        var date = new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate() - i);
-
+    for (var i = 0; i < 14; i++) {
         var dateOption = document.createElement('div');
         dateOption.id = "entryOption";
         dateOption.style.width = window.innerWidth.toString() + "px";
         dateOption.style.top = (50 * i).toString() + "px";
-        dateOption.style.textAlign = "left";
         dateOption.style.paddingLeft = "15px";
         dateOption.onmousedown = dateOption_onmousedown;
-        if (i === 0) {
-            dateOption.innerHTML = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " (Today)";
-        } else {
-            var dayOfTheWeek = daysOfTheWeek[date.getDay()];
-            dateOption.innerHTML = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + " (" + dayOfTheWeek + ")";
-        }
+        dateOption.innerHTML = dateToday.NumberOfDaysFromTodayString(i * -1);
+
         entryOptionsList.appendChild(dateOption);
     }
 }
@@ -760,8 +786,11 @@ function callbackSignIn(gUser) {
     btnSignOut.style.visibility = "visible";
 
     getProjectsAndActivitesFromServer();
+
+    entriesList.innerHTML = "";
+
     btnRefresh_onmousedown();
-    btnRefresh_onmouseup();
+    //btnRefresh_onmouseup();
 }
 
 function storeCredentials() {
@@ -781,15 +810,15 @@ function ditStorageGet(key, dfltValue) {
 
 function validateSignInPage() {
     if (txtTeamName.value.trim() === "") {
-        showErrorMessage("Enter a team name.", txtTeamName);
+        showErrorMessage("Team name is required.", txtTeamName);
         return false;
     }
     if (txtEmail.value.trim() === "") {
-        showErrorMessage("Enter an email address.", txtEmail);
+        showErrorMessage("Email address is required.", txtEmail);
         return false;
     }
     if (txtPassword.value === "") {
-        showErrorMessage("Enter a password.", txtPassword);
+        showErrorMessage("Password is required.", txtPassword);
         return false;
     }
 
@@ -802,15 +831,11 @@ function btnSignIn_onmouseup() {
 }
 
 function addDefaultDates() {
-    var dateToday = new Date();
-    txtEndDate.defaultValue = (dateToday.getMonth() + 1) + "/" + dateToday.getDate() + "/" + dateToday.getFullYear();
+    var todayDate = new Date();
+    var  twoWeeksAgo = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - 14);
 
-    dateToday = new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate() - 7);
-    txtBeginDate.defaultValue = (dateToday.getMonth() + 1) + "/" + dateToday.getDate() + "/" + dateToday.getFullYear();
-}
-
-function btnRefresh_onmouseup() {
-    btnRefresh.style.backgroundColor = "#1588C7";
+    gEndDate = new dmDate(todayDate.getFullYear(), todayDate.getMonth() + 1, todayDate.getDate());
+    gStartDate = new dmDate(twoWeeksAgo.getFullYear(), twoWeeksAgo.getMonth() + 1, twoWeeksAgo.getDate());
 }
 
 function displayAllEntries() {
@@ -927,16 +952,18 @@ function showErrorMessage(message, objectToFocus) {
 
     errorMessageMain.ObjectToFocus = objectToFocus;
 
-    btnRefresh.style.backgroundColor = "#1588C7";
+    //btnRefresh.style.backgroundColor = "#1588C7";
 }
 
 function btnErrorMessageOK_onmousedown() {
     errorMessageMain.style.visibility = 'hidden';
     inputInformation.style.pointerEvents = 'all';
-    btnRefresh.style.backgroundColor = "#1588C7";
-    window.setTimeout(function () {
-        errorMessageMain.ObjectToFocus.focus();
-    }, 0);
+    //btnRefresh.style.backgroundColor = "#1588C7";
+    if (errorMessageMain.ObjectToFocus != null) {
+        window.setTimeout(function () {
+            errorMessageMain.ObjectToFocus.focus();
+        }, 0);
+    }
 }
 
 function isTouchDevice() {
@@ -987,7 +1014,7 @@ function validateShowEntriesDates() {
 }
 
 function validateDateRanges() {
-    var endDateAfterTodayErrorMessage = "Enter an end date that is not in the future.";
+    var endDateAfterTodayErrorMessage = "Enter an end date that is no later than today.";
     var beginDateAfterEndErrorMessage = "Enter a begin date that is not after the end date.";
 
     var beginDateParts = txtBeginDate.value.trim().split('/');
@@ -1007,16 +1034,16 @@ function validateDateRanges() {
         return [endDateAfterTodayErrorMessage, txtEndDate];
     }
 
-    if (parseInt(endDateParts[2]) < parseInt(beginDateParts[0])) {
+    if (parseInt(endDateParts[2]) < parseInt(beginDateParts[2])) {
         return [beginDateAfterEndErrorMessage, txtBeginDate];
     }
-    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[0])
-        && parseInt(endDateParts[0]) < parseInt(beginDateParts[1])) {
+    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[2])
+        && parseInt(endDateParts[0]) < parseInt(beginDateParts[0])) {
         return [beginDateAfterEndErrorMessage, txtBeginDate];
     }
-    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[0])
-        && parseInt(endDateParts[0]) === parseInt(beginDateParts[1])
-        && parseInt(endDateParts[1]) < parseInt(beginDateParts[2])) {
+    if (parseInt(endDateParts[2]) === parseInt(beginDateParts[2])
+        && parseInt(endDateParts[0]) === parseInt(beginDateParts[0])
+        && parseInt(endDateParts[1]) < parseInt(beginDateParts[1])) {
         return [beginDateAfterEndErrorMessage, txtBeginDate];
     }
 
@@ -1122,9 +1149,11 @@ function addEntryPanel_onresize() {
     lblBillable.style.top = (5.3 * pageHeight / 12 + 0.5).toString() + "px";
     cbxBillable.style.top = (5.3 * pageHeight / 12).toString() + "px";
 
-    txtDescription.style.top = (6.1 * pageHeight / 12).toString() + "px";
-    txtDescription.style.height = (4.5 * pageHeight / 12).toString() + "px";
-    txtDescription.style.width = (window.innerWidth - 40).toString() + "px";
+    if (txtDescription.Focused === false) {
+        txtDescription.style.top = (6.1 * pageHeight / 12).toString() + "px";
+        txtDescription.style.height = (4.5 * pageHeight / 12).toString() + "px";
+        txtDescription.style.width = (window.innerWidth - 40).toString() + "px";
+    }
 
     btnSave.style.width = (window.innerWidth - 40).toString() + "px";
     btnSave.style.top = (11 * pageHeight / 12).toString() + "px";
@@ -1137,6 +1166,10 @@ function window_onresize() {
     divMain.style.width = window.innerWidth.toString() + "px";
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
+
+    //if (entryOptionsList.style.visibility === "visible") {
+    //    entryOption.style.width = window.innerWidth.toString() + "px";
+    //}
 
     addEntryPanel_onresize();
 
@@ -1177,11 +1210,11 @@ function showEntriesPanel_onresize() {
     showEntries.style.width = window.innerWidth.toString() + "px";
     showEntries.style.height = (window.innerHeight - 44).toString() + "px";
 
-    txtBeginDate.style.width = (window.innerWidth / 2 - 106).toString() + "px";
-    lblEndDate.style.left = (window.innerWidth / 2).toString() + "px";
-    txtEndDate.style.width = (window.innerWidth / 2- 86).toString() + "px";
+    //txtBeginDate.style.width = (window.innerWidth / 2 - 106).toString() + "px";
+    //lblEndDate.style.left = (window.innerWidth / 2).toString() + "px";
+    //txtEndDate.style.width = (window.innerWidth / 2- 86).toString() + "px";
 
-    btnRefresh.style.width = (window.innerWidth - 40).toString() + "px";
+    //btnRefresh.style.width = (window.innerWidth - 40).toString() + "px";
 
     entriesList.style.width = (window.innerWidth).toString() + "px";
     entriesList.style.height = (window.innerHeight - 172).toString() + "px";
