@@ -4,12 +4,6 @@
     this.Year = year;
 }
 
-//function dmDate() {
-//    this.Month = 0;
-//    this.Day = 0;
-//    this.Year = 0;
-//}
-
 function formatNumberToTwoDigits(number) {
     if (number < 10) {
         return "0" + number.toString();
@@ -23,12 +17,14 @@ dmDate.prototype.ToYearMonthDayString = function () {
 }
 
 dmDate.prototype.NumberOfDaysFromTodayString = function (days) {
+    // returns the date of the number of days before today in this for mat: 01/14/2016
+
     var today = new Date();
     var fromToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + days);
 
-    return fromToday.getFullYear() + "/"
-        + (formatNumberToTwoDigits(fromToday.getMonth() + 1)).toString()
-        + "/" + formatNumberToTwoDigits(fromToday.getDate());
+    return (formatNumberToTwoDigits(fromToday.getMonth() + 1)).toString() +
+        "/" + formatNumberToTwoDigits(fromToday.getDate()) +
+        "/" + fromToday.getFullYear();
 }
 
 dmDate.prototype.ToMonthNameDayYearString = function () {
