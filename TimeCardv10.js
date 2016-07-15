@@ -14,8 +14,10 @@ var gTotalHours = 0.00;
 
 var gAuthToken = "";
 
-var gStartDate;// = new dmDate();
-var gEndDate;// = new dmDate();
+var gStartDate;
+var gEndDate;
+
+
 
 function body_load() {
     window.onresize = window_onresize;
@@ -23,6 +25,7 @@ function body_load() {
     btnBack.onmousedown = btnBack_onmousedown;
 
     cbxRememberPassword.onmousedown = cbxRememberPassword_onmousedown;
+
 
     btnForgotPassword.onmousedown = btnForgotPassword_onmousedown;
 
@@ -844,9 +847,9 @@ function restoreEntryPage(entry) {
     selectedActivity.innerHTML = entry.ActivityTitle;
     selectedActivity.ActivityID = entry.ActivityID;
 
-    selectedDateWorked.innerHTML = updateFormatUpdateDateWorked(entry.DateWorked);
+    selectedDateWorked.innerHTML = formatDateFromServerToYearMonthDay(entry.DateWorked);
 
-    selectedHoursWorked.innerHTML = entry.HoursWorked;
+    selectedHoursWorked.innerHTML = formatNumberToTwoDecimalPlaces(entry.HoursWorked);
     selectedProject.innerHTML = entry.ProjectTitle;
     selectedProject.ProjectID = entry.ProjectID;
     txtDescription.value = entry.EntryDescription;
@@ -872,7 +875,7 @@ function restoreEntryPage(entry) {
     inputInformation.EntryToEdit = entry;
 }
 
-function updateFormatUpdateDateWorked(serializedDate) {
+function formatDateFromServerToYearMonthDay(serializedDate) {
     var date = serializedDate.split("T")[0];
     date = date.split("-");
 
@@ -880,31 +883,31 @@ function updateFormatUpdateDateWorked(serializedDate) {
 }
 
 function displayAllEntries() {
-
     entriesList.innerHTML = "";
 
     gTotalHours = 0;
     gTodayHours = 0;
 
-    counter = 0
+    countNumberOfDates = 0
+
     prevDate = "";
+
     for (var i = 0; i < gEntriesList.length; i++) {
         if (prevDate != gEntriesList[i].DateWorked) {
             prevDate = gEntriesList[i].DateWorked;
-            addDateToList(i, counter, prevDate);
-            counter += 1;
+            addDateToList(i, countNumberOfDates, prevDate);
+            countNumberOfDates += 1;
         }
-        addEntryToList(gEntriesList[i], i, counter);
+        addEntryToList(gEntriesList[i], i, countNumberOfDates);
     }
 
     lblTodayHours.innerHTML = formatNumberToTwoDecimalPlaces(gTodayHours);
     lblTotalHours.innerHTML = formatNumberToTwoDecimalPlaces(gTotalHours);
 
-    showEntriesPanel_onresize();
-
+    showEntries_onresize();
 }
 
-function addDateToList(i, counter, dateString) {
+function addDateToList(i, countNumberOfDates, dateString) {
     var element = document.createElement('div');
     element.id = "entriesListElement";
     element.style.border = "none";
@@ -918,17 +921,17 @@ function addDateToList(i, counter, dateString) {
     var date = new dmDate(0, 0, 0);
     date.Deserialize(serializedDate);
 
-    div.style.top = (81 * i + counter * 21).toString() + "px";
+    div.style.top = (81 * i + countNumberOfDates * 21).toString() + "px";
     div.innerHTML = date.GetDayOfWeekName() + ", " + date.GetMonthOfYearName() + " " + date.GetDay();
     element.appendChild(div);
     entriesList.appendChild(element);
 }
 
-function addEntryToList(entry, i, counter) {
+function addEntryToList(entry, i, countNumberOfDates) {
     var entryDiv = document.createElement('div');
     entryDiv.id = "entriesListElement";
     entryDiv.EntryIndex = i;
-    entryDiv.style.top = (counter * 21) + "px";
+    entryDiv.style.top = (countNumberOfDates * 21) + "px";
     addEventToListElement(entryDiv);
 
     entryDiv.onmousedown = entryListElement_onmousedown;
@@ -936,41 +939,47 @@ function addEntryToList(entry, i, counter) {
 
     var entryDivName = document.createElement('div');
     entryDivName.id = "entryProjectName";
-    entryDivName.style.top = (81 * i + 3 + counter * 21).toString() + "px";
+    entryDivName.style.top = (81 * i + 3 + countNumberOfDates * 21).toString() + "px";
     entryDivName.innerHTML = entry.ProjectTitle;
 
     var entryDivTaskName = document.createElement('div');
     entryDivTaskName.id = "entryTaskName";
-    entryDivTaskName.style.top = (81 * i + 25 + counter * 21).toString() + "px";
+    entryDivTaskName.style.top = (81 * i + 25 + countNumberOfDates * 21).toString() + "px";
     entryDivTaskName.innerHTML = entry.TaskTitle;
 
     var entryDivDateWorked = document.createElement('div');
     entryDivDateWorked.id = "entryDateWorked";
-    entryDivDateWorked.style.top = (81 * i + 3 + counter * 21).toString() + "px";
+    entryDivDateWorked.style.top = (81 * i + 7 + countNumberOfDates * 21).toString() + "px";
     
-    entryDivDateWorked.innerHTML = compareDateToEndDate(entry.DateWorked, entry.HoursWorked);
+    entryDivDateWorked.innerHTML = formatAndCompareDateToEndDate(entry.DateWorked, parseFloat(entry.HoursWorked));
 
     var entryDivHoursWorked = document.createElement('div');
     entryDivHoursWorked.id = "entryHoursWorked";
-    entryDivHoursWorked.style.top = (81 * i + 53 + counter * 21).toString() + "px";
+    entryDivHoursWorked.style.top = (81 * i + 55 + countNumberOfDates * 21).toString() + "px";
     entryDivHoursWorked.innerHTML = formatNumberToTwoDecimalPlaces(entry.HoursWorked);
 
     var entryDivDescription = document.createElement('div');
     entryDivDescription.id = "entryDescription";
-    entryDivDescription.style.top = (81 * i + 45 + counter * 21).toString() + "px";
+    entryDivDescription.style.top = (81 * i + 45 + countNumberOfDates * 21).toString() + "px";
     entryDivDescription.innerHTML = entry.EntryDescription;
-    entryDivDescription.style.width = (window.innerWidth - 70).toString() + "px"
+    entryDivDescription.style.width = (window.innerWidth - 140).toString() + "px"
+
+    var entryDivButton = document.createElement('div');
+    entryDivButton.id = "entryButtonForward";
+    entryDivButton.style.top = (81 * i + 30.5 + countNumberOfDates * 21).toString() + "px";
+    entryDivButton.innerHTML = "<img src=\"Images/Forward15.png\"/>";
 
     entryDiv.appendChild(entryDivName);
     entryDiv.appendChild(entryDivTaskName);
     entryDiv.appendChild(entryDivDateWorked);
+    entryDiv.appendChild(entryDivButton);
     entryDiv.appendChild(entryDivHoursWorked);
     entryDiv.appendChild(entryDivDescription);
 
     entriesList.appendChild(entryDiv);
 }
 
-function compareDateToEndDate(serializedDate, hours) {
+function formatAndCompareDateToEndDate(serializedDate, hours) {
     serializedDate = serializedDate.split("T")[0];
 
     serializedDate = serializedDate.replace(/-/g, "/");
@@ -997,8 +1006,6 @@ function showErrorMessage(message, objectToFocus) {
     errorMessageMain.style.visibility = 'visible';
     inputInformation.style.pointerEvents = 'none';
 
-    var fontSize = (window.innerWidth / 3) / 10;
-    errorMessageString.style.fontSize = fontSize.toString() + "px";
     errorMessageString.innerHTML = message;
 
     errorMessageMain.ObjectToFocus = objectToFocus;
@@ -1038,98 +1045,22 @@ function addEventToListElement(object, eventFunction) {
     }
 }
 
-function checkIfStringIsNumber(numberString) {
-    var checkDigits = numberString.split("");
-    if (checkDigits.length === 0) {
-        return false;
-    }
-    var checkNumbers = new RegExp('[0-9]');
-
-    for (var i = 0; i < checkDigits.length; i++) {
-        if (checkNumbers.test(checkDigits[i]) === false) {
-            return false;
-        }
-    }
-    return true;
-}
-
-
-function addEntryPanel_onresize() {
-    var pageHeight = window.innerHeight - 44;
-
-    inputInformation.style.width = window.innerWidth.toString() + "px";
-    inputInformation.style.height = pageHeight.toString() + "px";
-
-    btnDateWorked.style.width = (window.innerWidth).toString() + "px";
-    btnDateWorked.style.top = (0.25 * pageHeight / 12).toString() + "px";
-    btnDateWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
-
-    btnProject.style.width = (window.innerWidth).toString() + "px";
-    btnProject.style.top = (1.25 * pageHeight / 12).toString() + "px";
-    btnProject.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
-
-    btnTask.style.width = (window.innerWidth).toString() + "px";
-    btnTask.style.top = (2.25 * pageHeight / 12).toString() + "px";
-    btnTask.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
-
-    btnActivity.style.width = (window.innerWidth).toString() + "px";
-    btnActivity.style.top = (3.25 * pageHeight / 12).toString() + "px";
-    btnActivity.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
-
-    btnHoursWorked.style.width = (window.innerWidth).toString() + "px";
-    btnHoursWorked.style.top = (4.25 * pageHeight / 12).toString() + "px";
-    btnHoursWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
-
-    lblPayable.style.top = (5.3 * pageHeight / 12 + 0.5).toString() + "px";
-    cbxPayable.style.top = (5.3 * pageHeight / 12).toString() + "px";
-
-    lblBillable.style.top = (5.3 * pageHeight / 12 + 0.5).toString() + "px";
-    cbxBillable.style.top = (5.3 * pageHeight / 12).toString() + "px";
-
-    if (txtDescription.Focused === false) {
-        txtDescription.style.top = (6.1 * pageHeight / 12).toString() + "px";
-        txtDescription.style.height = (4.5 * pageHeight / 12).toString() + "px";
-        txtDescription.style.width = (window.innerWidth - 40).toString() + "px";
-    }
-
-    btnSave.style.width = (window.innerWidth - 40).toString() + "px";
-    btnSave.style.top = (11 * pageHeight / 12).toString() + "px";
-
-    entryOptionsList.style.width = (window.innerWidth).toString() + "px";
-    entryOptionsList.style.height = (window.innerHeight - 44).toString() + "px";
-}
+// Resize window function 
 
 function window_onresize() {
     divMain.style.width = window.innerWidth.toString() + "px";
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
 
-    //if (entryOptionsList.style.visibility === "visible") {
-    //    entryOption.style.width = window.innerWidth.toString() + "px";
-    //}
-
     addEntryPanel_onresize();
 
-    // Sign in page
     signInPage_onresize();
 
-    // Entries page
-    showEntriesPanel_onresize();
+    showEntries_onresize();
 
-    // Error Messages
     errorMessageBody_onresize();
 
-    inputInformation_onresize();
-
     displayAllEntries(gResponseString);
-}
-
-function inputInformation_onresize() {
-    selectedHoursWorked.style.width = (innerWidth - 120).toString() + "px";
-    selectedActivity.style.width = (innerWidth - 120).toString() + "px";
-    selectedDateWorked.style.width = (innerWidth - 120).toString() + "px";
-    selectedProject.style.width = (innerWidth - 120).toString() + "px";
-    selectedTask.style.width = (innerWidth - 120).toString() + "px";
 }
 
 function signInPage_onresize() {
@@ -1143,7 +1074,7 @@ function signInPage_onresize() {
     txtPassword.style.width = (window.innerWidth - 52).toString() + "px";
 }
 
-function showEntriesPanel_onresize() {
+function showEntries_onresize() {
     showDateRange.style.width = (window.innerWidth - 10).toString() + "px";
     showEntries.style.width = window.innerWidth.toString() + "px";
     showEntries.style.height = (window.innerHeight - 44).toString() + "px";
@@ -1153,13 +1084,69 @@ function showEntriesPanel_onresize() {
 
     lblTotalHoursText.style.right = (parseFloat(lblTotalHours.clientWidth) + 15).toString() + "px";
 }
+
 function errorMessageBody_onresize() {
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
-    errorMessageBody.style.top = (window.innerHeight / 3).toString() + "px";
-    errorMessageBody.style.left = (window.innerWidth / 3).toString() + "px";
-    errorMessageBody.style.height = (window.innerHeight / 3).toString() + "px";
-    errorMessageBody.style.width = (window.innerWidth / 3).toString() + "px";
 
-    btnErrorMessageOK.style.width = (window.innerWidth / 3).toString() + "px";
+    errorMessageBody.style.top = (window.innerHeight / 3).toString() + "px";
+    errorMessageBody.style.left = (window.innerWidth / 6).toString() + "px";
+    errorMessageBody.style.height = (window.innerHeight / 3).toString() + "px";
+    errorMessageBody.style.width = (window.innerWidth / 1.5).toString() + "px";
+
+    errorMessageString.style.height = (window.innerHeight / 3 - 55).toString() + "px";
+    errorMessageString.style.width = (window.innerWidth / 1.5).toString() + "px";
+
+    btnErrorMessageOK.style.width = (window.innerWidth /1.5).toString() + "px";
+}
+
+function addEntryPanel_onresize() {
+    var pageHeight = window.innerHeight - 44;
+
+    inputInformation.style.width = window.innerWidth.toString() + "px";
+    inputInformation.style.height = pageHeight.toString() + "px";
+
+    btnDateWorked.style.width = (window.innerWidth).toString() + "px";
+    btnDateWorked.style.top = (0.50 * pageHeight / 12).toString() + "px";
+    //btnDateWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
+
+    btnProject.style.width = (window.innerWidth).toString() + "px";
+    btnProject.style.top = (1.75 * pageHeight / 12).toString() + "px";
+    //btnProject.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
+
+    btnTask.style.width = (window.innerWidth).toString() + "px";
+    btnTask.style.top = (3.00 * pageHeight / 12).toString() + "px";
+    //btnTask.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
+
+    btnActivity.style.width = (window.innerWidth).toString() + "px";
+    btnActivity.style.top = (4.25 * pageHeight / 12).toString() + "px";
+    //btnActivity.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
+
+    btnHoursWorked.style.width = (window.innerWidth).toString() + "px";
+    btnHoursWorked.style.top = (5.50 * pageHeight / 12).toString() + "px";
+    //btnHoursWorked.style.height = (1 * pageHeight / 12 - 5).toString() + "px";
+
+    lblPayable.style.top = (7.1 * pageHeight / 12 + 0.5).toString() + "px";
+    cbxPayable.style.top = (7.1 * pageHeight / 12).toString() + "px";
+
+    lblBillable.style.top = (7.1 * pageHeight / 12 + 0.5).toString() + "px";
+    cbxBillable.style.top = (7.1 * pageHeight / 12).toString() + "px";
+
+    if (txtDescription.Focused === false) {
+        txtDescription.style.top = (8 * pageHeight / 12).toString() + "px";
+        txtDescription.style.height = (2 * pageHeight / 12).toString() + "px";
+        txtDescription.style.width = (window.innerWidth - 40).toString() + "px";
+    }
+
+    btnSave.style.width = (window.innerWidth - 40).toString() + "px";
+    btnSave.style.top = (10.5 * pageHeight / 12).toString() + "px";
+
+    entryOptionsList.style.width = (window.innerWidth).toString() + "px";
+    entryOptionsList.style.height = (window.innerHeight - 44).toString() + "px";
+
+    selectedHoursWorked.style.width = (innerWidth - 120).toString() + "px";
+    selectedActivity.style.width = (innerWidth - 120).toString() + "px";
+    selectedDateWorked.style.width = (innerWidth - 120).toString() + "px";
+    selectedProject.style.width = (innerWidth - 120).toString() + "px";
+    selectedTask.style.width = (innerWidth - 120).toString() + "px";
 }
