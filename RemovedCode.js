@@ -345,3 +345,18 @@
 
 //    return true;
 //}
+
+//function checkIfStringIsNumber(numberString) {
+//    var checkDigits = numberString.split("");
+//    if (checkDigits.length === 0) {
+//        return false;
+//    }
+//    var checkNumbers = new RegExp('[0-9]');
+
+//    for (var i = 0; i < checkDigits.length; i++) {
+//        if (checkNumbers.test(checkDigits[i]) === false) {
+//            return false;
+//        }
+//    }
+//    return true;
+//}
